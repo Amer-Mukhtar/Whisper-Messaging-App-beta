@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:whisper/screens/profile_screen.dart';
 import 'package:whisper/screens/signin_screen.dart';
 
-import 'home_chat_screen.dart';
 
 class edit_profile extends StatefulWidget {
   const edit_profile({super.key});

@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:whisper/screens/Message.dart';
 import 'package:whisper/screens/forgetPassword_screen.dart';
 import 'package:whisper/screens/signup_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
 import 'home_chat_screen.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends StatefulWidget
+{
   const SignInScreen({super.key});
 
   @override
@@ -31,25 +31,26 @@ class _SignInScreenState extends State<SignInScreen> {
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email!, password: password!);
 
-        // Fetch user data from Firestore
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(userCredential.user!.uid)
             .get();
 
+
         if (userDoc.exists) {
+          String email=userDoc.get('email');
           String fullName = userDoc.get('fullName');
 
-          // Navigate to home screen and pass the fullName
+
+
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => home(currentuser: fullName),
+              builder: (context) => home(currentuser: fullName,email: email,),
             ),
           );
         }
         else {
-          // Handle case where user document does not exist
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               backgroundColor: Colors.redAccent,

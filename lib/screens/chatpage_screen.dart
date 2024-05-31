@@ -42,9 +42,13 @@ Future<List<Map<String, dynamic>>> fetchUsers() async {
   return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
 }
 
-class ChatPage extends StatefulWidget {
-String currentuser;
-ChatPage({required this.currentuser});
+class ChatPage extends StatefulWidget
+{
+ final String currentuser;
+ final String email;
+
+
+ ChatPage({required this.currentuser,required this.email});
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -66,7 +70,7 @@ class _ChatPageState extends State<ChatPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => profile()),
+                  MaterialPageRoute(builder: (context) => profile(currentuser: widget.currentuser,email: widget.email,)),
                 );
               },
               child: const CircleAvatar(
@@ -109,7 +113,8 @@ class _ChatPageState extends State<ChatPage> {
 
 
                           )
-                          ));
+                          )
+                          );
 
                         },
                       ),
@@ -167,6 +172,7 @@ class _ChatPageState extends State<ChatPage> {
                         {
                           List<Map<String, dynamic>> users = snapshot.data!;
                           return ListView.builder(
+
                             itemCount: users.length,
                             physics: const BouncingScrollPhysics(),
                             padding: const EdgeInsets.only(top: 16),

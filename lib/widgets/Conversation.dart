@@ -32,7 +32,9 @@ class _ConversationListState extends State<ConversationList> {
             return MessageScreen(
               receiver:widget.name,currentuser: widget.currentuser,
             );
-          }));
+          }
+          )
+          );
         },
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
@@ -86,8 +88,7 @@ class _ConversationListState extends State<ConversationList> {
             Text(
               widget.time,
               style: TextStyle(
-                fontSize: 12,
-
+                fontSize: 12
               ),
             ),
           ],
