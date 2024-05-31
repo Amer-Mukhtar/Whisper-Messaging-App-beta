@@ -5,6 +5,7 @@ import 'package:whisper/widgets/Conversation.dart';
 import 'add_user.dart';
 import 'Message.dart';
 import 'profile_screen.dart';
+import 'package:whisper/widgets/bg_scaffold.dart';
 
 class ChatUsers {
   String name;
@@ -42,13 +43,12 @@ Future<List<Map<String, dynamic>>> fetchUsers() async {
   return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
 }
 
-class ChatPage extends StatefulWidget
-{
- final String currentuser;
- final String email;
+class ChatPage extends StatefulWidget {
+  final String currentuser;
+  final String email;
 
+  ChatPage({required this.currentuser, required this.email});
 
- ChatPage({required this.currentuser,required this.email});
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -57,32 +57,35 @@ class _ChatPageState extends State<ChatPage> {
   ChatUsers? selectedUser;
 
   @override
-
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Whisper', style: TextStyle(fontWeight: FontWeight.bold)),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 10),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => profile(currentuser: widget.currentuser,email: widget.email,)),
-                );
-              },
-              child: const CircleAvatar(
-                backgroundImage: NetworkImage('https://plus.unsplash.com/premium_photo-1673866484792-c5a36a6c025e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsfGVufDB8fDB8fHww%3D%3D'),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Column(
+    return BGScaffold(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Row(children: [
+            Container(
+              child: Text('Whisper', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 35,color: Colors.white)),
+              margin: const EdgeInsets.only(left: 16, top: 16),
+            ),
+            SizedBox(
+              width: 190,
+            ),
+            Container(
+              margin: const EdgeInsets.only(right: 16),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => profile(currentuser: widget.currentuser, email: widget.email)),
+                  );
+                },
+                child: const CircleAvatar(
+                  backgroundImage: NetworkImage('https://plus.unsplash.com/premium_photo-1673866484792-c5a36a6c025e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsfGVufDB8fDB8fHww%3D%3D'),
+                ),
+              ),
+            ),
+          ],)
+          ,
           Container(
             height: 100,
             child: ListView.builder(
@@ -90,7 +93,6 @@ class _ChatPageState extends State<ChatPage> {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 return Container(
-
                   margin: const EdgeInsets.only(right: 10, left: 10, top: 10, bottom: 10),
                   child: Column(
                     children: [
@@ -99,26 +101,20 @@ class _ChatPageState extends State<ChatPage> {
                           radius: 30,
                           backgroundImage: NetworkImage(ChatPageState.chatUsers[index].imageURL),
                         ),
-
                         onTap: () {
                           setState(() {
-
                             selectedUser = ChatPageState.chatUsers[index];
-
                           });
                           Navigator.push(
-                              context, MaterialPageRoute(
-                              builder: (context) => MessageScreen(
-                                  receiver: ChatPageState.chatUsers[index].name,currentuser:widget.currentuser
-
-
-                          )
-                          )
-                          );
-
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MessageScreen(
+                                    receiver: ChatPageState.chatUsers[index].name,
+                                    currentuser: widget.currentuser,
+                                  )));
                         },
                       ),
-                      Text(ChatPageState.chatUsers[index].name)
+                      Text(ChatPageState.chatUsers[index].name,style: TextStyle(color: Colors.white),),
                     ],
                   ),
                 );
@@ -164,15 +160,11 @@ class _ChatPageState extends State<ChatPage> {
                     child: FutureBuilder<List<Map<String, dynamic>>>(
                       future: fetchUsers(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting)
-                        {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
                           return const Center(child: CircularProgressIndicator());
-                        }
-                        else
-                        {
+                        } else {
                           List<Map<String, dynamic>> users = snapshot.data!;
                           return ListView.builder(
-
                             itemCount: users.length,
                             physics: const BouncingScrollPhysics(),
                             padding: const EdgeInsets.only(top: 16),
