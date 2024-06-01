@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/Message.dart';
+import '../screens/chat_detail.dart';
 
 
 class ConversationList extends StatefulWidget {
@@ -7,16 +7,14 @@ class ConversationList extends StatefulWidget {
   final String messageText;
   final String imageUrl;
   final String time;
-  final String email;
-  final String currentuser;
+  final bool isMessageRead;
 
   ConversationList({
     required this.name,
     required this.messageText,
     required this.imageUrl,
     required this.time,
-    required this.email,
-    required this.currentuser
+    required this.isMessageRead,
   });
 
   @override
@@ -29,12 +27,8 @@ class _ConversationListState extends State<ConversationList> {
     return GestureDetector(
         onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context){
-            return MessageScreen(
-              receiver:widget.name,currentuser: widget.currentuser,
-            );
-          }
-          )
-          );
+            return ChatDetailPage();
+          }));
         },
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
@@ -59,24 +53,15 @@ class _ConversationListState extends State<ConversationList> {
                             style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(height: 6),
-                          Column(
-                            children: [Text(
-                            widget.email,
+                          Text(
+                            widget.messageText,
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.grey.shade600,
-
+                              fontWeight: widget.isMessageRead
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                             ),
-                          ),
-                              Text(
-                                widget.messageText,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.grey.shade600,
-
-                                ),
-                              ),
-                            ],
                           ),
                         ],
                       ),
@@ -88,7 +73,10 @@ class _ConversationListState extends State<ConversationList> {
             Text(
               widget.time,
               style: TextStyle(
-                fontSize: 12
+                fontSize: 12,
+                fontWeight: widget.isMessageRead
+                    ? FontWeight.bold
+                    : FontWeight.normal,
               ),
             ),
           ],

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:whisper/screens/signin_screen.dart';
+
+import 'home_chat_screen.dart';
 
 class AddProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar
-        (
+      appBar: AppBar(
         title: Text('Add Profile',style: TextStyle(color: Colors.black),),
       ),
       body: Center(
@@ -29,20 +29,20 @@ class AddProfileScreen extends StatelessWidget {
                   labelText: 'Email',
                     border: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: Colors.black12,
+                        color: Colors.black12, // Default border color
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: Colors.black12,
+                        color: Colors.black12, // Default border color
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 10), // Spacing between text fields
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: TextField(
@@ -50,13 +50,13 @@ class AddProfileScreen extends StatelessWidget {
                   labelText: 'ID Number',
                   border: OutlineInputBorder(
                     borderSide: const BorderSide(
-                      color: Colors.black12,
+                      color: Colors.black12, // Default border color
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
-                      color: Colors.black12,
+                      color: Colors.black12, // Default border color
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -78,7 +78,7 @@ class AddProfileScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 20,),*/
                 ElevatedButton(
-                  onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>SignInScreen()));},
+                  onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>home()));},
                   child: Text('Add'),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),

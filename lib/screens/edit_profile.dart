@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:whisper/screens/signin_screen.dart';
+import 'package:whisper/screens/profile_screen.dart';
 
+import 'home_chat_screen.dart';
 
 class edit_profile extends StatefulWidget {
   const edit_profile({super.key});
@@ -152,7 +153,7 @@ class _edit_profileState extends State<edit_profile> {
                          ),
                        ),SizedBox(width: 15,),
               ElevatedButton(
-                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>SignInScreen()));},
+                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>home()));},
                 child: Text('Save Changes'),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),

@@ -1,11 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:whisper/screens/chatpage_screen.dart';
+import 'package:whisper/screens/chat_page.dart';
 
 class home extends StatefulWidget {
-  final String currentuser;
-  final String email;
-
-  home({required this.currentuser, required this.email});
+  const home({super.key});
 
   @override
   State<home> createState() => _homeState();
@@ -13,15 +11,11 @@ class home extends StatefulWidget {
 
 class _homeState extends State<home> {
   @override
-
-
-
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ChatPage(
-        currentuser: widget.currentuser,
-        email: widget.email,
-      ),
+      body: ChatPage(),
     );
   }
 }
+
+

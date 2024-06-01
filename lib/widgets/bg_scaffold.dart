@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
 
 class BGScaffold extends StatelessWidget {
-  const BGScaffold({
-    super.key,
-    this.child,
-    this.floatingActionButton,
-    this.floatingActionButtonLocation,
-  });
-
+  const BGScaffold({super.key, this.child});
   final Widget? child;
-  final Widget? floatingActionButton;
-  final FloatingActionButtonLocation? floatingActionButtonLocation;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
           Image.asset(
-            'assets/images/bg1.png',
+            'assets/images/bg2.jpg',
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
@@ -30,8 +26,6 @@ class BGScaffold extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButtonLocation,
     );
   }
 }
