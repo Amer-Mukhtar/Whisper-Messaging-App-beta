@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:whisper/screens/chat_detail.dart';
-import 'package:whisper/screens/forgetpassword_screen.dart';
+import 'package:whisper/screens/forgetPassword_screen.dart';
 import 'package:whisper/screens/signup_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
+import 'home_chat_screen.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends StatefulWidget
+{
   const SignInScreen({super.key});
 
   @override
@@ -14,16 +18,89 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final _formSignInKey = GlobalKey<FormState>();
+  String? sender;
+  String? email;
+  String? password;
   bool rememberPassword = true;
+  final _formSignInKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  Future<void> login() async {
+    if (password != null && emailController.text != "") {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email!, password: password!);
+
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .get();
+
+
+        if (userDoc.exists) {
+          String email=userDoc.get('email');
+          String fullName = userDoc.get('fullName');
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => home(currentuser: fullName,email: email,),
+            ),
+          );
+        }
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text(
+                'User data not found.',
+                style: TextStyle(fontSize: 18.0),
+              ),
+            ),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.orangeAccent,
+              content: Text(
+                'No User Found for that Email',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          );
+        } else if (e.code == 'wrong-password') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.orangeAccent,
+              content: Text(
+                'Wrong Password Provided!',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
+            ),
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BGScaffold(
       child: Column(
         children: [
+          Container(//sign in bypass button uses default account: test_1
+            child: ElevatedButton(
+              child: Text('next'),
+              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => home(currentuser: 'test_1',email: 'test_1@gmail.com',)),);},
+            ),
+          ),
           const Expanded(
             child: SizedBox(
               height: 10,
@@ -63,7 +140,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         keyboardType: TextInputType.emailAddress,
                         obscureText: false,
                         validator: (value) {
-                          if (value==null || value.isEmpty){
+                          email = value;
+                          if (value == null || value.isEmpty) {
                             return 'Please enter Email';
                           }
                           return null;
@@ -78,7 +156,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         hintText: 'Enter Password',
                         obscureText: true,
                         validator: (value) {
-                          if (value==null || value.isEmpty){
+                          if (value == null || value.isEmpty) {
                             return 'Please enter Password';
                           }
                           return null;
@@ -135,8 +213,14 @@ class _SignInScreenState extends State<SignInScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>const home()));
+                          onPressed: () async {
+                            if (_formSignInKey.currentState!.validate()) {
+                              setState(() {
+                                email = emailController.text;
+                                password = passwordController.text;
+                              });
+                            }
+                            await login();
                           },
                           child: const Text('Sign In'),
                         ),

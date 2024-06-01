@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whisper/screens/signup_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
@@ -11,7 +12,41 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
+  String? email;
   final emailController = TextEditingController();
+  final _formRecoveryKey = GlobalKey<FormState>();
+
+  reset() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.orangeAccent,
+          content: Text(
+            'Password Reset Email has been sent!',
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
+          ),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.orangeAccent,
+            content: Text(
+              'No user found for that Email',
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BGScaffold(
@@ -67,7 +102,14 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            if (_formRecoveryKey.currentState!.validate()) {
+                              setState(() {
+                                email = emailController.text;
+                              });
+                            }
+                            reset();
+                          },
                           child: const Text('Send Code'),
                         ),
                       ),

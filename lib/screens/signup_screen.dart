@@ -4,6 +4,7 @@ import 'package:whisper/screens/signin_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -23,25 +24,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool agreePersonalData = true;
 
   registration() async {
-    if (password != null) {
+    if (password != null && fullNameController.text!="" && emailController.text!="") {
       try {
-        UserCredential userCredential = await FirebaseAuth.instance
+        var userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email!, password: password!);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Registered Successfully",
-              style: TextStyle(fontSize: 20.0),
-            ),
-          ),
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (e) => const SignInScreen(),
-          ),
-        );
-      } on FirebaseAuthException catch (e) {
+        var user = userCredential.user;
+        if (user != null) {
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+            'fullName': fullName,
+            'email': email,
+          }
+          );
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SignInScreen()),
+          );
+        }
+      }
+      on FirebaseAuthException catch (e) {
         if (e.code == 'email-already-in-use') {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
