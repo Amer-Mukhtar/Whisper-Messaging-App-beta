@@ -7,47 +7,60 @@ import 'Message.dart';
 import 'profile_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 
-class ChatUsers {
-  String name;
-  String messageText;
-  String imageURL;
-  String time;
+int check = 0;
+int check2 = 0;
 
+class ChatUsers {
+  String imageURL;
   ChatUsers({
-    required this.name,
-    required this.messageText,
     required this.imageURL,
-    required this.time,
   });
 }
 
 class ChatPageState {
   static List<ChatUsers> chatUsers = [
     ChatUsers(
-      name: "Kri wat",
-      messageText: "Awesome Setup",
-      imageURL: "https://plus.unsplash.com/premium_photo-1673866484792-c5a36a6c025e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmllfGVufDB8fDB8fHww%3D%3D",
-      time: "Now",
+      imageURL: "assets/images/profile1.png ",
     ),
     ChatUsers(
-      name: "Glad Murph",
-      messageText: "That's Great",
-      imageURL: "https://randomuser.me/api/portraits/men/83.jpg",
-      time: "Yesterday",
+      imageURL: "assets/images/profile2.png",
+    ),
+    ChatUsers(
+      imageURL: "assets/images/profile3.png",
+    ),
+    ChatUsers(
+      imageURL: "assets/images/profile4.png",
+    ),
+    ChatUsers(
+      imageURL: "assets/images/profile5.png",
+    ),
+    ChatUsers(
+      imageURL: "assets/images/profile6.png",
+    ),
+    ChatUsers(
+      imageURL: "assets/images/profile7.png",
+    ),
+    ChatUsers(
+      imageURL: "assets/images/profile8.png",
+    ),
+    ChatUsers(
+      imageURL: "assets/images/profile9.png",
+    ),
+    ChatUsers(
+      imageURL: "assets/images/profile10.png",
     ),
   ];
 }
 
 Future<List<Map<String, dynamic>>> fetchUsers() async
 {
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').get();
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('added_users').get();
   return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
 }
 
 class ChatPage extends StatefulWidget {
-  final String currentuser;
   final String email;
-
+  final String currentuser;
   ChatPage({required this.currentuser, required this.email});
 
   @override
@@ -73,7 +86,7 @@ class _ChatPageState extends State<ChatPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddProfileScreen()),
+                MaterialPageRoute(builder: (context) => AddProfileScreen(currentuser: widget.currentuser, currentemail: widget.email)),
               );
             },
             icon: const Icon(CupertinoIcons.person_add),
@@ -84,30 +97,30 @@ class _ChatPageState extends State<ChatPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(children: [
-            Container(
-              margin: const EdgeInsets.only(left: 16, top: 16),
-              child: const Text('Whisper', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 35,color: Colors.white)),
-            ),
-            const SizedBox(
-              width: 190,
-            ),
-            Container(
-              margin: const EdgeInsets.only(right: 16),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => profile(currentuser: widget.currentuser, email: widget.email)),
-                  );
-                },
-                child: const CircleAvatar(
-                  backgroundImage: NetworkImage('https://plus.unsplash.com/premium_photo-1673866484792-c5a36a6c025e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsfGVufDB8fDB8fHww%3D%3D'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(left: 16, top: 16),
+                child: const Text('Whisper', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35, color: Colors.white)),
+              ),
+
+              Container(
+                margin: const EdgeInsets.only(right: 16),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => profile(currentuser: widget.currentuser, email: widget.email)),
+                    );
+                  },
+                  child: const CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/profile3.png'),
+                  ),
                 ),
               ),
-            ),
-          ],)
-          ,
+            ],
+          ),
           SizedBox(
             height: 100,
             child: FutureBuilder<List<Map<String, dynamic>>>(
@@ -115,25 +128,63 @@ class _ChatPageState extends State<ChatPage> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No users found'));
                 } else {
                   List<Map<String, dynamic>> users = snapshot.data!;
+                  bool userAdded = false;
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: users.length,
+                    itemCount: users.length , // Adding 1 for the 'No User Added' message
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.fromLTRB(15, 10, 5, 0),
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(ChatPageState.chatUsers[index % ChatPageState.chatUsers.length].imageURL),
+                      if (index <= users.length) {
+                        String currentUser = users[index]['CurrentUser'] as String;
+                        if (currentUser == widget.currentuser) {
+                          userAdded = true;
+                          return Padding(
+                            padding: EdgeInsets.fromLTRB(15, 10, 5, 0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MessageScreen(
+                                      receiver: users[index]['AddedUser'] ?? 'No Name',
+                                      currentuser: widget.currentuser,imageurl:ChatPageState.chatUsers[index % ChatPageState.chatUsers.length].imageURL,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Column(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: AssetImage(ChatPageState.chatUsers[index % ChatPageState.chatUsers.length].imageURL),
+                                  ),
+                                  Text(users[index]['AddedUser'] ?? 'No Name', style: TextStyle(fontSize: 15, color: Colors.white)),
+                                ],
+                              ),
                             ),
-                            Text(users[index]['fullName']??'No Name',style: TextStyle(fontSize: 15,color: Colors.white),)
-                          ],
-                        ),
-                      );
+                          );
+                        }
+                      } else if (!userAdded) {
+                        return Container(
+                          padding: EdgeInsets.fromLTRB(15, 10, 5, 0),
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundImage: AssetImage(''),
+                              ),
+                              Text('No User Added', style: TextStyle(fontSize: 15, color: Colors.white)),
+                            ],
+                          ),
+                        );
+                      }
+                      return SizedBox.shrink();
                     },
                   );
                 }
@@ -181,21 +232,44 @@ class _ChatPageState extends State<ChatPage> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Center(child: Text('No users found'));
                         } else {
                           List<Map<String, dynamic>> users = snapshot.data!;
+                          bool userAdded = false;
                           return ListView.builder(
-                            itemCount: users.length,
+                            itemCount: users.length ,
                             physics: const BouncingScrollPhysics(),
                             padding: const EdgeInsets.only(top: 16),
                             itemBuilder: (context, index) {
-                              return ConversationList(
-                                name: users[index]['fullName'] ?? 'No Name',
-                                messageText: ChatPageState.chatUsers[index % ChatPageState.chatUsers.length].messageText,
-                                imageUrl: ChatPageState.chatUsers[index % ChatPageState.chatUsers.length].imageURL,
-                                time: ChatPageState.chatUsers[index % ChatPageState.chatUsers.length].time,
-                                email: users[index]['email'],
-                                currentuser: widget.currentuser,
-                              );
+                              if (index <= users.length)
+                              {
+                                String currentUser = users[index]['CurrentUser'] as String;
+                                String? addedUser = users[index]['AddedUser'] as String?;
+                                String? addedEmail = users[index]['AddedEmail'] as String?;
+
+                                if (currentUser == widget.currentuser) {
+                                  userAdded = true;
+                                  return ConversationList(
+                                    name: addedUser ?? 'No Name',
+                                    imageUrl: ChatPageState.chatUsers[index % ChatPageState.chatUsers.length].imageURL,
+                                    email: addedEmail ?? 'No Email',
+                                    currentuser: widget.currentuser,
+                                  );
+                                }
+                              }
+                              else if (!userAdded) {
+                                userAdded = true;
+                                return ConversationList(
+                                  name: 'No user Added',
+                                  imageUrl: ' ',
+                                  email: '',
+                                  currentuser: widget.currentuser,
+                                );
+                              }
+                              return SizedBox.shrink();
                             },
                           );
                         }

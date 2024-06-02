@@ -8,8 +8,9 @@ User? loggedUser;
 class MessageScreen extends StatefulWidget {
   final String receiver;
   final String currentuser;
+  final String imageurl;
 
-  const MessageScreen({required this.receiver, required this.currentuser});
+  MessageScreen({required this.receiver, required this.currentuser, required this.imageurl});
 
   @override
   _MessageScreenState createState() => _MessageScreenState();
@@ -50,10 +51,8 @@ class _MessageScreenState extends State<MessageScreen> {
                   icon: const Icon(Icons.arrow_back, color: Colors.black),
                 ),
                 const SizedBox(width: 2),
-                const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    "https://plus.unsplash.com/premium_photo-1673866484792-c5a36a6c025e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
-                  ),
+                CircleAvatar(
+                  backgroundImage: AssetImage(widget.imageurl),
                   maxRadius: 20,
                 ),
                 const SizedBox(width: 12),
@@ -173,11 +172,11 @@ class MessageStream extends StatelessWidget {
             final messageData = message.data() as Map<String, dynamic>;
             final messageText = messageData['message'] ?? '';
             final messageSender = messageData['sender'] ?? '';
-            final messageReciever=messageData['receiver']??' ';
+            final messageReceiver = messageData['receiver'] ?? '';
 
-            if (messageSender == receiver && messageReciever==currentuser || messageReciever==receiver&& messageSender==currentuser ) {
-              final messageWidget = MessageBubble
-                (
+            if ((messageSender == receiver && messageReceiver == currentuser) ||
+                (messageReceiver == receiver && messageSender == currentuser)) {
+              final messageWidget = MessageBubble(
                 sender: messageSender,
                 message: messageText,
                 isMe: currentuser == messageSender,

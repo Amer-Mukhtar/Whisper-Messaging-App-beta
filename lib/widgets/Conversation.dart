@@ -4,17 +4,13 @@ import '../screens/Message.dart';
 
 class ConversationList extends StatefulWidget {
   final String name;
-  final String messageText;
   final String imageUrl;
-  final String time;
   final String email;
   final String currentuser;
 
   ConversationList({
     required this.name,
-    required this.messageText,
     required this.imageUrl,
-    required this.time,
     required this.email,
     required this.currentuser
   });
@@ -30,7 +26,7 @@ class _ConversationListState extends State<ConversationList> {
         onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context){
             return MessageScreen(
-              receiver:widget.name,currentuser: widget.currentuser,
+              receiver:widget.name,currentuser: widget.currentuser,imageurl:widget.imageUrl
             );
           }
           )
@@ -44,7 +40,7 @@ class _ConversationListState extends State<ConversationList> {
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: NetworkImage(widget.imageUrl),
+                    backgroundImage: AssetImage(widget.imageUrl),
                     maxRadius: 30,
                   ),
                   SizedBox(width: 16),
@@ -68,14 +64,7 @@ class _ConversationListState extends State<ConversationList> {
 
                             ),
                           ),
-                              Text(
-                                widget.messageText,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.grey.shade600,
 
-                                ),
-                              ),
                             ],
                           ),
                         ],
@@ -85,12 +74,7 @@ class _ConversationListState extends State<ConversationList> {
                 ],
               ),
             ),
-            Text(
-              widget.time,
-              style: TextStyle(
-                fontSize: 12
-              ),
-            ),
+
           ],
         ),
       ),
