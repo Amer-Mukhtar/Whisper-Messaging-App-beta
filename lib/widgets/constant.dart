@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+const Color ChatPageBGColor=Colors.white;
+const Color ChatPageContactNameTextColor=Colors.black;
+Color ChatPageContactemailTextColor= Colors.grey.shade600;
+
+
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,
   fontWeight: FontWeight.bold,

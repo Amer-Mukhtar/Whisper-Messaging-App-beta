@@ -9,6 +9,7 @@ import 'package:whisper/widgets/bg_scaffold.dart';
 
 int check = 0;
 int check2 = 0;
+const Color ListBGColor=Colors.grey;
 
 class ChatUsers {
   String imageURL;
@@ -16,7 +17,6 @@ class ChatUsers {
     required this.imageURL,
   });
 }
-
 class ChatPageState {
   static List<ChatUsers> chatUsers = [
     ChatUsers(
@@ -164,7 +164,7 @@ class _ChatPageState extends State<ChatPage> {
                                     radius: 30,
                                     backgroundImage: AssetImage(ChatPageState.chatUsers[index % ChatPageState.chatUsers.length].imageURL),
                                   ),
-                                  Text(users[index]['AddedUser'] ?? 'No Name', style: TextStyle(fontSize: 15, color: Colors.white)),
+                                  Text(users[index]['AddedUser'] ?? 'No Name', style: const TextStyle(fontSize: 15, color: Colors.white,fontWeight: FontWeight.w500)),
                                 ],
                               ),
                             ),
@@ -173,7 +173,7 @@ class _ChatPageState extends State<ChatPage> {
                       } else if (!userAdded) {
                         return Container(
                           padding: EdgeInsets.fromLTRB(15, 10, 5, 0),
-                          child: Column(
+                          child: const Column(
                             children: [
                               CircleAvatar(
                                 radius: 30,
@@ -195,10 +195,10 @@ class _ChatPageState extends State<ChatPage> {
             child: Container(
               margin: const EdgeInsets.only(top: 10),
               decoration: const BoxDecoration(
-                color: Colors.grey,
+                color: ListBGColor,
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(50),
-                  topLeft: Radius.circular(50),
+                  topRight: Radius.circular(45),
+                  topLeft: Radius.circular(45),
                 ),
               ),
               child: Column(
@@ -246,7 +246,7 @@ class _ChatPageState extends State<ChatPage> {
                             itemBuilder: (context, index) {
                               if (index <= users.length)
                               {
-                                String currentUser = users[index]['CurrentUser'] as String;
+                                String? currentUser = users[index]['CurrentUser'] as String;
                                 String? addedUser = users[index]['AddedUser'] as String?;
                                 String? addedEmail = users[index]['AddedEmail'] as String?;
 

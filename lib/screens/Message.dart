@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _firestore = FirebaseFirestore.instance;
-User? loggedUser;
+
 
 class MessageScreen extends StatefulWidget {
   final String receiver;
@@ -22,17 +22,7 @@ class _MessageScreenState extends State<MessageScreen> {
   String message = '';
 
   @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
-  }
 
-  void getCurrentUser() {
-    loggedUser = _auth.currentUser;
-    if (loggedUser != null) {
-      print(loggedUser!.email);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

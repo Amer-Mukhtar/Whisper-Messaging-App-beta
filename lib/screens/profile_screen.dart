@@ -62,7 +62,7 @@ class _profileState extends State<profile>
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          /*const SizedBox(height: 20),
           Container(
             margin: const EdgeInsets.only(left: 60),
             child: const Row(
@@ -74,7 +74,7 @@ class _profileState extends State<profile>
                 SizedBox(width: 28),
               ],
             ),
-          ),
+          ),*/
           const SizedBox(height: 20),
           Container(
             margin: const EdgeInsets.only(left: 60),

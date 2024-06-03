@@ -106,7 +106,7 @@ final textaddemailcontroller=TextEditingController();
                       Map<String,String> adduser={
                         'CurrentUser':widget.currentuser,
                         'AddedUser':textaddnamecontroller.text,
-                        'AddedEmail':widget.currentemail
+                        'AddedEmail':textaddemailcontroller.text
                       };
                       FirebaseFirestore.instance.collection('added_users').add(adduser);
 

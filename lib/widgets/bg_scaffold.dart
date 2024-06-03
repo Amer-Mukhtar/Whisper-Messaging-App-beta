@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BGScaffold extends StatelessWidget {
@@ -6,10 +7,13 @@ class BGScaffold extends StatelessWidget {
     this.child,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
+    this.appBar,
+
   });
 
   final Widget? child;
   final Widget? floatingActionButton;
+  final PreferredSizeWidget? appBar;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
 
   @override
@@ -19,12 +23,11 @@ class BGScaffold extends StatelessWidget {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          Image.asset(
-            'assets/images/bg1.png',
+          Image.asset('assets/images/bg1.png',
             fit: BoxFit.cover,
             width: double.infinity,
-            height: double.infinity,
-          ),
+            height: double.infinity,),
+
           SafeArea(
             child: child!,
           ),

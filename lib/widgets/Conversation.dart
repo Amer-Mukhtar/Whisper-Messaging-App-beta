@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/Message.dart';
 
+const Color TextColor= Colors.black;
 
 class ConversationList extends StatefulWidget {
   final String name;
@@ -52,15 +53,16 @@ class _ConversationListState extends State<ConversationList> {
                         children: <Widget>[
                           Text(
                             widget.name,
-                            style: TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 17,color: TextColor,fontWeight: FontWeight.w800),
                           ),
-                          SizedBox(height: 6),
+
                           Column(
-                            children: [Text(
+                            children: [
+                              Text(
                             widget.email,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 13,
-                              color: Colors.grey.shade600,
+                              color: TextColor,
 
                             ),
                           ),
