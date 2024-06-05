@@ -101,7 +101,7 @@ class _SignInScreenState extends State<SignInScreen> {
           Container(//sign in bypass button uses default account: test_1
             child: ElevatedButton(
               child: Text('next'),
-              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => home(currentuser: 'test_1',email: 'test_1@gmail.com',)),);},
+              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => home(currentuser: 'Test_1',email: 'test_1@gmail.com',)),);},
             ),
           ),
           const Expanded(

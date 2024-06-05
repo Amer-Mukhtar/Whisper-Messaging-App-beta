@@ -23,7 +23,7 @@ class BGScaffold extends StatelessWidget {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          Image.asset('assets/images/bg1.png',
+          Image.asset('assets/images/background.jpg',
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,),

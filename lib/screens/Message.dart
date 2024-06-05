@@ -151,10 +151,12 @@ class MessageStream extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<QuerySnapshot>
+      (
       stream: _firestore.collection('chat_room').orderBy('timestamp', descending: true).snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData)
+        {
           final messages = snapshot.data!.docs;
           List<MessageBubble> messageWidgets = [];
 
@@ -163,9 +165,9 @@ class MessageStream extends StatelessWidget {
             final messageText = messageData['message'] ?? '';
             final messageSender = messageData['sender'] ?? '';
             final messageReceiver = messageData['receiver'] ?? '';
-
             if ((messageSender == receiver && messageReceiver == currentuser) ||
-                (messageReceiver == receiver && messageSender == currentuser)) {
+                (messageReceiver == receiver && messageSender == currentuser))
+            {
               final messageWidget = MessageBubble(
                 sender: messageSender,
                 message: messageText,

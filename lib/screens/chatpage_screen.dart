@@ -6,10 +6,10 @@ import 'add_user.dart';
 import 'Message.dart';
 import 'profile_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
-
+import 'package:whisper/widgets/constant.dart';
+final _firestore = FirebaseFirestore.instance;
 int check = 0;
 int check2 = 0;
-const Color ListBGColor=Colors.grey;
 
 class ChatUsers {
   String imageURL;
@@ -19,9 +19,7 @@ class ChatUsers {
 }
 class ChatPageState {
   static List<ChatUsers> chatUsers = [
-    ChatUsers(
-      imageURL: "assets/images/profile1.png ",
-    ),
+
     ChatUsers(
       imageURL: "assets/images/profile2.png",
     ),
@@ -58,17 +56,17 @@ Future<List<Map<String, dynamic>>> fetchUsers() async
   return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
 }
 
+
 class ChatPage extends StatefulWidget {
   final String email;
   final String currentuser;
-  ChatPage({required this.currentuser, required this.email});
+  ChatPage({required this.currentuser,  required this.email});
 
   @override
   _ChatPageState createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  ChatUsers? selectedUser;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +76,7 @@ class _ChatPageState extends State<ChatPage> {
         width: 80,
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.redAccent,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
@@ -86,10 +84,10 @@ class _ChatPageState extends State<ChatPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddProfileScreen(currentuser: widget.currentuser, currentemail: widget.email)),
+                MaterialPageRoute(builder: (context) => AddUserScreen(currentUser: widget.currentuser, currentEmail: widget.email)),
               );
             },
-            icon: const Icon(CupertinoIcons.person_add),
+            icon: const Icon(CupertinoIcons.person_add,color: Colors.white,),
           ),
         ),
       ),
@@ -101,12 +99,12 @@ class _ChatPageState extends State<ChatPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                margin: const EdgeInsets.only(left: 16, top: 16),
+                margin: const EdgeInsets.only(left: 16),
                 child: const Text('Whisper', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35, color: Colors.white)),
               ),
 
               Container(
-                margin: const EdgeInsets.only(right: 16),
+                margin: const EdgeInsets.only(right: 16,bottom: 10),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -164,7 +162,7 @@ class _ChatPageState extends State<ChatPage> {
                                     radius: 30,
                                     backgroundImage: AssetImage(ChatPageState.chatUsers[index % ChatPageState.chatUsers.length].imageURL),
                                   ),
-                                  Text(users[index]['AddedUser'] ?? 'No Name', style: const TextStyle(fontSize: 15, color: Colors.white,fontWeight: FontWeight.w500)),
+                                  Text(users[index]['AddedUser'] ?? 'No Name', style: const TextStyle(fontSize: 15, color: ChatPageContactNameTextColor,fontWeight: FontWeight.w500)),
                                 ],
                               ),
                             ),
@@ -197,35 +195,13 @@ class _ChatPageState extends State<ChatPage> {
               decoration: const BoxDecoration(
                 color: ListBGColor,
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(45),
-                  topLeft: Radius.circular(45),
+                  topRight: Radius.circular(50),
+                  topLeft: Radius.circular(50),
                 ),
               ),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 65,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "Search",
-                          hintStyle: TextStyle(color: Colors.grey.shade600),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.grey.shade600,
-                            size: 20,
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey.shade100,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(60),
-                            borderSide: BorderSide(color: Colors.grey.shade100),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+
                   Expanded(
                     child: FutureBuilder<List<Map<String, dynamic>>>(
                       future: fetchUsers(),
@@ -236,26 +212,27 @@ class _ChatPageState extends State<ChatPage> {
                           return Center(child: Text('Error: ${snapshot.error}'));
                         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                           return Center(child: Text('No users found'));
-                        } else {
+                        }
+                        else
+                        {
                           List<Map<String, dynamic>> users = snapshot.data!;
                           bool userAdded = false;
                           return ListView.builder(
                             itemCount: users.length ,
                             physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.only(top: 16),
+                            padding: const EdgeInsets.only(top: 10,left: 10,right: 10),
                             itemBuilder: (context, index) {
                               if (index <= users.length)
                               {
                                 String? currentUser = users[index]['CurrentUser'] as String;
                                 String? addedUser = users[index]['AddedUser'] as String?;
-                                String? addedEmail = users[index]['AddedEmail'] as String?;
 
-                                if (currentUser == widget.currentuser) {
+                                if (currentUser == widget.currentuser)
+                                {
                                   userAdded = true;
                                   return ConversationList(
                                     name: addedUser ?? 'No Name',
                                     imageUrl: ChatPageState.chatUsers[index % ChatPageState.chatUsers.length].imageURL,
-                                    email: addedEmail ?? 'No Email',
                                     currentuser: widget.currentuser,
                                   );
                                 }
@@ -265,7 +242,6 @@ class _ChatPageState extends State<ChatPage> {
                                 return ConversationList(
                                   name: 'No user Added',
                                   imageUrl: ' ',
-                                  email: '',
                                   currentuser: widget.currentuser,
                                 );
                               }

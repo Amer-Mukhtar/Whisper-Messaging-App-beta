@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import '../screens/Message.dart';
+import 'constant.dart';
 
-const Color TextColor= Colors.black;
 
 class ConversationList extends StatefulWidget {
   final String name;
   final String imageUrl;
-  final String email;
   final String currentuser;
 
   ConversationList({
     required this.name,
     required this.imageUrl,
-    required this.email,
     required this.currentuser
   });
 
@@ -34,7 +32,12 @@ class _ConversationListState extends State<ConversationList> {
           );
         },
       child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+        decoration: BoxDecoration(
+            color: tileColor,
+            borderRadius: BorderRadius.circular(45)),
         padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+
         child: Row(
           children: <Widget>[
             Expanded(
@@ -56,19 +59,8 @@ class _ConversationListState extends State<ConversationList> {
                             style: const TextStyle(fontSize: 17,color: TextColor,fontWeight: FontWeight.w800),
                           ),
 
-                          Column(
-                            children: [
-                              Text(
-                            widget.email,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: TextColor,
 
-                            ),
-                          ),
 
-                            ],
-                          ),
                         ],
                       ),
                     ),
