@@ -30,7 +30,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           ),
         ),
       );
-    } on FirebaseAuthException catch (e) {
+    }
+    on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

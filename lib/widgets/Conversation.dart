@@ -40,6 +40,7 @@ class _ConversationListState extends State<ConversationList> {
 
         child: Row(
           children: <Widget>[
+
             Expanded(
               child: Row(
                 children: <Widget>[

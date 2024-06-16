@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:whisper/widgets/constant.dart';
 final _firestore = FirebaseFirestore.instance;
 
 
@@ -28,9 +28,10 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: messageBackground,
         flexibleSpace: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(right: 16),
@@ -38,7 +39,7 @@ class _MessageScreenState extends State<MessageScreen> {
               children: [
                 IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  icon: const Icon(Icons.arrow_back, color: messageIcon),
                 ),
                 const SizedBox(width: 2),
                 CircleAvatar(
@@ -49,7 +50,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 Expanded(
                   child: Text(
                     widget.receiver,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600,color: messageText),
                   ),
                 ),
               ],
@@ -73,21 +74,24 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget buildMessageInput() {
     return Container(
       padding: const EdgeInsets.all(10),
-      color: Colors.white,
+      color: messageBackground,
       child: Row(
         children: [
           const SizedBox(width: 15),
           Expanded(
             child: TextField(
+              style: const TextStyle(color: Colors.white),
               controller: messagetextController,
               onChanged: (value) => message = value,
               decoration: const InputDecoration(
                 hintText: "Write message...",
-                hintStyle: TextStyle(color: Colors.black54),
+                hintStyle: TextStyle(color: Colors.white54),
                 border: InputBorder.none,
+
               ),
             ),
           ),
+
           Container(
             margin: const EdgeInsets.only(right: 10),
             child: FloatingActionButton(
@@ -129,7 +133,7 @@ class MessageBubble extends StatelessWidget {
     return Column(
       crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        Text(sender, style: const TextStyle(color: Colors.black54)),
+        Text(sender, style: const TextStyle(color: Colors.white60)),
         Material(
           borderRadius: BorderRadius.circular(30),
           color: isMe ? Colors.lightBlueAccent : Colors.white,
@@ -147,46 +151,50 @@ class MessageStream extends StatelessWidget {
   final String currentuser;
   final String receiver;
 
-  const MessageStream({required this.currentuser, required this.receiver});
+  const MessageStream({super.key, required this.currentuser, required this.receiver});
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>
-      (
-      stream: _firestore.collection('chat_room').orderBy('timestamp', descending: true).snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData)
-        {
-          final messages = snapshot.data!.docs;
-          List<MessageBubble> messageWidgets = [];
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      color: messageBackground,
+      child: StreamBuilder<QuerySnapshot>
+        (
+        stream: _firestore.collection('chat_room').orderBy('timestamp', descending: true).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData)
+          {
+            final messages = snapshot.data!.docs;
+            List<MessageBubble> messageWidgets = [];
 
-          for (var message in messages) {
-            final messageData = message.data() as Map<String, dynamic>;
-            final messageText = messageData['message'] ?? '';
-            final messageSender = messageData['sender'] ?? '';
-            final messageReceiver = messageData['receiver'] ?? '';
-            if ((messageSender == receiver && messageReceiver == currentuser) ||
-                (messageReceiver == receiver && messageSender == currentuser))
-            {
-              final messageWidget = MessageBubble(
-                sender: messageSender,
-                message: messageText,
-                isMe: currentuser == messageSender,
-              );
-              messageWidgets.add(messageWidget);
+            for (var message in messages) {
+              final messageData = message.data() as Map<String, dynamic>;
+              final messageText = messageData['message'] ?? '';
+              final messageSender = messageData['sender'] ?? '';
+              final messageReceiver = messageData['receiver'] ?? '';
+              if ((messageSender == receiver && messageReceiver == currentuser) ||
+                  (messageReceiver == receiver && messageSender == currentuser))
+              {
+                final messageWidget = MessageBubble(
+                  sender: messageSender,
+                  message: messageText,
+                  isMe: currentuser == messageSender,
+                );
+                messageWidgets.add(messageWidget);
+              }
             }
-          }
 
-          return ListView(
-            reverse: true,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            children: messageWidgets,
-          );
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        return const Center(child: CircularProgressIndicator());
-      },
+            return ListView(
+              reverse: true,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              children: messageWidgets,
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }

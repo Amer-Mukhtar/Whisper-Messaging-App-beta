@@ -7,6 +7,18 @@ const Color ListBGColor=Colors.black;
 const Color TextColor= Colors.white;
 const Color tileColor =Color(0xFF211a23);
 
+const Color profileBackground =Colors.black;
+const Color profileText=Colors.white;
+const Color profileIcon=Colors.white;
+
+const Color addUserBackground=Colors.black;
+const Color addUserText=Colors.white;
+const Color addUserIcon=Colors.white;
+
+const Color messageBackground=Colors.black;
+const Color messageText=Colors.white;
+const Color messageIcon=Colors.white;
+
 
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,

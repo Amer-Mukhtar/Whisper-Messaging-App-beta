@@ -98,12 +98,12 @@ class _SignInScreenState extends State<SignInScreen> {
     return BGScaffold(
       child: Column(
         children: [
-          Container(//sign in bypass button uses default account: test_1
+          /*Container(//sign in bypass button uses default account: test_1
             child: ElevatedButton(
               child: Text('next'),
               onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => home(currentuser: 'Test_1',email: 'test_1@gmail.com',)),);},
             ),
-          ),
+          ),*/
           const Expanded(
             child: SizedBox(
               height: 10,
