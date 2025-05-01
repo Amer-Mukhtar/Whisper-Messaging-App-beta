@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:whisper/widgets/constant.dart';
 final _firestore = FirebaseFirestore.instance;
 
@@ -24,7 +28,16 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
 
 
+  late final String chatId;
+
   @override
+  void initState() {
+    super.initState();
+    chatId = widget.currentuser.compareTo(widget.receiver) < 0
+        ? '${widget.currentuser}-${widget.receiver}'
+        : '${widget.receiver}-${widget.currentuser}';
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -91,10 +104,29 @@ class _MessageScreenState extends State<MessageScreen> {
               ),
             ),
           ),
+          Container(
+            child: FloatingActionButton.small(heroTag: "sendi",onPressed: () async {
+              File? imageFile = await pickImage();
+              if (imageFile != null) {
+                String imageUrl = await uploadImage(imageFile, chatId);
+                await _firestore.collection('chat_room').add({
+                  'message': '',
+                  'imageUrl': imageUrl,
+                  'type': 'image',
+                  'sender': widget.currentuser,
+                  'receiver': widget.receiver,
+                  'timestamp': FieldValue.serverTimestamp(),
+                });
+              }
+            }
+              ,child: Icon(Icons.attach_file, color: Colors.white, size: 20),
+              backgroundColor: Colors.blue,
 
+            ),
+          ),
           Container(
             margin: const EdgeInsets.only(right: 10),
-            child: FloatingActionButton(
+            child: FloatingActionButton.small(heroTag:"sendm" ,
               onPressed: () {
                 if (message.isNotEmpty) {
                   messagetextController.clear();
@@ -121,25 +153,33 @@ class MessageBubble extends StatelessWidget {
   final String sender;
   final String message;
   final bool isMe;
+  final String? imageUrl;
+  final String? type;
 
   const MessageBubble({
     required this.sender,
     required this.message,
     required this.isMe,
+    this.imageUrl,
+    this.type,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isImage = type == 'image';
+
     return Column(
       crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Text(sender, style: const TextStyle(color: Colors.white60)),
         Material(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(10),
           color: isMe ? Colors.lightBlueAccent : Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(10),
-            child: Text(message, style: const TextStyle(fontSize: 15)),
+            child: isImage
+                ? Image.network(imageUrl!, width: 200)
+                : Text(message, style: const TextStyle(fontSize: 15)),
           ),
         ),
       ],
@@ -170,6 +210,8 @@ class MessageStream extends StatelessWidget {
             for (var message in messages) {
               final messageData = message.data() as Map<String, dynamic>;
               final messageText = messageData['message'] ?? '';
+              final imageUrl = messageData['imageUrl'] ?? '';
+              final type = messageData['type'] ?? 'text';
               final messageSender = messageData['sender'] ?? '';
               final messageReceiver = messageData['receiver'] ?? '';
               if ((messageSender == receiver && messageReceiver == currentuser) ||
@@ -179,6 +221,8 @@ class MessageStream extends StatelessWidget {
                   sender: messageSender,
                   message: messageText,
                   isMe: currentuser == messageSender,
+                  imageUrl: imageUrl,
+                  type: type,
                 );
                 messageWidgets.add(messageWidget);
               }
@@ -197,4 +241,21 @@ class MessageStream extends StatelessWidget {
       ),
     );
   }
+}
+Future<File?> pickImage() async {
+  final picker = ImagePicker();
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  if (pickedFile != null) {
+    return File(pickedFile.path);
+  }
+  return null;
+}
+Future<String> uploadImage(File imageFile, String chatId) async {
+  final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+  final ref = FirebaseStorage.instance
+      .ref()
+      .child('chat_images/$chatId/$fileName.jpg');
+
+  await ref.putFile(imageFile);
+  return await ref.getDownloadURL();
 }
