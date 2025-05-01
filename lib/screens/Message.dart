@@ -76,7 +76,7 @@ class _MessageScreenState extends State<MessageScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(child: MessageStream(currentuser: widget.currentuser, receiver: widget.receiver)),
+            Expanded(child: MessageStream(currentUser: widget.currentuser, receiver: widget.receiver)),
             buildMessageInput(),
           ],
         ),
@@ -104,29 +104,28 @@ class _MessageScreenState extends State<MessageScreen> {
               ),
             ),
           ),
-          Container(
-            child: FloatingActionButton.small(heroTag: "sendi",onPressed: () async {
-              File? imageFile = await pickImage();
-              if (imageFile != null) {
-                String imageUrl = await uploadImage(imageFile, chatId);
-                await _firestore.collection('chat_room').add({
-                  'message': '',
-                  'imageUrl': imageUrl,
-                  'type': 'image',
-                  'sender': widget.currentuser,
-                  'receiver': widget.receiver,
-                  'timestamp': FieldValue.serverTimestamp(),
-                });
-              }
+          FloatingActionButton.small(heroTag: "sendImage",onPressed: () async {
+            File? imageFile = await pickImage();
+            if (imageFile != null) {
+              String imageUrl = await uploadImage(imageFile, chatId);
+              messagetextController.clear();
+              await _firestore.collection('chat_room').add({
+                'message': message,
+                'imageUrl': imageUrl,
+                'type': 'image',
+                'sender': widget.currentuser,
+                'receiver': widget.receiver,
+                'timestamp': FieldValue.serverTimestamp(),
+              });
             }
-              ,child: Icon(Icons.attach_file, color: Colors.white, size: 20),
-              backgroundColor: Colors.blue,
+          }
+            ,
+            backgroundColor: Colors.blue,child: Icon(Icons.attach_file, color: Colors.white, size: 20),
 
-            ),
           ),
           Container(
             margin: const EdgeInsets.only(right: 10),
-            child: FloatingActionButton.small(heroTag:"sendm" ,
+            child: FloatingActionButton.small(heroTag:"sendMessage" ,
               onPressed: () {
                 if (message.isNotEmpty) {
                   messagetextController.clear();
@@ -167,7 +166,6 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isImage = type == 'image';
-
     return Column(
       crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
@@ -178,7 +176,7 @@ class MessageBubble extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: isImage
-                ? Image.network(imageUrl!, width: 200)
+                ? ZoomableImageScreen(imageUrl: imageUrl!,)
                 : Text(message, style: const TextStyle(fontSize: 15)),
           ),
         ),
@@ -188,10 +186,10 @@ class MessageBubble extends StatelessWidget {
 }
 
 class MessageStream extends StatelessWidget {
-  final String currentuser;
+  final String currentUser;
   final String receiver;
 
-  const MessageStream({super.key, required this.currentuser, required this.receiver});
+  const MessageStream({super.key, required this.currentUser, required this.receiver});
 
   @override
   Widget build(BuildContext context) {
@@ -214,13 +212,13 @@ class MessageStream extends StatelessWidget {
               final type = messageData['type'] ?? 'text';
               final messageSender = messageData['sender'] ?? '';
               final messageReceiver = messageData['receiver'] ?? '';
-              if ((messageSender == receiver && messageReceiver == currentuser) ||
-                  (messageReceiver == receiver && messageSender == currentuser))
+              if ((messageSender == receiver && messageReceiver == currentUser) ||
+                  (messageReceiver == receiver && messageSender == currentUser))
               {
                 final messageWidget = MessageBubble(
                   sender: messageSender,
                   message: messageText,
-                  isMe: currentuser == messageSender,
+                  isMe: currentUser == messageSender,
                   imageUrl: imageUrl,
                   type: type,
                 );
@@ -258,4 +256,49 @@ Future<String> uploadImage(File imageFile, String chatId) async {
 
   await ref.putFile(imageFile);
   return await ref.getDownloadURL();
+}
+
+class ZoomableImageScreen extends StatelessWidget {
+  final String imageUrl;
+
+  const ZoomableImageScreen({Key? key, required this.imageUrl}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (_) => FullScreenImage(imageUrl: imageUrl),
+        ));
+      },
+      child: Image.network(
+        imageUrl,
+        height: 100,
+        width: 100,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+}
+
+class FullScreenImage extends StatelessWidget {
+  final String imageUrl;
+
+  const FullScreenImage({Key? key, required this.imageUrl}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(backgroundColor: Colors.black),
+      body: Center(
+        child: InteractiveViewer(
+          panEnabled: true,
+          minScale: 1,
+          maxScale: 4,
+          child: Image.network(imageUrl),
+        ),
+      ),
+    );
+  }
 }
