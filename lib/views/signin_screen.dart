@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whisper/views/signup_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
-import 'forgetPassword_screen.dart';
+import 'forget_Password_screen.dart';
 import 'home_chat_screen.dart';
 
 class SignInScreen extends StatefulWidget
@@ -45,7 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => home(currentuser: fullName,email: email,),
+              builder: (context) => home_screen(currentuser: fullName,email: email,),
             ),
           );
         }

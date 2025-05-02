@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:whisper/widgets/Conversation.dart';
 import 'add_user.dart';
-import 'Message.dart';
+import 'chat_Screen.dart';
 import 'profile_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/constant.dart';
@@ -19,7 +19,7 @@ class ChatUsers {
     required this.imageURL,
   });
 }
-class ChatPageState {
+class chat_listState {
   static List<ChatUsers> chatUsers = [
 
     ChatUsers(
@@ -59,16 +59,16 @@ Stream<QuerySnapshot> fetchUsersStream()
 }
 
 
-class ChatPage extends StatefulWidget {
+class chat_list extends StatefulWidget {
   final String email;
   final String currentuser;
-  ChatPage({super.key, required this.currentuser,  required this.email});
+  chat_list({super.key, required this.currentuser,  required this.email});
 
   @override
   _ChatPageState createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends State<chat_list> {
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +162,7 @@ class _ChatPageState extends State<ChatPage> {
                                   builder: (context) => MessageScreen(
                                     receiver: addedUser ?? 'No Name',
                                     currentuser: widget.currentuser,
-                                    imageurl: ChatPageState.chatUsers[users.indexOf(user) % ChatPageState.chatUsers.length].imageURL,
+                                    imageurl: chat_listState.chatUsers[users.indexOf(user) % chat_listState.chatUsers.length].imageURL,
                                   ),
                                 ),
                               );
@@ -171,7 +171,7 @@ class _ChatPageState extends State<ChatPage> {
                               children: [
                                 CircleAvatar(
                                   radius: 30,
-                                  backgroundImage: AssetImage(ChatPageState.chatUsers[users.indexOf(user) % ChatPageState.chatUsers.length].imageURL),
+                                  backgroundImage: AssetImage(chat_listState.chatUsers[users.indexOf(user) % chat_listState.chatUsers.length].imageURL),
                                 ),
                                 Text(
                                   addedUser ?? 'No Name',
@@ -253,7 +253,7 @@ class _ChatPageState extends State<ChatPage> {
                               userWidgets.add(
                                 ConversationList(
                                   name: addedUser ?? 'No Name',
-                                  imageUrl: ChatPageState.chatUsers[users.indexOf(user) % ChatPageState.chatUsers.length].imageURL,
+                                  imageUrl: chat_listState.chatUsers[users.indexOf(user) % chat_listState.chatUsers.length].imageURL,
                                   currentuser: widget.currentuser,
                                 ),
                               );
