@@ -21,17 +21,17 @@ final List<String> defaultUserImages = [
   "assets/images/profile10.png",
 ];
 
-class ChatList extends StatefulWidget {
+class ChatListScreen extends StatefulWidget {
   final String email;
   final String currentuser;
 
-  const ChatList({super.key, required this.currentuser, required this.email});
+  const ChatListScreen({super.key, required this.currentuser, required this.email});
 
   @override
-  State<ChatList> createState() => _ChatListState();
+  State<ChatListScreen> createState() => _ChatListScreenState();
 }
 
-class _ChatListState extends State<ChatList> {
+class _ChatListScreenState extends State<ChatListScreen> {
   final _viewModel = ChatListViewModel();
 
   @override

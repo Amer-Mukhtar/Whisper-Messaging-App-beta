@@ -46,7 +46,7 @@ class _SignInScreenState extends State<SignInScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => ChatList(
+            builder: (_) => ChatListScreen(
               currentuser: result.fullName!,
               email: result.email!,
             ),
