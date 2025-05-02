@@ -276,6 +276,20 @@ class ZoomableImageScreen extends StatelessWidget {
         height: 100,
         width: 100,
         fit: BoxFit.cover,
+        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress){
+          if(loadingProgress==null)
+            {
+              return child;
+            }
+          return Container(
+            height: 100,
+            width: 100,
+            child: CircularProgressIndicator(
+              color: Colors.white,
+              value: loadingProgress.expectedTotalBytes!=null ? loadingProgress.cumulativeBytesLoaded/loadingProgress.expectedTotalBytes!:null,
+            ),
+          );
+        },
       ),
     );
   }
