@@ -5,7 +5,7 @@ import 'package:whisper/views/profile_screen.dart';
 import 'package:whisper/widgets/Conversation.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/constant.dart';
-import '../viewModel/chat_list_screen.dart';
+import '../view_model/chat_list_screen.dart';
 import 'add_user.dart';
 import 'chat_screen.dart';
 
@@ -157,9 +157,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
           if (userWidgets.isEmpty) {
             userWidgets.add(
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 10, 5, 0),
-                child: const Column(
+              const Padding(
+                padding: EdgeInsets.fromLTRB(15, 10, 5, 0),
+                child: Column(
                   children: [
                     CircleAvatar(radius: 30),
                     Text('No User Added', style: TextStyle(fontSize: 15, color: Colors.white)),

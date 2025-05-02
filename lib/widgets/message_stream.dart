@@ -10,10 +10,10 @@ class MessageStream extends StatelessWidget {
   final String receiver;
 
   const MessageStream({
-    Key? key,
+    super.key,
     required this.currentUser,
     required this.receiver,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

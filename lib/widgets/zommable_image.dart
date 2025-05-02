@@ -4,7 +4,7 @@ import 'package:whisper/widgets/fullscreen_image.dart';
 class ZoomableImageScreen extends StatelessWidget {
   final String imageUrl;
 
-  const ZoomableImageScreen({Key? key, required this.imageUrl}) : super(key: key);
+  const ZoomableImageScreen({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

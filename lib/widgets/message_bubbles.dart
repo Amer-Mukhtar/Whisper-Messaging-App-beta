@@ -9,13 +9,13 @@ class MessageBubble extends StatelessWidget {
   final String? type;
 
   const MessageBubble({
-    Key? key,
+    super.key,
     required this.sender,
     required this.message,
     required this.isMe,
     this.imageUrl,
     this.type,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

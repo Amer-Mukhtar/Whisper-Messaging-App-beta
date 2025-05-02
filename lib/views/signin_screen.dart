@@ -5,7 +5,7 @@ import 'package:whisper/views/signup_screen.dart';
 import 'package:whisper/views/chat_list_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
-import '../viewModel/signin_screen.dart';
+import '../view_model/signin_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:whisper/widgets/constant.dart';
 import 'package:whisper/widgets/text_field.dart';
 
-import 'chat_list_screen.dart';
 class AddUserScreen extends StatefulWidget {
   final String currentUser;
   final String currentEmail;
@@ -52,7 +51,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: addUserIcon),
+          iconTheme: const IconThemeData(color: addUserIcon),
           backgroundColor: addUserBackground,
           title: const Text(
             'Add Profile',
@@ -61,7 +60,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
         ),
         body: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.only(bottom: 300),
+              padding: const EdgeInsets.only(bottom: 300),
               color: addUserBackground,
               child: Form(
                 key: _formKey,
@@ -83,7 +82,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: CustomTextField(
-                          textStyle: TextStyle(color: Colors.white),
+                          textStyle: const TextStyle(color: Colors.white),
                           label: 'User Name',
                           hintText: 'Enter User Name',
                           keyboardType: TextInputType.name,
