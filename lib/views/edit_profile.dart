@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:whisper/screens/signin_screen.dart';
+import 'package:whisper/views/signin_screen.dart';
 
 
 class edit_profile extends StatefulWidget {

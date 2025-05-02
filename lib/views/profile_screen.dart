@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:whisper/screens/signin_screen.dart';
+import 'package:whisper/views/signin_screen.dart';
 import 'package:whisper/widgets/constant.dart';
 
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:whisper/screens/chatpage_screen.dart';
+
+import '../screens/chatPage_screen.dart';
 
 class home extends StatefulWidget {
   final String currentuser;
