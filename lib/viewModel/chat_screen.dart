@@ -1,0 +1,63 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+
+class ChatViewModel {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool isUploading = false;
+  String message = '';
+  late String chatId;
+
+  void init(String currentUser, String receiver) {
+    chatId = currentUser.compareTo(receiver) < 0
+        ? '$currentUser-$receiver'
+        : '$receiver-$currentUser';
+  }
+
+  Future<void> sendMessage(String sender, String receiver) async {
+    if (message.isEmpty) return;
+    await _firestore.collection('chat_room').add({
+      'message': message,
+      'sender': sender,
+      'receiver': receiver,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+    message = '';
+  }
+
+  Future<void> sendImage(String sender, String receiver) async {
+    isUploading = true;
+    final file = await _pickImage();
+    if (file == null) {
+      isUploading = false;
+      return;
+    }
+
+    final imageUrl = await _uploadImage(file);
+    await _firestore.collection('chat_room').add({
+      'message': message,
+      'imageUrl': imageUrl,
+      'type': 'image',
+      'sender': sender,
+      'receiver': receiver,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+    isUploading = false;
+  }
+
+  Future<File?> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    return pickedFile != null ? File(pickedFile.path) : null;
+  }
+
+  Future<String> _uploadImage(File imageFile) async {
+    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('chat_images/$chatId/$fileName.jpg');
+    await ref.putFile(imageFile);
+    return await ref.getDownloadURL();
+  }
+}

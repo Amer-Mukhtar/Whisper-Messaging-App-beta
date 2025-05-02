@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:whisper/screens/chatPage_screen.dart';
 import 'package:whisper/widgets/constant.dart';
 import 'package:whisper/widgets/text_field.dart';
+
+import 'chat_list_screen.dart';
 class AddUserScreen extends StatefulWidget {
   final String currentUser;
   final String currentEmail;
@@ -140,15 +141,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                   };
                                   await FirebaseFirestore.instance.collection('added_users').add(adduser);
 
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatPage(
-                                        currentuser: widget.currentUser,
-                                        email: widget.currentEmail,
-                                      ),
-                                    ),
-                                  );
+                                  Navigator.pop(context);
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text('Error adding user: $e')),

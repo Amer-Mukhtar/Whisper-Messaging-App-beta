@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:whisper/screens/signin_screen.dart';
 import 'package:whisper/widgets/constant.dart';
 
-
-class profile extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
   final String currentuser;
   final String email;
   final String? image;
-  const profile({required this.currentuser, required this.email,this.image});
+  const ProfileScreen({super.key, required this.currentuser, required this.email,this.image});
 
   @override
-  State<profile> createState() => _profileState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
-
-class _profileState extends State<profile>
+class _ProfileScreenState extends State<ProfileScreen>
 {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +23,9 @@ class _profileState extends State<profile>
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SignInScreen()),
-              );
+              Navigator.of(context)
+                ..pop()
+                ..pop();
             },
             icon: const Icon(Icons.logout,color: profileIcon,),
           ),
@@ -67,19 +62,6 @@ class _profileState extends State<profile>
                 ],
               ),
             ),
-            /*const SizedBox(height: 20),
-            Container(
-              margin: const EdgeInsets.only(left: 60),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(CupertinoIcons.book, size: 40),
-                  SizedBox(width: 10),
-                  Text('Cant Live forever'),
-                  SizedBox(width: 28),
-                ],
-              ),
-            ),*/
             const SizedBox(height: 20),
             Container(
               margin: const EdgeInsets.only(left: 60),
@@ -105,20 +87,6 @@ class _profileState extends State<profile>
               ),
             ),
             const SizedBox(height: 40),
-            /*Container(
-              width: double.infinity,
-              margin: const EdgeInsets.symmetric(horizontal: 40),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const edit_profile()),
-                  );
-                },
-                child: const Text('Edit Profile'),
-              ),
-            ),*/
           ],
         ),
       ),
