@@ -17,7 +17,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: profileIcon),
+        iconTheme: const IconThemeData(color: profileIcon),
         backgroundColor: profileBackground,
         title: const Text('Profile',style: TextStyle(color: profileText),),
         actions: [
@@ -56,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         "Full Name",
                         style: TextStyle(color: Colors.white70),
                       ),
-                      Text(widget.currentuser,style: TextStyle(color: profileText),),
+                      Text(widget.currentuser,style: const TextStyle(color: profileText),),
                     ],
                   ),
                 ],

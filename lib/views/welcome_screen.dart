@@ -12,7 +12,7 @@ class WelcomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            margin: EdgeInsets.only(bottom: 0,top: 190),
+            margin: const EdgeInsets.only(bottom: 0,top: 190),
             child: const CircleAvatar(
               backgroundImage: AssetImage('assets/images/icon.png'),
               radius: 90,
@@ -74,7 +74,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 40,
           )
         ],

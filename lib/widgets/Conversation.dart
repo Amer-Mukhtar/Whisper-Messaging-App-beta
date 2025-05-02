@@ -8,7 +8,7 @@ class ConversationList extends StatefulWidget {
   final String imageUrl;
   final String currentuser;
 
-  ConversationList({
+  const ConversationList({super.key, 
     required this.name,
     required this.imageUrl,
     required this.currentuser
@@ -32,11 +32,11 @@ class _ConversationListState extends State<ConversationList> {
           );
         },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+        margin: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
         decoration: BoxDecoration(
             color: tileColor,
             borderRadius: BorderRadius.circular(45)),
-        padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -46,7 +46,7 @@ class _ConversationListState extends State<ConversationList> {
                     backgroundImage: AssetImage(widget.imageUrl),
                     maxRadius: 30,
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Container(
                       color: Colors.transparent,

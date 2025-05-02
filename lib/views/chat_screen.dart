@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import '../view_model/chat_screen.dart';
 import '../widgets/constant.dart';
 import '../widgets/message_stream.dart';
-import '../viewModel/chat_screen.dart';
 
 
 class ChatScreen extends StatefulWidget {
@@ -10,11 +10,11 @@ class ChatScreen extends StatefulWidget {
   final String imageurl;
 
   const ChatScreen({
-    Key? key,
+    super.key,
     required this.receiver,
     required this.currentuser,
     required this.imageurl,
-  }) : super(key: key);
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -129,9 +129,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 messagetextController.clear();
                 setState(() {});
               },
-              child: const Icon(Icons.send, color: Colors.white, size: 15),
               backgroundColor: Colors.blue,
               elevation: 0,
+              child: const Icon(Icons.send, color: Colors.white, size: 15),
             ),
           ),
         ],
