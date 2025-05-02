@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../views/chat_Screen.dart';
+import '../views/chat_screen.dart';
 import 'constant.dart';
 
 
@@ -24,7 +24,7 @@ class _ConversationListState extends State<ConversationList> {
     return GestureDetector(
         onTap: (){
           Navigator.push(context, MaterialPageRoute(builder: (context){
-            return MessageScreen(
+            return ChatScreen(
               receiver:widget.name,currentuser: widget.currentuser,imageurl:widget.imageUrl
             );
           }
@@ -37,10 +37,8 @@ class _ConversationListState extends State<ConversationList> {
             color: tileColor,
             borderRadius: BorderRadius.circular(45)),
         padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
-
         child: Row(
           children: <Widget>[
-
             Expanded(
               child: Row(
                 children: <Widget>[
@@ -59,9 +57,6 @@ class _ConversationListState extends State<ConversationList> {
                             widget.name,
                             style: const TextStyle(fontSize: 17,color: TextColor,fontWeight: FontWeight.w800),
                           ),
-
-
-
                         ],
                       ),
                     ),

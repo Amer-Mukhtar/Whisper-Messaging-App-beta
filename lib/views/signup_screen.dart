@@ -3,8 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whisper/views/signin_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../viewModel/signup_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -14,48 +14,42 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  String? email;
-  String? fullName;
-  String? password;
-  final _formSignupKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final fullNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool agreePersonalData = true;
+  final _viewModel = SignUpViewModel();
 
-  registration() async {
-    if (password != null && fullNameController.text!="" && emailController.text!="") {
-      try {
-        var userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email!, password: password!);
-        var user = userCredential.user;
-        if (user != null) {
-          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-            'fullName': fullName,
-            'email': email,
-          }
-          );
+  @override
+  void dispose() {
+    fullNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const SignInScreen()),
-          );
-        }
-      }
-      on FirebaseAuthException catch (e) {
-        if (e.code == 'email-already-in-use') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.orangeAccent,
-              content: Text(
-                'Account Already Exists',
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-              ),
-            ),
-          );
-        }
+  void _onSignUp() async {
+    if (_formKey.currentState!.validate()) {
+      final fullName = fullNameController.text.trim();
+      final email = emailController.text.trim();
+      final password = passwordController.text;
+
+      final result = await _viewModel.register(
+        fullName: fullName,
+        email: email,
+        password: password,
+      );
+
+      if (result == null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const SignInScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result), backgroundColor: Colors.orangeAccent),
+        );
       }
     }
   }
@@ -65,164 +59,82 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return BGScaffold(
       child: Column(
         children: [
-          const Expanded(
-            flex: 1,
-            child: SizedBox(height: 10),
-          ),
+          const Expanded(flex: 1, child: SizedBox(height: 10)),
           Expanded(
             flex: 7,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(25.0, 25.0, 25.0, 20.0),
+              padding: const EdgeInsets.all(25),
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40.0),
-                  topRight: Radius.circular(40.0),
-                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
               ),
               child: SingleChildScrollView(
                 child: Form(
-                  key: _formSignupKey,
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Get Started',
-                        style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
+                      const Text('Get Started',
+                          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: Colors.blueAccent)),
+                      const SizedBox(height: 20),
                       CustomTextField(
                         label: 'Full Name',
                         hintText: 'Enter Full Name',
                         obscureText: false,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Full Name';
-                          }
-                          return null;
-                        },
                         controller: fullNameController,
+                        validator: (val) => val == null || val.isEmpty ? 'Please enter Full Name' : null,
                       ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
+                      const SizedBox(height: 20),
                       CustomTextField(
                         label: 'Email',
                         hintText: 'Enter Email',
-                        keyboardType: TextInputType.emailAddress,
                         obscureText: false,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Email';
-                          }
-                          return null;
-                        },
+                        keyboardType: TextInputType.emailAddress,
                         controller: emailController,
+                        validator: (val) => val == null || val.isEmpty ? 'Please enter Email' : null,
                       ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
+                      const SizedBox(height: 20),
                       CustomTextField(
                         label: 'Password',
                         hintText: 'Enter Password',
                         obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Password';
-                          }
-                          return null;
-                        },
                         controller: passwordController,
+                        validator: (val) => val == null || val.isEmpty ? 'Please enter Password' : null,
                       ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
+                      const SizedBox(height: 20),
                       Row(
                         children: [
                           Checkbox(
                             value: agreePersonalData,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                agreePersonalData = value!;
-                              });
-                            },
+                            onChanged: (val) => setState(() => agreePersonalData = val ?? false),
                             activeColor: Colors.blueAccent,
                           ),
-                          const Text(
-                            'I Agree to the processing of  ',
-                            style: TextStyle(
-                              color: Colors.black45,
-                            ),
-                          ),
-                          const Text(
-                            'Personal Data',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueAccent,
-                            ),
-                          ),
+                          const Text('I Agree to the processing of ', style: TextStyle(color: Colors.black45)),
+                          const Text('Personal Data',
+                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent)),
                         ],
                       ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
+                      const SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            if(_formSignupKey.currentState!.validate()){
-                              setState(() {
-                                email = emailController.text;
-                                fullName = fullNameController.text;
-                                password = passwordController.text;
-                              });
-                            }
-                            registration();
-                          },
+                          onPressed: _onSignUp,
                           child: const Text('Sign Up'),
                         ),
                       ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.7,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                          ),
+                          Expanded(child: Divider(thickness: 0.7, color: Colors.grey.withOpacity(0.5))),
                           const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 0,
-                              horizontal: 10,
-                            ),
-                            child: Text(
-                              'Sign Up with',
-                              style: TextStyle(
-                                color: Colors.black45,
-                              ),
-                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text('Sign Up with', style: TextStyle(color: Colors.black45)),
                           ),
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.7,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                          ),
+                          Expanded(child: Divider(thickness: 0.7, color: Colors.grey.withOpacity(0.5))),
                         ],
                       ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
+                      const SizedBox(height: 20),
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -232,40 +144,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Icon(FontAwesomeIcons.apple),
                         ],
                       ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            'Already have an Account? ',
-                            style: TextStyle(
-                              color: Colors.black45,
-                            ),
-                          ),
+                          const Text('Already have an Account? ', style: TextStyle(color: Colors.black45)),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (e) => const SignInScreen(),
-                                ),
+                                MaterialPageRoute(builder: (_) => const SignInScreen()),
                               );
                             },
-                            child: const Text(
-                              'Sign In',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent,
-                              ),
-                            ),
+                            child: const Text('Sign In',
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent)),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
+                      const SizedBox(height: 15),
                     ],
                   ),
                 ),

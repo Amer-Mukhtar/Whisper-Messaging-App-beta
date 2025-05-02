@@ -38,7 +38,7 @@ class WelcomeScreen extends StatelessWidget {
                           )),
                       TextSpan(
                         text:
-                            '\nWelcome! join us and remember, everyone is but a whisper away from you.  ',
+                            '\nWelcome! join us and remember, everyone is but a whisper away from you.',
                         style: TextStyle(
                           color: Colors.white70,
                           fontSize: 18,

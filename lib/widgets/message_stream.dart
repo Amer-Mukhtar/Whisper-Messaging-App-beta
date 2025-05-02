@@ -1,0 +1,67 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:whisper/widgets/constant.dart';
+import 'package:whisper/widgets/message_bubbles.dart';
+
+final _firestore = FirebaseFirestore.instance;
+
+class MessageStream extends StatelessWidget {
+  final String currentUser;
+  final String receiver;
+
+  const MessageStream({
+    Key? key,
+    required this.currentUser,
+    required this.receiver,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      color: messageBackground,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: _firestore
+            .collection('chat_room')
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final messages = snapshot.data!.docs;
+            List<MessageBubble> messageWidgets = [];
+
+            for (var message in messages) {
+              final messageData = message.data() as Map<String, dynamic>;
+              final messageText = messageData['message'] ?? '';
+              final imageUrl = messageData['imageUrl'] ?? '';
+              final type = messageData['type'] ?? 'text';
+              final messageSender = messageData['sender'] ?? '';
+              final messageReceiver = messageData['receiver'] ?? '';
+
+              if ((messageSender == receiver && messageReceiver == currentUser) ||
+                  (messageReceiver == receiver && messageSender == currentUser)) {
+                final messageWidget = MessageBubble(
+                  sender: messageSender,
+                  message: messageText,
+                  isMe: currentUser == messageSender,
+                  imageUrl: imageUrl,
+                  type: type,
+                );
+                messageWidgets.add(messageWidget);
+              }
+            }
+
+            return ListView(
+              reverse: true,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              children: messageWidgets,
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
+    );
+  }
+}

@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:whisper/views/signup_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
+
+import '../viewModel/forget_password_screen.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -12,39 +13,23 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
-  String? email;
   final emailController = TextEditingController();
-  final _formRecoveryKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  final viewModel = ForgetPasswordViewModel();
 
-  reset() async {
-    try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email!);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.orangeAccent,
-          content: Text(
-            'Password Reset Email has been sent!',
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
-        ),
-      );
-    }
-    on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.orangeAccent,
-            content: Text(
-              'No user found for that Email',
-              style: TextStyle(
-                fontSize: 18.0,
-              ),
-            ),
-          ),
-        );
-      }
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+
+  void _submit() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final result = await viewModel.resetPassword(emailController.text.trim());
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: result.success ? Colors.orangeAccent : Colors.redAccent,
+        content: Text(result.message, style: const TextStyle(fontSize: 18)),
+      ));
     }
   }
 
@@ -53,133 +38,78 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     return BGScaffold(
       child: Column(
         children: [
-          const Expanded(
-            child: SizedBox(
-              height: 10,
-            ),
-          ),
+          const Expanded(child: SizedBox(height: 10)),
           Expanded(
             flex: 7,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0),
+              padding: const EdgeInsets.fromLTRB(25, 50, 25, 20),
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40.0),
-                  topRight: Radius.circular(40.0),
-                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
               ),
               child: SingleChildScrollView(
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text(
                         'Password Recovery',
                         style: TextStyle(
-                          fontSize: 30.0,
+                          fontSize: 30,
                           fontWeight: FontWeight.w900,
                           color: Colors.blueAccent,
                         ),
                       ),
-                      const SizedBox(
-                        height: 40.0,
-                      ),
+                      const SizedBox(height: 40),
                       CustomTextField(
                         label: 'Recovery Email',
                         hintText: 'Enter Recovery Email',
                         obscureText: false,
+                        controller: emailController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Email';
                           }
                           return null;
                         },
-                        controller: emailController,
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 25),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            if (_formRecoveryKey.currentState!.validate()) {
-                              setState(() {
-                                email = emailController.text;
-                              });
-                            }
-                            reset();
-                          },
+                          onPressed: _submit,
                           child: const Text('Send Code'),
                         ),
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      const SizedBox(height: 25),
+                      const Row(
                         children: [
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.7,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
+                          Expanded(child: Divider(thickness: 0.7, color: Colors.grey)),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text('OR', style: TextStyle(color: Colors.black45)),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 0,
-                              horizontal: 10,
-                            ),
-                            child: Text(
-                              'OR',
-                              style: TextStyle(
-                                color: Colors.black45,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.7,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                          ),
+                          Expanded(child: Divider(thickness: 0.7, color: Colors.grey)),
                         ],
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            'Don\'t have an Account? ',
-                            style: TextStyle(
-                              color: Colors.black45,
-                            ),
-                          ),
+                          const Text('Don\'t have an Account?', style: TextStyle(color: Colors.black45)),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (e) => const SignUpScreen(),
-                                ),
-                              );
+                              Navigator.push(context, MaterialPageRoute(builder: (_) => const SignUpScreen()));
                             },
                             child: const Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent,
-                              ),
+                              ' Sign Up',
+                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
+                      const SizedBox(height: 15),
                     ],
                   ),
                 ),

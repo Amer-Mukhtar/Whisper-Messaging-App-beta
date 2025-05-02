@@ -1,16 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:whisper/views/forget_password_screen.dart';
 import 'package:whisper/views/signup_screen.dart';
+import 'package:whisper/views/chat_list_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
-import 'forget_Password_screen.dart';
-import 'home_chat_screen.dart';
+import '../viewModel/signin_screen.dart';
 
-class SignInScreen extends StatefulWidget
-{
+class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
   @override
@@ -18,77 +15,43 @@ class SignInScreen extends StatefulWidget
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  String? sender;
-  String? email;
-  String? password;
-  bool rememberPassword = true;
   final _formSignInKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool rememberPassword = true;
+  final _viewModel = SignInViewModel();
 
-  Future<void> login() async {
-    if (password != null && emailController.text != "") {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email!, password: password!);
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .get();
+  void _onSignIn() async {
+    if (_formSignInKey.currentState!.validate()) {
+      final result = await _viewModel.signIn(
+        emailController.text.trim(),
+        passwordController.text,
+      );
 
-
-        if (userDoc.exists) {
-          String email=userDoc.get('email');
-          String fullName = userDoc.get('fullName');
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => home_screen(currentuser: fullName,email: email,),
+      if (result.errorMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.errorMessage!),
+            backgroundColor: Colors.orangeAccent,
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ChatList(
+              currentuser: result.fullName!,
+              email: result.email!,
             ),
-          );
-        }
-        else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.redAccent,
-              content: Text(
-                'User data not found.',
-                style: TextStyle(fontSize: 18.0),
-              ),
-            ),
-          );
-        }
-      }
-      on FirebaseAuthException catch (e)
-      {
-        if (e.code == 'user-not-found')
-        {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.orangeAccent,
-              content: Text(
-                'No User Found for that Email',
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-              ),
-            ),
-          );
-        } else if (e.code == 'wrong-password') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.orangeAccent,
-              content: Text(
-                'Wrong Password Provided!',
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-              ),
-            ),
-          );
-        }
+          ),
+        );
       }
     }
   }
@@ -98,17 +61,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return BGScaffold(
       child: Column(
         children: [
-          /*Container(//sign in bypass button uses default account: test_1
-            child: ElevatedButton(
-              child: Text('next'),
-              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => home(currentuser: 'Test_1',email: 'test_1@gmail.com',)),);},
-            ),
-          ),*/
-          const Expanded(
-            child: SizedBox(
-              height: 10,
-            ),
-          ),
+          const Expanded(child: SizedBox(height: 10)),
           Expanded(
             flex: 7,
             child: Container(
@@ -134,41 +87,28 @@ class _SignInScreenState extends State<SignInScreen> {
                           color: Colors.blueAccent,
                         ),
                       ),
-                      const SizedBox(
-                        height: 40.0,
-                      ),
+                      const SizedBox(height: 40),
                       CustomTextField(
                         label: 'Email',
                         hintText: 'Enter Email',
                         keyboardType: TextInputType.emailAddress,
                         obscureText: false,
-                        validator: (value) {
-                          email = value;
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Email';
-                          }
-                          return null;
-                        },
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Please enter Email'
+                            : null,
                         controller: emailController,
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 25),
                       CustomTextField(
                         label: 'Password',
                         hintText: 'Enter Password',
                         obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Password';
-                          }
-                          return null;
-                        },
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Please enter Password'
+                            : null,
                         controller: passwordController,
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -176,19 +116,13 @@ class _SignInScreenState extends State<SignInScreen> {
                             children: [
                               Checkbox(
                                 value: rememberPassword,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    rememberPassword = value!;
-                                  });
-                                },
+                                onChanged: (val) => setState(
+                                      () => rememberPassword = val ?? false,
+                                ),
                                 activeColor: Colors.blueAccent,
                               ),
-                              const Text(
-                                'Remember Me',
-                                style: TextStyle(
-                                  color: Colors.black45,
-                                ),
-                              ),
+                              const Text('Remember Me',
+                                  style: TextStyle(color: Colors.black45)),
                             ],
                           ),
                           GestureDetector(
@@ -203,66 +137,34 @@ class _SignInScreenState extends State<SignInScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (e) => const ForgetPasswordScreen(),
+                                  builder: (_) => const ForgetPasswordScreen(),
                                 ),
                               );
                             },
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 25),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formSignInKey.currentState!.validate()) {
-                              setState(() {
-                                email = emailController.text;
-                                password = passwordController.text;
-                              });
-                            }
-                            await login();
-                          },
+                          onPressed: _onSignIn,
                           child: const Text('Sign In'),
                         ),
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.7,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                          ),
+                          Expanded(child: Divider(thickness: 0.7, color: Colors.grey.withOpacity(0.5))),
                           const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 0,
-                              horizontal: 10,
-                            ),
-                            child: Text(
-                              'Sign In with',
-                              style: TextStyle(
-                                color: Colors.black45,
-                              ),
-                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text('Sign In with', style: TextStyle(color: Colors.black45)),
                           ),
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.7,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                          ),
+                          Expanded(child: Divider(thickness: 0.7, color: Colors.grey.withOpacity(0.5))),
                         ],
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 25),
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -272,40 +174,26 @@ class _SignInScreenState extends State<SignInScreen> {
                           Icon(FontAwesomeIcons.apple),
                         ],
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            'Don\'t have an Account? ',
-                            style: TextStyle(
-                              color: Colors.black45,
-                            ),
-                          ),
+                          const Text('Don\'t have an Account? ', style: TextStyle(color: Colors.black45)),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (e) => const SignUpScreen(),
+                                  builder: (_) => const SignUpScreen(),
                                 ),
                               );
                             },
-                            child: const Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent,
-                              ),
-                            ),
+                            child: const Text('Sign Up',
+                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent)),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
+                      const SizedBox(height: 15),
                     ],
                   ),
                 ),
