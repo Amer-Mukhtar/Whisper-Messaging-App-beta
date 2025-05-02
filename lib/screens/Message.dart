@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,7 +28,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
 
   late final String chatId;
-
+  bool isUploading = false;
   @override
   void initState() {
     super.initState();
@@ -104,25 +103,50 @@ class _MessageScreenState extends State<MessageScreen> {
               ),
             ),
           ),
-          FloatingActionButton.small(heroTag: "sendImage",onPressed: () async {
-            File? imageFile = await pickImage();
-            if (imageFile != null) {
-              String imageUrl = await uploadImage(imageFile, chatId);
-              messagetextController.clear();
-              await _firestore.collection('chat_room').add({
-                'message': message,
-                'imageUrl': imageUrl,
-                'type': 'image',
-                'sender': widget.currentuser,
-                'receiver': widget.receiver,
-                'timestamp': FieldValue.serverTimestamp(),
+          FloatingActionButton.small(
+            heroTag: "sendImage",
+            onPressed: isUploading ? null : () async {
+              setState(() {
+                isUploading = true;
               });
-            }
-          }
-            ,
-            backgroundColor: Colors.blue,child: Icon(Icons.attach_file, color: Colors.white, size: 20),
 
+              try {
+                File? imageFile = await pickImage();
+                if (imageFile != null)
+                {
+                  String imageUrl = await uploadImage(imageFile, chatId);
+                  messagetextController.clear();
+                  await _firestore.collection('chat_room').add({
+                    'message': message,
+                    'imageUrl': imageUrl,
+                    'type': 'image',
+                    'sender': widget.currentuser,
+                    'receiver': widget.receiver,
+                    'timestamp': FieldValue.serverTimestamp(),
+                  });
+                }
+              } catch (e) {
+                // Handle errors gracefully
+                print("Upload failed: $e");
+              } finally {
+                setState(() {
+                  isUploading = false;
+                });
+              }
+            },
+            backgroundColor: Colors.blue,
+            child: isUploading
+                ? const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                strokeWidth: 2,
+              ),
+            )
+                : const Icon(Icons.attach_file, color: Colors.white, size: 20),
           ),
+
           Container(
             margin: const EdgeInsets.only(right: 10),
             child: FloatingActionButton.small(heroTag:"sendMessage" ,
@@ -147,6 +171,8 @@ class _MessageScreenState extends State<MessageScreen> {
     );
   }
 }
+
+
 
 class MessageBubble extends StatelessWidget {
   final String sender;
@@ -261,7 +287,7 @@ Future<String> uploadImage(File imageFile, String chatId) async {
 class ZoomableImageScreen extends StatelessWidget {
   final String imageUrl;
 
-  const ZoomableImageScreen({Key? key, required this.imageUrl}) : super(key: key);
+  const ZoomableImageScreen({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -276,12 +302,15 @@ class ZoomableImageScreen extends StatelessWidget {
         height: 100,
         width: 100,
         fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Text('Image not available');
+        },
         loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress){
           if(loadingProgress==null)
             {
               return child;
             }
-          return Container(
+          return SizedBox(
             height: 100,
             width: 100,
             child: CircularProgressIndicator(
