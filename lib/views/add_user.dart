@@ -125,7 +125,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
                               );
                               if (userAlreadyAdded )//
                               {
-
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text('User with this name has already been added.')),
                                 );
