@@ -38,10 +38,10 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   firebase_core: ^2.31.1
   firebase_auth: ^4.19.6
-  google_sign_in: ^6.2.1
+  google_sign_in: ^6.3.0
   cloud_firestore: ^4.10.2
   image_picker: ^1.1.2
-  permission_handler: ^10.0.0
+  permission_handler: ^12.0.0+1
   firebase_storage: ^11.7.7
 
 

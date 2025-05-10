@@ -14,7 +14,29 @@ class ChatViewModel {
         ? '$currentUser-$receiver'
         : '$receiver-$currentUser';
   }
+  Future<void> deleteMessage({
+    required String sender,
+    required String receiver,
+    required String messageText,
+  }) async {
+    try {
+      final querySnapshot = await _firestore.collection('chat_room')
+          .where('sender', isEqualTo: sender)
+          .where('receiver', isEqualTo: receiver)
+          .where('message', isEqualTo: messageText)
+          .limit(1)
+          .get();
 
+      if (querySnapshot.docs.isNotEmpty) {
+        await querySnapshot.docs.first.reference.delete();
+        print('Message deleted successfully.');
+      } else {
+        print('Message not found.');
+      }
+    } catch (e) {
+      print('Error deleting message: $e');
+    }
+  }
   Future<void> sendMessage(String sender, String receiver) async {
     if (message.isEmpty) return;
     await _firestore.collection('chat_room').add({
@@ -61,3 +83,4 @@ class ChatViewModel {
     return await ref.getDownloadURL();
   }
 }
+
