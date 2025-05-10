@@ -29,8 +29,11 @@ class MessageOptionsSheet extends StatelessWidget {
             leading: Icon(Icons.edit),
             title: Text('Edit'),
             onTap: () {
-
-              Navigator.pop(context);
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => renameMessage(chatViewModel,sender,reciever,message,context),
+              );
 
             },
           ),
@@ -46,4 +49,45 @@ class MessageOptionsSheet extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget renameMessage(ChatViewModel chatViewModel, String sender, String receiver, String msg, BuildContext context) {
+  TextEditingController _controller = TextEditingController();
+_controller.text=msg;
+  return Padding(
+    padding: EdgeInsets.only(
+      bottom: MediaQuery.of(context).viewInsets.bottom,
+      left: 16,
+      right: 16,
+      top: 16,
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _controller,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: 'Enter new message',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () {
+                chatViewModel.editMessage(msg, _controller.text, sender, receiver);
+                Navigator.pop(context);
+              },
+              child: Text('Rename'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+      ],
+    ),
+  );
 }

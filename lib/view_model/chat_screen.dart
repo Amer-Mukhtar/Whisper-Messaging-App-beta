@@ -37,6 +37,34 @@ class ChatViewModel {
       print('Error deleting message: $e');
     }
   }
+
+  Future<void> editMessage(
+      String oldMessage,
+      String newMessage,
+      String sender,
+      String receiver
+      ) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('chat_room')
+          .where('sender', isEqualTo: sender)
+          .where('receiver', isEqualTo: receiver)
+          .where('message', isEqualTo: oldMessage)
+          .get();
+
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.update({
+          'message': newMessage,
+        });
+      }
+
+      print('Message(s) updated successfully');
+    } catch (e) {
+      print('Error updating message: $e');
+    }
+  }
+
+
   Future<void> sendMessage(String sender, String receiver) async {
     if (message.isEmpty) return;
     await _firestore.collection('chat_room').add({
