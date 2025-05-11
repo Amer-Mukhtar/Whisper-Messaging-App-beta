@@ -25,6 +25,9 @@ if (flutterVersionName == null) {
 }
 
 android {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     namespace = "com.example.whisper"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion

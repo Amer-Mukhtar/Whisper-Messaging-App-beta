@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:whisper/widgets/zommable_image.dart';
 
+import '../view_model/chat_screen.dart';
+import 'message_options_sheet.dart';
+
 class MessageBubble extends StatelessWidget {
   final String sender;
   final String message;
+  final String reciever;
   final bool isMe;
   final String? imageUrl;
   final String? type;
+  final ChatViewModel chatViewModel;
 
   const MessageBubble({
     super.key,
@@ -14,7 +19,7 @@ class MessageBubble extends StatelessWidget {
     required this.message,
     required this.isMe,
     this.imageUrl,
-    this.type,
+    this.type, required this.chatViewModel, required this.reciever,
   });
 
   @override
@@ -33,7 +38,21 @@ class MessageBubble extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: isImage
                 ? ZoomableImageScreen(imageUrl: imageUrl!)
-                : Text(message, style: const TextStyle(fontSize: 15)),
+                : GestureDetector(onLongPress: (){
+                  if(isMe)
+                    {
+                      showModalBottomSheet(context: context, builder: (context)=>
+                      MessageOptionsSheet(
+                        onDelete: (){
+
+                        },
+                        onEdit: (){
+
+                        }, chatViewModel: chatViewModel, sender: sender, message: message, reciever: reciever,
+                      )
+                      );
+                    }
+            } ,child: Text(message, style: const TextStyle(fontSize: 15))),
           ),
         ),
       ],

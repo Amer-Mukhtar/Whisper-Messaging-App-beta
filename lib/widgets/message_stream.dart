@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:whisper/widgets/constant.dart';
 import 'package:whisper/widgets/message_bubbles.dart';
 
+import '../view_model/chat_screen.dart';
+
 final _firestore = FirebaseFirestore.instance;
 
 class MessageStream extends StatelessWidget {
   final String currentUser;
   final String receiver;
+  final ChatViewModel chatViewModel;
 
   const MessageStream({
     super.key,
     required this.currentUser,
-    required this.receiver,
+    required this.receiver, required this.chatViewModel,
   });
 
   @override
@@ -45,7 +48,7 @@ class MessageStream extends StatelessWidget {
                   message: messageText,
                   isMe: currentUser == messageSender,
                   imageUrl: imageUrl,
-                  type: type,
+                  type: type, chatViewModel: chatViewModel, reciever:messageReceiver ,
                 );
                 messageWidgets.add(messageWidget);
               }

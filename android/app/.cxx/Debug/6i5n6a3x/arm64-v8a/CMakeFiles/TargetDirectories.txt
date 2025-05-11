@@ -1,0 +1,2 @@
+D:/GitHub/Whisper/android/app/.cxx/Debug/6i5n6a3x/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/GitHub/Whisper/android/app/.cxx/Debug/6i5n6a3x/arm64-v8a/CMakeFiles/rebuild_cache.dir

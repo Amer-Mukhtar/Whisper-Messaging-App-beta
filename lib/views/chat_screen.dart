@@ -40,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: MessageStream(
                 currentUser: widget.currentuser,
-                receiver: widget.receiver,
+                receiver: widget.receiver, chatViewModel: viewModel,
               ),
             ),
             _buildMessageInput(),
