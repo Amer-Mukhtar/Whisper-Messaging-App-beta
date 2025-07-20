@@ -5,7 +5,7 @@ import 'package:whisper/views/profile_screen.dart';
 import 'package:whisper/widgets/Conversation.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/constant.dart';
-import '../view_model/chat_list_screen.dart';
+import '../controller/chat_list_screen.dart';
 import 'add_user.dart';
 import 'chat_screen.dart';
 
@@ -32,7 +32,7 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  final _viewModel = ChatListViewModel();
+  final chat_list_controller = ChatListController();
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     return SizedBox(
       height: 100,
       child: StreamBuilder<QuerySnapshot>(
-        stream: _viewModel.fetchUsersStream(),
+        stream: chat_list_controller.fetchUsersStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
           if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
@@ -188,7 +188,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           borderRadius: BorderRadius.only(topRight: Radius.circular(50), topLeft: Radius.circular(50)),
         ),
         child: StreamBuilder<QuerySnapshot>(
-          stream: _viewModel.fetchUsersStream(),
+          stream: chat_list_controller.fetchUsersStream(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
             if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));

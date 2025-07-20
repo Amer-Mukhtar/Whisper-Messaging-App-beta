@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChatListViewModel {
+class ChatListController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Stream<QuerySnapshot> fetchUsersStream() {

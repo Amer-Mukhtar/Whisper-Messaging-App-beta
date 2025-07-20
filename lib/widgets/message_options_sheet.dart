@@ -1,14 +1,12 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../view_model/chat_screen.dart';
+import '../controller/chat_screen.dart';
 
 class MessageOptionsSheet extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
-  final ChatViewModel chatViewModel;
+  final ChatController chatViewModel;
   final String sender;
   final String message;
   final String reciever;
@@ -51,7 +49,7 @@ class MessageOptionsSheet extends StatelessWidget {
   }
 }
 
-Widget renameMessage(ChatViewModel chatViewModel, String sender, String receiver, String msg, BuildContext context) {
+Widget renameMessage(ChatController chatViewModel, String sender, String receiver, String msg, BuildContext context) {
   TextEditingController _controller = TextEditingController();
 _controller.text=msg;
   return Padding(

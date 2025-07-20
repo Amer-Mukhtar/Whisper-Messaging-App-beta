@@ -5,7 +5,7 @@ import 'package:whisper/views/signup_screen.dart';
 import 'package:whisper/views/chat_list_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
-import '../view_model/signin_screen.dart';
+import '../controller/signin_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -19,7 +19,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool rememberPassword = true;
-  final _viewModel = SignInViewModel();
+  final signin_controller = SignInController();
 
   @override
   void dispose() {
@@ -30,7 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void _onSignIn() async {
     if (_formSignInKey.currentState!.validate()) {
-      final result = await _viewModel.signIn(
+      final result = await signin_controller.signIn(
         emailController.text.trim(),
         passwordController.text,
       );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whisper/widgets/zommable_image.dart';
-
-import '../view_model/chat_screen.dart';
+import '../controller/chat_screen.dart';
 import 'message_options_sheet.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -11,7 +10,7 @@ class MessageBubble extends StatelessWidget {
   final bool isMe;
   final String? imageUrl;
   final String? type;
-  final ChatViewModel chatViewModel;
+  final ChatController chatViewModel;
 
   const MessageBubble({
     super.key,

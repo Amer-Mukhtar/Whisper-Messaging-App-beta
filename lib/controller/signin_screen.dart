@@ -9,7 +9,7 @@ class SignInResult {
   SignInResult({this.errorMessage, this.fullName, this.email});
 }
 
-class SignInViewModel {
+class SignInController {
   Future<SignInResult> signIn(String email, String password) async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance

@@ -2,15 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:whisper/widgets/constant.dart';
 import 'package:whisper/widgets/message_bubbles.dart';
-
-import '../view_model/chat_screen.dart';
+import '../controller/chat_screen.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
 class MessageStream extends StatelessWidget {
   final String currentUser;
   final String receiver;
-  final ChatViewModel chatViewModel;
+  final ChatController chatViewModel;
 
   const MessageStream({
     super.key,
