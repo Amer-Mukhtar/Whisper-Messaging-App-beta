@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:whisper/views/signup_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
-import '../view_model/forget_password_screen.dart';
+import '../controller/forget_password_screen.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -14,7 +14,7 @@ class ForgetPasswordScreen extends StatefulWidget {
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final viewModel = ForgetPasswordViewModel();
+  final forgert_password_controller = ForgetPasswordController();
 
   @override
   void dispose() {
@@ -24,7 +24,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
   void _submit() async {
     if (_formKey.currentState?.validate() ?? false) {
-      final result = await viewModel.resetPassword(emailController.text.trim());
+      final result = await forgert_password_controller.resetPassword(emailController.text.trim());
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: result.success ? Colors.orangeAccent : Colors.redAccent,
         content: Text(result.message, style: const TextStyle(fontSize: 18)),

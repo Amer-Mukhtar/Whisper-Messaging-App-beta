@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class ForgetPasswordViewModel {
+class ForgetPasswordController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<PasswordResetResult> resetPassword(String email) async {

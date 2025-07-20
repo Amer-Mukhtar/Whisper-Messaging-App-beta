@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../view_model/chat_screen.dart';
+import '../controller/chat_screen.dart';
 import '../widgets/constant.dart';
 import '../widgets/message_stream.dart';
 
@@ -21,13 +21,13 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final ChatViewModel viewModel = ChatViewModel();
+  final ChatController chat_controller = ChatController();
   final TextEditingController messagetextController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    viewModel.init(widget.currentuser, widget.receiver);
+    chat_controller.init(widget.currentuser, widget.receiver);
   }
 
   @override
@@ -40,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: MessageStream(
                 currentUser: widget.currentuser,
-                receiver: widget.receiver, chatViewModel: viewModel,
+                receiver: widget.receiver, chatViewModel: chat_controller,
               ),
             ),
             _buildMessageInput(),
@@ -94,7 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
             child: TextField(
               style: const TextStyle(color: Colors.white),
               controller: messagetextController,
-              onChanged: (value) => viewModel.message = value,
+              onChanged: (value) => chat_controller.message = value,
               decoration: const InputDecoration(
                 hintText: "Write message...",
                 hintStyle: TextStyle(color: Colors.white54),
@@ -104,12 +104,12 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           FloatingActionButton.small(
             heroTag: "sendImage",
-            onPressed: viewModel.isUploading ? null : () async {
-              await viewModel.sendImage(widget.currentuser, widget.receiver);
+            onPressed: chat_controller.isUploading ? null : () async {
+              await chat_controller.sendImage(widget.currentuser, widget.receiver);
               setState(() {});
             },
             backgroundColor: Colors.blue,
-            child: viewModel.isUploading
+            child: chat_controller.isUploading
                 ? const SizedBox(
               height: 20,
               width: 20,
@@ -125,7 +125,7 @@ class _ChatScreenState extends State<ChatScreen> {
             child: FloatingActionButton.small(
               heroTag: "sendMessage",
               onPressed: () async {
-                await viewModel.sendMessage(widget.currentuser, widget.receiver);
+                await chat_controller.sendMessage(widget.currentuser, widget.receiver);
                 messagetextController.clear();
                 setState(() {});
               },

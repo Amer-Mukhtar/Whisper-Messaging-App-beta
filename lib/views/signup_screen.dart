@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whisper/views/signin_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
-import '../view_model/signup_screen.dart';
+import '../controller/signup_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -18,7 +18,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool agreePersonalData = true;
-  final _viewModel = SignUpViewModel();
+  final sign_up_controller = SignUpController();
 
   @override
   void dispose() {
@@ -34,7 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final email = emailController.text.trim();
       final password = passwordController.text;
 
-      final result = await _viewModel.register(
+      final result = await sign_up_controller.register(
         fullName: fullName,
         email: email,
         password: password,
