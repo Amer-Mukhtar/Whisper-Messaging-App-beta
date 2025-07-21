@@ -14,32 +14,36 @@ class MessageOptionsSheet extends StatelessWidget {
   const MessageOptionsSheet({
     super.key,
     required this.onEdit,
-    required this.onDelete, required this.chatController, required this.sender, required this.message, required this.reciever,
+    required this.onDelete,
+    required this.chatController,
+    required this.sender,
+    required this.message,
+    required this.reciever,
   });
 
   @override
-
   Widget build(BuildContext context) {
     return SafeArea(
       child: Wrap(
         children: [
           ListTile(
-            leading: Icon(Icons.edit),
-            title: Text('Edit'),
+            leading: const Icon(Icons.edit),
+            title: const Text('Edit'),
             onTap: () {
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
-                builder: (context) => renameMessage(chatController,sender,reciever,message,context),
+                builder: (context) => renameMessage(
+                    chatController, sender, reciever, message, context),
               );
-
             },
           ),
           ListTile(
-            leading: Icon(Icons.delete),
-            title: Text('Delete'),
+            leading: const Icon(Icons.delete),
+            title: const Text('Delete'),
             onTap: () {
-              chatController.deleteMessage(sender: sender, receiver: reciever, messageText: message);
+              chatController.deleteMessage(
+                  sender: sender, receiver: reciever, messageText: message);
               Navigator.pop(context);
             },
           ),
@@ -49,9 +53,10 @@ class MessageOptionsSheet extends StatelessWidget {
   }
 }
 
-Widget renameMessage(ChatController chatViewModel, String sender, String receiver, String msg, BuildContext context) {
-  TextEditingController _controller = TextEditingController();
-_controller.text=msg;
+Widget renameMessage(ChatController chatViewModel, String sender,
+    String receiver, String msg, BuildContext context) {
+  TextEditingController controller = TextEditingController();
+  controller.text = msg;
   return Padding(
     padding: EdgeInsets.only(
       bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -66,9 +71,9 @@ _controller.text=msg;
           children: [
             Expanded(
               child: TextField(
-                controller: _controller,
+                controller: controller,
                 autofocus: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Enter new message',
                   border: OutlineInputBorder(),
                 ),
@@ -77,10 +82,11 @@ _controller.text=msg;
             const SizedBox(width: 8),
             ElevatedButton(
               onPressed: () {
-                chatViewModel.editMessage(msg, _controller.text, sender, receiver);
+                chatViewModel.editMessage(
+                    msg, controller.text, sender, receiver);
                 Navigator.pop(context);
               },
-              child: Text('Rename'),
+              child: const Text('Rename'),
             ),
           ],
         ),

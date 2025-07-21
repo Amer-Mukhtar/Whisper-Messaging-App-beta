@@ -51,7 +51,6 @@ class WelcomeScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-
             flex: 2,
             child: Align(
               alignment: Alignment.topCenter,
