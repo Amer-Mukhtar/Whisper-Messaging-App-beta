@@ -47,8 +47,7 @@ class _SignInScreenState extends State<SignInScreen> {
           context,
           MaterialPageRoute(
             builder: (_) => ChatListScreen(
-              currentuser: result.fullName!,
-              email: result.email!,
+              currentuser: result.user!,
             ),
           ),
         );
@@ -117,7 +116,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               Checkbox(
                                 value: rememberPassword,
                                 onChanged: (val) => setState(
-                                      () => rememberPassword = val ?? false,
+                                  () => rememberPassword = val ?? false,
                                 ),
                                 activeColor: Colors.blueAccent,
                               ),
@@ -156,12 +155,19 @@ class _SignInScreenState extends State<SignInScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(child: Divider(thickness: 0.7, color: Colors.grey.withOpacity(0.5))),
+                          Expanded(
+                              child: Divider(
+                                  thickness: 0.7,
+                                  color: Colors.grey.withOpacity(0.5))),
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text('Sign In with', style: TextStyle(color: Colors.black45)),
+                            child: Text('Sign In with',
+                                style: TextStyle(color: Colors.black45)),
                           ),
-                          Expanded(child: Divider(thickness: 0.7, color: Colors.grey.withOpacity(0.5))),
+                          Expanded(
+                              child: Divider(
+                                  thickness: 0.7,
+                                  color: Colors.grey.withOpacity(0.5))),
                         ],
                       ),
                       const SizedBox(height: 25),
@@ -178,7 +184,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Don\'t have an Account? ', style: TextStyle(color: Colors.black45)),
+                          const Text('Don\'t have an Account? ',
+                              style: TextStyle(color: Colors.black45)),
                           GestureDetector(
                             onTap: () {
                               Navigator.pushReplacement(
@@ -189,7 +196,9 @@ class _SignInScreenState extends State<SignInScreen> {
                               );
                             },
                             child: const Text('Sign Up',
-                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent)),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blueAccent)),
                           ),
                         ],
                       ),

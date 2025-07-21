@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:whisper/models/user_model.dart';
 import 'package:whisper/views/profile_screen.dart';
 import 'package:whisper/widgets/Conversation.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
@@ -22,10 +23,9 @@ final List<String> defaultUserImages = [
 ];
 
 class ChatListScreen extends StatefulWidget {
-  final String email;
-  final String currentuser;
+  final UserModel currentuser;
 
-  const ChatListScreen({super.key, required this.currentuser, required this.email});
+  const ChatListScreen({super.key, required this.currentuser});
 
   @override
   State<ChatListScreen> createState() => _ChatListScreenState();
@@ -52,8 +52,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => AddUserScreen(
-                    currentUser: widget.currentuser,
-                    currentEmail: widget.email,
+                    currentUser: widget.currentuser.fullName,
+                    currentEmail: widget.currentuser.email,
                   ),
                 ),
               );
@@ -80,7 +80,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
       children: [
         Container(
           margin: const EdgeInsets.only(left: 16),
-          child: const Text('Whisper', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35, color: Colors.white)),
+          child: const Text('Whisper',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 35,
+                  color: Colors.white)),
         ),
         Container(
           margin: const EdgeInsets.only(right: 16, bottom: 10),
@@ -89,7 +93,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => ProfileScreen(currentuser: widget.currentuser, email: widget.email),
+                  builder: (_) =>
+                      ProfileScreen(currentuser: widget.currentuser),
                 ),
               );
             },
@@ -108,9 +113,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
       child: StreamBuilder<QuerySnapshot>(
         stream: chat_list_controller.fetchUsersStream(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) return const Center(child: Text('No users found'));
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return const Center(child: CircularProgressIndicator());
+          if (snapshot.hasError)
+            return Center(child: Text('Error: ${snapshot.error}'));
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty)
+            return const Center(child: Text('No users found'));
 
           final users = snapshot.data!.docs;
           final List<Widget> userWidgets = [];
@@ -120,7 +128,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             final currentUser = userData['CurrentUser'] as String?;
             final addedUser = userData['AddedUser'] as String?;
 
-            if (currentUser == widget.currentuser) {
+            if (currentUser == widget.currentuser.fullName) {
               userWidgets.add(
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15, 10, 5, 0),
@@ -131,8 +139,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         MaterialPageRoute(
                           builder: (_) => ChatScreen(
                             receiver: addedUser ?? 'No Name',
-                            currentuser: widget.currentuser,
-                            imageurl: defaultUserImages[i % defaultUserImages.length],
+                            currentuser: widget.currentuser.fullName,
+                            imageurl:
+                                defaultUserImages[i % defaultUserImages.length],
                           ),
                         ),
                       );
@@ -141,11 +150,15 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       children: [
                         CircleAvatar(
                           radius: 30,
-                          backgroundImage: AssetImage(defaultUserImages[i % defaultUserImages.length]),
+                          backgroundImage: AssetImage(
+                              defaultUserImages[i % defaultUserImages.length]),
                         ),
                         Text(
                           addedUser ?? 'No Name',
-                          style: const TextStyle(fontSize: 15, color: ChatPageContactNameTextColor, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 15,
+                              color: ChatPageContactNameTextColor,
+                              fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -162,7 +175,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 child: Column(
                   children: [
                     CircleAvatar(radius: 30),
-                    Text('No User Added', style: TextStyle(fontSize: 15, color: Colors.white)),
+                    Text('No User Added',
+                        style: TextStyle(fontSize: 15, color: Colors.white)),
                   ],
                 ),
               ),
@@ -185,13 +199,16 @@ class _ChatListScreenState extends State<ChatListScreen> {
         margin: const EdgeInsets.only(top: 10),
         decoration: const BoxDecoration(
           color: ListBGColor,
-          borderRadius: BorderRadius.only(topRight: Radius.circular(50), topLeft: Radius.circular(50)),
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(50), topLeft: Radius.circular(50)),
         ),
         child: StreamBuilder<QuerySnapshot>(
           stream: chat_list_controller.fetchUsersStream(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-            if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return const Center(child: CircularProgressIndicator());
+            if (snapshot.hasError)
+              return Center(child: Text('Error: ${snapshot.error}'));
 
             final users = snapshot.data?.docs ?? [];
             final userWidgets = <Widget>[];
@@ -201,12 +218,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
               final currentUser = userData['CurrentUser'] as String?;
               final addedUser = userData['AddedUser'] as String?;
 
-              if (currentUser == widget.currentuser) {
+              if (currentUser == widget.currentuser.fullName) {
                 userWidgets.add(
                   ConversationList(
                     name: addedUser ?? 'No Name',
                     imageUrl: defaultUserImages[i % defaultUserImages.length],
-                    currentuser: widget.currentuser,
+                    currentuser: widget.currentuser.fullName,
                   ),
                 );
               }
@@ -217,7 +234,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 ConversationList(
                   name: 'No user Added',
                   imageUrl: '',
-                  currentuser: widget.currentuser,
+                  currentuser: widget.currentuser.fullName,
                 ),
               );
             }

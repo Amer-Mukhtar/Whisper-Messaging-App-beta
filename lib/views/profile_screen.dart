@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:whisper/models/user_model.dart';
 import 'package:whisper/widgets/constant.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String currentuser;
-  final String email;
+  final UserModel currentuser;
   final String? image;
-  const ProfileScreen({super.key, required this.currentuser, required this.email,this.image});
+  const ProfileScreen({super.key, required this.currentuser, this.image});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
-class _ProfileScreenState extends State<ProfileScreen>
-{
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: profileIcon),
         backgroundColor: profileBackground,
-        title: const Text('Profile',style: TextStyle(color: profileText),),
+        title: const Text(
+          'Profile',
+          style: TextStyle(color: profileText),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -27,7 +30,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ..pop()
                 ..pop();
             },
-            icon: const Icon(Icons.logout,color: profileIcon,),
+            icon: const Icon(
+              Icons.logout,
+              color: profileIcon,
+            ),
           ),
           const SizedBox(width: 10),
         ],
@@ -39,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             const SizedBox(height: 40),
             const CircleAvatar(
               radius: 130,
-               backgroundImage: AssetImage('assets/images/profile3.png'),
+              backgroundImage: AssetImage('assets/images/profile3.png'),
             ),
             const SizedBox(height: 40),
             Container(
@@ -47,7 +53,11 @@ class _ProfileScreenState extends State<ProfileScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Icon(CupertinoIcons.profile_circled, size: 40,color: profileIcon,),
+                  const Icon(
+                    CupertinoIcons.profile_circled,
+                    size: 40,
+                    color: profileIcon,
+                  ),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +66,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                         "Full Name",
                         style: TextStyle(color: Colors.white70),
                       ),
-                      Text(widget.currentuser,style: const TextStyle(color: profileText),),
+                      Text(
+                        widget.currentuser.fullName,
+                        style: const TextStyle(color: profileText),
+                      ),
                     ],
                   ),
                 ],
@@ -68,7 +81,11 @@ class _ProfileScreenState extends State<ProfileScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Icon(Icons.email, size: 40,color: profileIcon,),
+                  const Icon(
+                    Icons.email,
+                    size: 40,
+                    color: profileIcon,
+                  ),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         style: TextStyle(color: profileText),
                       ),
                       Text(
-                        widget.email,
+                        widget.currentuser.email,
                         style: const TextStyle(color: profileText),
                       ),
                     ],

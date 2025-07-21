@@ -1,41 +1,49 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:whisper/models/user_model.dart';
 
 class SignInResult {
   final String? errorMessage;
-  final String? fullName;
-  final String? email;
+  final UserModel? user;
 
-  SignInResult({this.errorMessage, this.fullName, this.email});
+  SignInResult({this.errorMessage, this.user});
 }
 
 class SignInController {
   Future<SignInResult> signIn(String email, String password) async {
     try {
+      // Sign in using Firebase Auth
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .get();
+      final String uid = userCredential.user!.uid;
 
-      if (userDoc.exists) {
+      // Fetch Firestore user document using UID
+      DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+      if (!userDoc.exists) {
         return SignInResult(
-          fullName: userDoc.get('fullName'),
-          email: userDoc.get('email'),
-        );
-      } else {
-        return SignInResult(errorMessage: 'User data not found.');
+            errorMessage: 'User record not found in Firestore.');
       }
+
+      // Build UserModel from Firestore data + docId
+      final userModel = UserModel.fromJson({
+        ...userDoc.data() as Map<String, dynamic>,
+        'docId': userDoc.id,
+      });
+
+      return SignInResult(user: userModel);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         return SignInResult(errorMessage: 'No user found for that email.');
       } else if (e.code == 'wrong-password') {
         return SignInResult(errorMessage: 'Wrong password provided.');
       } else {
-        return SignInResult(errorMessage: 'Something went wrong.');
+        return SignInResult(errorMessage: 'Authentication failed.');
       }
+    } catch (e) {
+      return SignInResult(errorMessage: 'An unexpected error occurred.');
     }
   }
 }
