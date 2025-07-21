@@ -10,7 +10,7 @@ class MessageBubble extends StatelessWidget {
   final bool isMe;
   final String? imageUrl;
   final String? type;
-  final ChatController chatViewModel;
+  final ChatController chatController;
 
   const MessageBubble({
     super.key,
@@ -18,7 +18,7 @@ class MessageBubble extends StatelessWidget {
     required this.message,
     required this.isMe,
     this.imageUrl,
-    this.type, required this.chatViewModel, required this.reciever,
+    this.type, required this.chatController, required this.reciever,
   });
 
   @override
@@ -47,7 +47,7 @@ class MessageBubble extends StatelessWidget {
                         },
                         onEdit: (){
 
-                        }, chatViewModel: chatViewModel, sender: sender, message: message, reciever: reciever,
+                        }, chatController: chatController, sender: sender, message: message, reciever: reciever,
                       )
                       );
                     }

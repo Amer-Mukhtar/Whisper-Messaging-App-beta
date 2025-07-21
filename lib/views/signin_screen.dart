@@ -19,7 +19,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool rememberPassword = true;
-  final signin_controller = SignInController();
+  final signInController = SignInController();
 
   @override
   void dispose() {
@@ -30,7 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void _onSignIn() async {
     if (_formSignInKey.currentState!.validate()) {
-      final result = await signin_controller.signIn(
+      final result = await signInController.signIn(
         emailController.text.trim(),
         passwordController.text,
       );

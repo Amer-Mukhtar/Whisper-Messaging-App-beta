@@ -6,7 +6,7 @@ import '../controller/chat_screen.dart';
 class MessageOptionsSheet extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
-  final ChatController chatViewModel;
+  final ChatController chatController;
   final String sender;
   final String message;
   final String reciever;
@@ -14,7 +14,7 @@ class MessageOptionsSheet extends StatelessWidget {
   const MessageOptionsSheet({
     super.key,
     required this.onEdit,
-    required this.onDelete, required this.chatViewModel, required this.sender, required this.message, required this.reciever,
+    required this.onDelete, required this.chatController, required this.sender, required this.message, required this.reciever,
   });
 
   @override
@@ -30,7 +30,7 @@ class MessageOptionsSheet extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
-                builder: (context) => renameMessage(chatViewModel,sender,reciever,message,context),
+                builder: (context) => renameMessage(chatController,sender,reciever,message,context),
               );
 
             },
@@ -39,7 +39,7 @@ class MessageOptionsSheet extends StatelessWidget {
             leading: Icon(Icons.delete),
             title: Text('Delete'),
             onTap: () {
-              chatViewModel.deleteMessage(sender: sender, receiver: reciever, messageText: message);
+              chatController.deleteMessage(sender: sender, receiver: reciever, messageText: message);
               Navigator.pop(context);
             },
           ),

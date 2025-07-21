@@ -14,7 +14,7 @@ class ForgetPasswordScreen extends StatefulWidget {
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final forgert_password_controller = ForgetPasswordController();
+  final forgertPasswordController = ForgetPasswordController();
 
   @override
   void dispose() {
@@ -24,7 +24,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
   void _submit() async {
     if (_formKey.currentState?.validate() ?? false) {
-      final result = await forgert_password_controller.resetPassword(emailController.text.trim());
+      final result = await forgertPasswordController.resetPassword(emailController.text.trim());
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: result.success ? Colors.orangeAccent : Colors.redAccent,
         content: Text(result.message, style: const TextStyle(fontSize: 18)),

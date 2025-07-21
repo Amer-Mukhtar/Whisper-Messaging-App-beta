@@ -18,7 +18,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool agreePersonalData = true;
-  final sign_up_controller = SignUpController();
+  final signUpController = SignUpController();
 
   @override
   void dispose() {
@@ -34,7 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final email = emailController.text.trim();
       final password = passwordController.text;
 
-      final result = await sign_up_controller.register(
+      final result = await signUpController.register(
         fullName: fullName,
         email: email,
         password: password,

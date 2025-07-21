@@ -9,12 +9,12 @@ final _firestore = FirebaseFirestore.instance;
 class MessageStream extends StatelessWidget {
   final String currentUser;
   final String receiver;
-  final ChatController chatViewModel;
+  final ChatController chatController;
 
   const MessageStream({
     super.key,
     required this.currentUser,
-    required this.receiver, required this.chatViewModel,
+    required this.receiver, required this.chatController,
   });
 
   @override
@@ -47,7 +47,7 @@ class MessageStream extends StatelessWidget {
                   message: messageText,
                   isMe: currentUser == messageSender,
                   imageUrl: imageUrl,
-                  type: type, chatViewModel: chatViewModel, reciever:messageReceiver ,
+                  type: type, chatController: chatController, reciever:messageReceiver ,
                 );
                 messageWidgets.add(messageWidget);
               }
