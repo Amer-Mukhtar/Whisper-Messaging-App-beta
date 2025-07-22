@@ -1,0 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class FriendsModel {
+  final String requestSender;
+  final String requestReceiver;
+  final String requestStatus;
+  final String docId;
+  final DateTime timestamp;
+
+  FriendsModel({
+    required this.requestSender,
+    required this.requestReceiver,
+    required this.requestStatus,
+    required this.docId,
+    required this.timestamp,
+  });
+
+  factory FriendsModel.fromJson(Map<String, dynamic> json) {
+    return FriendsModel(
+      requestSender: json['RequestSender'] as String,
+      requestReceiver: json['RequestReciever'] as String,
+      requestStatus: json['RequestStatus'] as String,
+      docId: json['docId'] as String,
+      timestamp: (json['timestamp'] as Timestamp).toDate(), // Firestore timestamp
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'RequestSender': requestSender,
+      'RequestReciever': requestReceiver,
+      'RequestStatus': requestStatus,
+      'docId': docId,
+      'timestamp': Timestamp.fromDate(timestamp), // convert DateTime back to Firestore Timestamp
+    };
+  }
+}

@@ -12,13 +12,11 @@ class SignInResult {
 class SignInController {
   Future<SignInResult> signIn(String email, String password) async {
     try {
-      // Sign in using Firebase Auth
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
       final String uid = userCredential.user!.uid;
 
-      // Fetch Firestore user document using UID
       DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
@@ -27,7 +25,6 @@ class SignInController {
             errorMessage: 'User record not found in Firestore.');
       }
 
-      // Build UserModel from Firestore data + docId
       final userModel = UserModel.fromJson({
         ...userDoc.data() as Map<String, dynamic>,
         'docId': userDoc.id,
