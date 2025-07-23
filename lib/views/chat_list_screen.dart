@@ -140,10 +140,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => ChatScreen(
-                            receiver: addedUser ?? 'No Name',
-                            currentuser: widget.currentuser.fullName,
-                            imageurl:
-                                defaultUserImages[i % defaultUserImages.length],
+                            currentuser: widget.currentuser,
+                            imageUrl: defaultUserImages[i % defaultUserImages.length],
+                            reciever: addedUser ?? 'No Name',
                           ),
                         ),
                       );
@@ -225,9 +224,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
               if (currentUser == widget.currentuser.fullName) {
                 userWidgets.add(
                   ConversationList(
-                    name: addedUser ?? 'No Name',
+                    reciever: addedUser ?? 'No Name',
                     imageUrl: defaultUserImages[i % defaultUserImages.length],
-                    currentuser: widget.currentuser.fullName,
+                    currentuser: widget.currentuser,
                   ),
                 );
               }
@@ -236,9 +235,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
             if (userWidgets.isEmpty) {
               userWidgets.add(
                 ConversationList(
-                  name: 'No user Added',
+                  reciever: 'No user Added',
                   imageUrl: '',
-                  currentuser: widget.currentuser.fullName,
+                  currentuser: widget.currentuser,
                 ),
               );
             }

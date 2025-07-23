@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:whisper/models/messages_model.dart';
 
 class ChatController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -65,18 +66,19 @@ class ChatController {
   }
 
 
-  Future<void> sendMessage(String sender, String receiver) async {
-    if (message.isEmpty) return;
+  Future<void> sendMessage(MessagesModel messageModel) async {
+    if (messageModel.message.isEmpty) return;
     await _firestore.collection('chat_room').add({
-      'message': message,
-      'sender': sender,
-      'receiver': receiver,
-      'timestamp': FieldValue.serverTimestamp(),
+      'message': messageModel.message,
+      'sender': messageModel.sender,
+      'receiver': messageModel.receiver,
+      'timestamp': messageModel.timestamp,
+      'isMe':messageModel.isMe,
+      'hasImage':messageModel.hasImage
     });
-    message = '';
   }
 
-  Future<void> sendImage(String sender, String receiver) async {
+  Future<void> sendImage(MessagesModel messageModel) async {
     isUploading = true;
     final file = await _pickImage();
     if (file == null) {
@@ -86,12 +88,12 @@ class ChatController {
 
     final imageUrl = await _uploadImage(file);
     await _firestore.collection('chat_room').add({
-      'message': message,
+      'message': messageModel.message,
       'imageUrl': imageUrl,
-      'type': 'image',
-      'sender': sender,
-      'receiver': receiver,
-      'timestamp': FieldValue.serverTimestamp(),
+      'hasImage': messageModel.hasImage,
+      'sender': messageModel.sender,
+      'receiver': messageModel.receiver,
+      'timestamp': messageModel.timestamp,
     });
     isUploading = false;
   }

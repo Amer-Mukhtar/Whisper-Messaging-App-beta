@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:whisper/models/messages_model.dart';
+import 'package:whisper/models/user_model.dart';
 import '../controller/chat_screen.dart';
 import '../widgets/constant.dart';
 import '../widgets/message_stream.dart';
 
-
 class ChatScreen extends StatefulWidget {
-  final String receiver;
-  final String currentuser;
-  final String imageurl;
+  final String reciever;
+  final UserModel currentuser;
+  final String imageUrl;
+
 
   const ChatScreen({
     super.key,
-    required this.receiver,
     required this.currentuser,
-    required this.imageurl,
+    required this.imageUrl,
+    required this.reciever,
   });
 
   @override
@@ -23,11 +25,12 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final ChatController chatController = ChatController();
   final TextEditingController messagetextController = TextEditingController();
-
+   late MessagesModel messagesModel;
   @override
   void initState() {
     super.initState();
-    chatController.init(widget.currentuser, widget.receiver);
+    chatController.init(
+        widget.currentuser.fullName, widget.reciever);
   }
 
   @override
@@ -39,8 +42,9 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Expanded(
               child: MessageStream(
-                currentUser: widget.currentuser,
-                receiver: widget.receiver, chatController: chatController,
+                currentUser: widget.currentuser.fullName,
+                receiver: widget.reciever,
+                chatController: chatController,
               ),
             ),
             _buildMessageInput(),
@@ -66,14 +70,17 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               const SizedBox(width: 2),
               CircleAvatar(
-                backgroundImage: AssetImage(widget.imageurl),
+                backgroundImage: AssetImage(widget.imageUrl),
                 maxRadius: 20,
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  widget.receiver,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: messageText),
+                  widget.reciever,
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: messageText),
                 ),
               ),
             ],
@@ -104,20 +111,31 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           FloatingActionButton.small(
             heroTag: "sendImage",
-            onPressed: chatController.isUploading ? null : () async {
-              await chatController.sendImage(widget.currentuser, widget.receiver);
-              setState(() {});
-            },
+            onPressed: chatController.isUploading
+                ? null
+                : () async {
+              MessagesModel newMessage = MessagesModel(
+                '', // imageurl (empty string if no image)
+                true, // isMe
+                true, // hasImage
+                sender: widget.currentuser.fullName,
+                receiver: widget.reciever,
+                message: messagetextController.text,
+                timestamp: DateTime.now(),
+              );
+                    await chatController.sendImage(newMessage);
+                    setState(() {});
+                  },
             backgroundColor: Colors.blue,
             child: chatController.isUploading
                 ? const SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                strokeWidth: 2,
-              ),
-            )
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      strokeWidth: 2,
+                    ),
+                  )
                 : const Icon(Icons.attach_file, color: Colors.white, size: 20),
           ),
           Container(
@@ -125,9 +143,18 @@ class _ChatScreenState extends State<ChatScreen> {
             child: FloatingActionButton.small(
               heroTag: "sendMessage",
               onPressed: () async {
-                await chatController.sendMessage(widget.currentuser, widget.receiver);
+                MessagesModel newMessage = MessagesModel(
+                  '', // imageurl (empty string if no image)
+                  true, // isMe
+                  false, // hasImage
+                  sender: widget.currentuser.fullName,
+                  receiver: widget.reciever,
+                  message: messagetextController.text,
+                  timestamp: DateTime.now(),
+                );
                 messagetextController.clear();
-                setState(() {});
+                await chatController.sendMessage(newMessage);
+                setState((){});
               },
               backgroundColor: Colors.blue,
               elevation: 0,

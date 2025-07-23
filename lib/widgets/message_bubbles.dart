@@ -43,10 +43,8 @@ class MessageBubble extends StatelessWidget {
                       showModalBottomSheet(context: context, builder: (context)=>
                       MessageOptionsSheet(
                         onDelete: (){
-
                         },
                         onEdit: (){
-
                         }, chatController: chatController, sender: sender, message: message, reciever: reciever,
                       )
                       );
