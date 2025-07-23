@@ -79,37 +79,33 @@ class ChatController {
   }
 
   Future<void> sendImage(MessagesModel messageModel) async {
-    isUploading = true;
-    final file = await _pickImage();
-    if (file == null) {
-      isUploading = false;
-      return;
-    }
-
-    final imageUrl = await _uploadImage(file);
+    if (messageModel.message.isEmpty) return;
     await _firestore.collection('chat_room').add({
       'message': messageModel.message,
-      'imageUrl': imageUrl,
+      'imageUrl': messageModel.imageUrl,
       'hasImage': messageModel.hasImage,
       'sender': messageModel.sender,
       'receiver': messageModel.receiver,
       'timestamp': messageModel.timestamp,
     });
-    isUploading = false;
   }
 
-  Future<File?> _pickImage() async {
+  Future<File?> pickImage() async
+  {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     return pickedFile != null ? File(pickedFile.path) : null;
   }
 
-  Future<String> _uploadImage(File imageFile) async {
+  Future<String> uploadImage(File imageFile) async
+  {
+    print('object');
     final fileName = DateTime.now().millisecondsSinceEpoch.toString();
     final ref = FirebaseStorage.instance
         .ref()
         .child('chat_images/$chatId/$fileName.jpg');
     await ref.putFile(imageFile);
+    print('object');
     return await ref.getDownloadURL();
   }
 }

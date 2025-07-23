@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:whisper/models/messages_model.dart';
 import 'package:whisper/models/user_model.dart';
 import '../controller/chat_screen.dart';
@@ -26,6 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final ChatController chatController = ChatController();
   final TextEditingController messagetextController = TextEditingController();
    late MessagesModel messagesModel;
+   bool isUploading=false;
   @override
   void initState() {
     super.initState();
@@ -109,35 +113,30 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-          FloatingActionButton.small(
-            heroTag: "sendImage",
-            onPressed: chatController.isUploading
-                ? null
-                : () async {
-              MessagesModel newMessage = MessagesModel(
-                '', // imageurl (empty string if no image)
-                true, // isMe
-                true, // hasImage
-                sender: widget.currentuser.fullName,
-                receiver: widget.reciever,
-                message: messagetextController.text,
-                timestamp: DateTime.now(),
+
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+            ),
+            onPressed: () async {
+             
+              final file = await chatController.pickImage();
+              //final imageUrl = await chatController.uploadImage(file!);
+              //firebase cloud rmv for trial versions
+
+              
+              showImageMessagePreview(
+                context: context,
+                messageController: messagetextController,
+                fil: file!,
               );
-                    await chatController.sendImage(newMessage);
-                    setState(() {});
-                  },
-            backgroundColor: Colors.blue,
-            child: chatController.isUploading
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      strokeWidth: 2,
-                    ),
-                  )
-                : const Icon(Icons.attach_file, color: Colors.white, size: 20),
+            },
+
+            child: const Icon(Icons.attach_file, color: Colors.white, size: 20),
           ),
+
+
+
           Container(
             margin: const EdgeInsets.only(right: 10),
             child: FloatingActionButton.small(
@@ -165,4 +164,91 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+  void showImageMessagePreview({
+    required File fil,
+    required BuildContext context,
+    required TextEditingController messageController,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.grey[900],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+            left: 16,
+            right: 16,
+            top: 16,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Image preview
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(
+                  fil,
+                  height: 250,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Text input + send
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      style: const TextStyle(color: Colors.white),
+                      controller: messagetextController,
+                      cursorColor: Colors.white,
+                      onChanged: (value) => chatController.message = value,
+                      decoration: const InputDecoration(
+                        hintText: "Write message...",
+                        hintStyle: TextStyle(color: Colors.white54),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    padding: EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.send, color: Colors.white,size: 20),
+                      onPressed: () async {
+                        final newMessage = MessagesModel(
+                          "",
+                          true,
+                          false,
+                          sender: widget.currentuser.fullName,
+                          receiver: widget.reciever,
+                          message: messagetextController.text,
+                          timestamp: DateTime.now(),
+                        );
+                        messagetextController.clear();
+                        Navigator.pop(context);
+                        await chatController.sendMessage(newMessage);
+
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
 }
