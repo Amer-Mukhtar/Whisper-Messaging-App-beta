@@ -52,8 +52,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => AddUserScreen(
-                    currentUser: widget.currentuser.fullName,
-                    currentEmail: widget.currentuser.email,
+                    currentUser: widget.currentuser,
                   ),
                 ),
               );
@@ -113,12 +112,15 @@ class _ChatListScreenState extends State<ChatListScreen> {
       child: StreamBuilder<QuerySnapshot>(
         stream: chat_list_controller.fetchUsersStream(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError)
+          }
+          if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty)
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(child: Text('No users found'));
+          }
 
           final users = snapshot.data!.docs;
           final List<Widget> userWidgets = [];
@@ -205,10 +207,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
         child: StreamBuilder<QuerySnapshot>(
           stream: chat_list_controller.fetchUsersStream(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
-            if (snapshot.hasError)
+            }
+            if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
+            }
 
             final users = snapshot.data?.docs ?? [];
             final userWidgets = <Widget>[];

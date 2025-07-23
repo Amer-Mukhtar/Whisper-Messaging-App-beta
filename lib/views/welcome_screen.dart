@@ -12,7 +12,7 @@ class WelcomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 0,top: 190),
+            margin: const EdgeInsets.only(bottom: 0, top: 190),
             child: const CircleAvatar(
               backgroundImage: AssetImage('assets/images/icon.png'),
               radius: 90,
@@ -22,9 +22,7 @@ class WelcomeScreen extends StatelessWidget {
           Flexible(
             flex: 8,
             child: Container(
-              padding: const EdgeInsets.only(
-                left: 15,right: 15
-              ),
+              padding: const EdgeInsets.only(left: 15, right: 15),
               child: Center(
                 child: RichText(
                   textAlign: TextAlign.center,
@@ -57,17 +55,17 @@ class WelcomeScreen extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SignInScreen()
-                        ),
+                            builder: (context) => const SignInScreen()),
                       );
                     },
-                    child: const Text('Get Started'),
+                    child: const Text('Get Started!'),
                   ),
                 ),
               ),
