@@ -90,23 +90,27 @@ class ChatController {
     });
   }
 
-  Future<File?> pickImage() async
-  {
+  Future<String?> pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    return pickedFile != null ? File(pickedFile.path) : null;
-  }
 
-  Future<String> uploadImage(File imageFile) async
-  {
-    print('object');
+    if (pickedFile == null) {
+      // User cancelled the picker
+      return null;
+    }
+
+    final imageFile = File(pickedFile.path);
     final fileName = DateTime.now().millisecondsSinceEpoch.toString();
     final ref = FirebaseStorage.instance
         .ref()
         .child('chat_images/$chatId/$fileName.jpg');
+
     await ref.putFile(imageFile);
-    print('object');
+    print('Image uploaded');
     return await ref.getDownloadURL();
   }
+
+
+
 }
 

@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:whisper/models/messages_model.dart';
 import 'package:whisper/models/user_model.dart';
 import '../controller/chat_screen.dart';
@@ -119,24 +116,16 @@ class _ChatScreenState extends State<ChatScreen> {
               backgroundColor: Colors.blue,
             ),
             onPressed: () async {
-             
-              final file = await chatController.pickImage();
-              //final imageUrl = await chatController.uploadImage(file!);
-              //firebase cloud rmv for trial versions
-
-              
+              final imageUrl = await chatController.pickImage();
               showImageMessagePreview(
+                url: imageUrl!,
                 context: context,
                 messageController: messagetextController,
-                fil: file!,
               );
             },
 
             child: const Icon(Icons.attach_file, color: Colors.white, size: 20),
           ),
-
-
-
           Container(
             margin: const EdgeInsets.only(right: 10),
             child: FloatingActionButton.small(
@@ -165,7 +154,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
   void showImageMessagePreview({
-    required File fil,
+    required String url,
     required BuildContext context,
     required TextEditingController messageController,
   }) {
@@ -190,8 +179,8 @@ class _ChatScreenState extends State<ChatScreen> {
               // Image preview
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  fil,
+                child: Image.network(
+                  url,
                   height: 250,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -226,9 +215,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       icon: const Icon(Icons.send, color: Colors.white,size: 20),
                       onPressed: () async {
                         final newMessage = MessagesModel(
-                          "",
+                          url,
                           true,
-                          false,
+                          true,
                           sender: widget.currentuser.fullName,
                           receiver: widget.reciever,
                           message: messagetextController.text,
@@ -236,7 +225,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         );
                         messagetextController.clear();
                         Navigator.pop(context);
-                        await chatController.sendMessage(newMessage);
+                        await chatController.sendImage(newMessage);
 
                       },
                     ),

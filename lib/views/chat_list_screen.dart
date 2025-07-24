@@ -197,7 +197,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   Widget _buildConversationList() {
     return Expanded(
       child: Container(
-        margin: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 5),
         decoration: const BoxDecoration(
           color: ListBGColor,
           borderRadius: BorderRadius.only(
@@ -212,10 +212,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
             if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             }
-
             final users = snapshot.data?.docs ?? [];
             final userWidgets = <Widget>[];
-
             for (var i = 0; i < users.length; i++) {
               final userData = users[i].data() as Map<String, dynamic>;
               final currentUser = userData['CurrentUser'] as String?;
