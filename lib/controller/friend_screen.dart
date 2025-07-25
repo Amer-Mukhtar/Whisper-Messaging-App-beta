@@ -11,7 +11,15 @@ class friend_controller
   Future<void> getFriendList(FriendsModel friendModel)
   async{
     await _firestore.collection('added_users').where('sender', isEqualTo: friendModel.requestSender);
-    
+  }
+  Future<void> addFriendRequest(FriendsModel model) async
+  {
+    try {
+      await _firestore.collection('added_users').add(model.toJson());
+    } catch (e) {
+      print('Error adding friend request: $e');
+      rethrow;
+    }
   }
   Stream<QuerySnapshot> getUsers()
   {

@@ -5,6 +5,7 @@ import 'package:whisper/widgets/constant.dart';
 import 'package:whisper/widgets/text_field.dart';
 
 import '../controller/friend_screen.dart';
+import '../models/user_friends_model.dart';
 
 class AddUserScreen extends StatefulWidget {
   final UserModel currentUser;
@@ -49,6 +50,35 @@ class _AddUserScreenState extends State<AddUserScreen> {
   {
     return _firestore.collection('users').snapshots();
   }
+  Stream<QuerySnapshot> getFriendSentList(UserModel currentUser)
+  {
+   return _firestore.collection('added_users').where('RequestSender', isEqualTo: currentUser.fullName).where('RequestStatus', isEqualTo: 'pending').snapshots();
+  }
+  Stream<QuerySnapshot> getFriendRecievedList(UserModel currentUser)
+  {
+    return _firestore.collection('added_users').where('RequestReciever', isEqualTo: currentUser.fullName).where('RequestStatus', isEqualTo: 'pending').snapshots();
+  }
+  Future<void> acceptFriendRequest(FriendsModel model) async {
+    try {
+      final query = await FirebaseFirestore.instance
+          .collection('added_users')
+          .where('RequestSender', isEqualTo: model.requestSender)
+          .where('RequestReciever', isEqualTo: model.requestReceiver)
+          .limit(1)
+          .get();
+
+      if (query.docs.isNotEmpty) {
+        final docId = query.docs.first.id;
+        await FirebaseFirestore.instance
+            .collection('added_users')
+            .doc(docId)
+            .update({'RequestStatus': 'accepted'});
+      }
+    } catch (e) {
+      print('Error updating request: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -106,10 +136,19 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                 backgroundImage: AssetImage(defaultUserImages[1]),
                               ),
                               title: Text(doc['fullName'] ?? 'No Name'),
-                              trailing: TextButton(onPressed: (){}, child: Icon(Icons.add)),
+                              trailing: TextButton(onPressed: (){
+                                final friendModel= FriendsModel(
+                                    requestSender: widget.currentUser.fullName,
+                                    requestReceiver: doc['fullName'] ?? 'No Name',
+                                    requestStatus: 'pending',
+                                    timestamp: DateTime.timestamp()
+                                );
+
+                                friendController.addFriendRequest(friendModel);
+                              }, child: Icon(Icons.add)),
                               onTap: ()
                               {
-                                controller.closeView(doc['fullName']);
+
                               },
                             );
                           }).toList(),
@@ -120,22 +159,62 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 },
               ),
             ),
-            const TabBar(tabs: [
-              Tab(text: "Sent Requests"),
+             TabBar(tabs: [Tab(text: "Sent Requests"),
               Tab(text: "Recieved Requests")
             ]),
-            const Expanded(
-              child: TabBarView(children: [
-                Center(
-                    child: Text(
-                      'Sent Requests',
-                      style: TextStyle(color: Colors.black),
-                    )),
-                Center(
-                    child: Text(
-                      'Received Requests',
-                      style: TextStyle(color: Colors.black),
-                    )),
+             Expanded(
+              child: TabBarView(children:
+              [
+                StreamBuilder<QuerySnapshot>(
+                  stream: getFriendSentList(widget.currentUser),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: Text('No data'));
+                    }
+                    final docs = snapshot.data!.docs;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: docs.length,
+                      itemBuilder: (context, index) {
+                        final data = docs[index].data() as Map<String, dynamic>;
+                        final fullName = data['RequestReciever'] ?? 'No Name';
+                        return ListTile(
+                          title: Text(fullName,style: TextStyle(color: Colors.blue),),
+                        );
+                      },
+                    );
+                  },
+                ),
+                StreamBuilder<QuerySnapshot>(
+                  stream: getFriendRecievedList(widget.currentUser),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: Text('No data'));
+                    }
+                    final docs = snapshot.data!.docs;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: docs.length,
+                      itemBuilder: (context, index) {
+                        final data = docs[index].data() as Map<String, dynamic>;
+                        final fullName = data['RequestReciever'] ?? 'No Name';
+                        return ListTile(
+                          title: Text(fullName,style: TextStyle(color: Colors.blue),),
+                          trailing: TextButton(onPressed: ()
+                          {
+                            final model = FriendsModel(
+                              requestSender: data['RequestSender'],
+                              requestReceiver: data['RequestReciever'],
+                              requestStatus: data['RequestStatus'],
+                              timestamp: (data['timestamp'] as Timestamp).toDate(),
+                            );
+                            acceptFriendRequest(model);
+                          }, child: Icon(Icons.check)),
+                        );
+                      },
+                    );
+                  },
+                ),
               ]),
             ),
           ],
