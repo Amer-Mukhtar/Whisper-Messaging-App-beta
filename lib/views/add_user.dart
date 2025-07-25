@@ -20,7 +20,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   final textAddNameController = TextEditingController();
   String friendSearch = "";
   TextEditingController searchtextController = TextEditingController();
-  late friend_controller friendController;
+  friend_controller friendController=friend_controller();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final List<String> defaultUserImages = [
     "assets/images/profile2.png",
@@ -44,38 +44,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     textAddNameController.dispose();
     super.dispose();
   }
-  Stream<QuerySnapshot> getUsers()
-  {
-    return _firestore.collection('users').snapshots();
-  }
-  Stream<QuerySnapshot> getFriendSentList(UserModel currentUser)
-  {
-   return _firestore.collection('added_users').where('RequestSender', isEqualTo: currentUser.fullName).where('RequestStatus', isEqualTo: 'pending').snapshots();
-  }
-  Stream<QuerySnapshot> getFriendRecievedList(UserModel currentUser)
-  {
-    return _firestore.collection('added_users').where('RequestReciever', isEqualTo: currentUser.fullName).where('RequestStatus', isEqualTo: 'pending').snapshots();
-  }
-  Future<void> acceptFriendRequest(FriendsModel model) async {
-    try {
-      final query = await FirebaseFirestore.instance
-          .collection('added_users')
-          .where('RequestSender', isEqualTo: model.requestSender)
-          .where('RequestReciever', isEqualTo: model.requestReceiver)
-          .limit(1)
-          .get();
 
-      if (query.docs.isNotEmpty) {
-        final docId = query.docs.first.id;
-        await FirebaseFirestore.instance
-            .collection('added_users')
-            .doc(docId)
-            .update({'RequestStatus': 'accepted'});
-      }
-    } catch (e) {
-      print('Error updating request: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +84,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 suggestionsBuilder: (BuildContext context, SearchController controller) {
                   return <Widget>[
                     StreamBuilder<QuerySnapshot>(
-                      stream: getUsers(),
+                      stream: friendController.getUsers(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return const Text('no data');
@@ -167,7 +136,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
               child: TabBarView(children:
               [
                 StreamBuilder<QuerySnapshot>(
-                  stream: getFriendSentList(widget.currentUser),
+                  stream: friendController.getFriendSentList(widget.currentUser),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(child: Text('No data'));
@@ -180,14 +149,26 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         final data = docs[index].data() as Map<String, dynamic>;
                         final fullName = data['RequestReciever'] ?? 'No Name';
                         return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: AssetImage(defaultUserImages[1]),
+                          ),
                           title: Text(fullName,style: TextStyle(color: Colors.blue),),
+                          trailing: TextButton(onPressed: (){
+                            final model = FriendsModel(
+                              requestSender: data['RequestSender'],
+                              requestReceiver: data['RequestReciever'],
+                              requestStatus: data['RequestStatus'],
+                              timestamp: (data['timestamp'] as Timestamp).toDate(),
+                            );
+                            friendController.withdrawFriendRequest(model);
+                          }, child: Text('Withdraw')),
                         );
                       },
                     );
                   },
                 ),
                 StreamBuilder<QuerySnapshot>(
-                  stream: getFriendRecievedList(widget.currentUser),
+                  stream: friendController.getFriendRecievedList(widget.currentUser),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(child: Text('No data'));
@@ -200,6 +181,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         final data = docs[index].data() as Map<String, dynamic>;
                         final fullName = data['RequestReciever'] ?? 'No Name';
                         return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: AssetImage(defaultUserImages[1]),
+                          ),
                           title: Text(fullName,style: TextStyle(color: Colors.blue),),
                           trailing: TextButton(onPressed: ()
                           {
@@ -209,7 +193,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                               requestStatus: data['RequestStatus'],
                               timestamp: (data['timestamp'] as Timestamp).toDate(),
                             );
-                            acceptFriendRequest(model);
+                            friendController.acceptFriendRequest(model);
                           }, child: Icon(Icons.check)),
                         );
                       },
