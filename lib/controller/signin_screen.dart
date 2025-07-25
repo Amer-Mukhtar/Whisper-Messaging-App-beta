@@ -39,7 +39,9 @@ class SignInController {
       } else {
         return SignInResult(errorMessage: 'Authentication failed.');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('Unexpected error: $e');
+      print('Stack trace: $stackTrace');
       return SignInResult(errorMessage: 'An unexpected error occurred.');
     }
   }

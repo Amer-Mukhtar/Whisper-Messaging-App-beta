@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:whisper/models/user_model.dart';
 import 'package:whisper/widgets/constant.dart';
-import 'package:whisper/widgets/text_field.dart';
-
 import '../controller/friend_screen.dart';
 import '../models/user_friends_model.dart';
 
@@ -159,9 +157,12 @@ class _AddUserScreenState extends State<AddUserScreen> {
                 },
               ),
             ),
-             TabBar(tabs: [Tab(text: "Sent Requests"),
+             const TabBar(tabs: 
+             [
+              Tab(text: "Sent Requests"),
               Tab(text: "Recieved Requests")
-            ]),
+             ]
+             ),
              Expanded(
               child: TabBarView(children:
               [

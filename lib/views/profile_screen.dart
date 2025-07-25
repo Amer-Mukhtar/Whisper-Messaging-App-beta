@@ -3,16 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:whisper/models/user_model.dart';
 import 'package:whisper/widgets/constant.dart';
 
+import '../controller/profile_controller.dart';
+
 class ProfileScreen extends StatefulWidget {
   final UserModel currentuser;
   final String? image;
   const ProfileScreen({super.key, required this.currentuser, this.image});
-
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final ProfileController profile_controller=ProfileController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,9 +46,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           children: [
             const SizedBox(height: 40),
-            const CircleAvatar(
-              radius: 130,
-              backgroundImage: AssetImage('assets/images/profile3.png'),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                const CircleAvatar(
+                  radius: 130,
+                  backgroundImage: AssetImage('assets/images/profile3.png'),
+                ),
+                Positioned(
+                    right: 40,
+                    bottom: 5,
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.blue,
+                      child: IconButton(
+                          onPressed: () {
+                            profile_controller.pickImage(widget.currentuser);
+                          },
+                          icon: Icon(CupertinoIcons.plus, color: Colors.white)),
+                    )),
+              ],
             ),
             const SizedBox(height: 40),
             Container(

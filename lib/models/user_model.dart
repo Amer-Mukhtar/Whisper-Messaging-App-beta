@@ -1,19 +1,19 @@
 class UserModel {
   final String fullName;
   final String email;
-  final String docId;
+  late final String? imageUrl;
 
   UserModel({
     required this.fullName,
     required this.email,
-    required this.docId,
+    this.imageUrl,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      fullName: json['fullName'] as String,
-      email: json['email'] as String,
-      docId: json['docId'] as String,
+      fullName: json['fullName']?.toString() ?? '',
+      email: json['email']?.toString() ?? '',
+      imageUrl: json['imageUrl']?.toString(),
     );
   }
 
@@ -21,7 +21,7 @@ class UserModel {
     return {
       'fullName': fullName,
       'email': email,
-      'docId': docId,
+      if (imageUrl != null) 'imageUrl': imageUrl,
     };
   }
 }
