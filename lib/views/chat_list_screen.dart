@@ -110,7 +110,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     return SizedBox(
       height: 100,
       child: StreamBuilder<QuerySnapshot>(
-        stream: chat_list_controller.fetchUsersStream(),
+        stream: chat_list_controller.fetchUsersStream(widget.currentuser),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -127,10 +127,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
           for (var i = 0; i < users.length; i++) {
             final userData = users[i].data() as Map<String, dynamic>;
-            final currentUser = userData['CurrentUser'] as String?;
-            final addedUser = userData['AddedUser'] as String?;
+            final currentUser = userData['RequestSender'] as String?;
+            final addedUser = userData['RequestReciever'] as String?;
 
-            if (currentUser == widget.currentuser.fullName) {
+            if (currentUser == currentUser) {
               userWidgets.add(
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15, 10, 5, 0),
@@ -204,7 +204,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               topRight: Radius.circular(50), topLeft: Radius.circular(50)),
         ),
         child: StreamBuilder<QuerySnapshot>(
-          stream: chat_list_controller.fetchUsersStream(),
+          stream: chat_list_controller.fetchUsersStream(widget.currentuser),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -216,8 +216,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
             final userWidgets = <Widget>[];
             for (var i = 0; i < users.length; i++) {
               final userData = users[i].data() as Map<String, dynamic>;
-              final currentUser = userData['CurrentUser'] as String?;
-              final addedUser = userData['AddedUser'] as String?;
+              final currentUser = userData['RequestSender'] as String?;
+              final addedUser = userData['RequestReciever'] as String?;
 
               if (currentUser == widget.currentuser.fullName) {
                 userWidgets.add(

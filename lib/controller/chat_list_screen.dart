@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../models/user_model.dart';
+
 class ChatListController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Stream<QuerySnapshot> fetchUsersStream() {
-    return _firestore.collection('added_users').snapshots();
+  Stream<QuerySnapshot> fetchUsersStream(UserModel userModel) {
+    return _firestore.collection('added_users')
+        .where('RequestSender',isEqualTo: userModel.fullName)
+        .where('RequestReciever',isEqualTo: userModel.fullName)
+        .where('RequestStatus',isEqualTo: 'accepted').snapshots();
   }
 
   bool isUserAdded(String currentUser, String? addedUser) {
