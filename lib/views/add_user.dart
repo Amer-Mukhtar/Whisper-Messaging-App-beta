@@ -4,6 +4,8 @@ import 'package:whisper/models/user_model.dart';
 import 'package:whisper/widgets/constant.dart';
 import 'package:whisper/widgets/text_field.dart';
 
+import '../controller/friend_screen.dart';
+
 class AddUserScreen extends StatefulWidget {
   final UserModel currentUser;
   const AddUserScreen({
@@ -17,155 +19,126 @@ class AddUserScreen extends StatefulWidget {
 
 class _AddUserScreenState extends State<AddUserScreen> {
   final textAddNameController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  String friendSearch = "";
+  TextEditingController searchtextController = TextEditingController();
+  late friend_controller friendController;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final List<String> defaultUserImages = [
+    "assets/images/profile2.png",
+    "assets/images/profile3.png",
+    "assets/images/profile4.png",
+    "assets/images/profile5.png",
+    "assets/images/profile6.png",
+    "assets/images/profile7.png",
+    "assets/images/profile8.png",
+    "assets/images/profile9.png",
+    "assets/images/profile10.png",
+  ];
+  @override
+  void initState() {
+    super.initState();
+    friendController = friend_controller();
+  }
 
   @override
   void dispose() {
     textAddNameController.dispose();
     super.dispose();
   }
-
-  Future<bool> _checkIfUserExists(
-      String name, String collection, String field) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection(collection)
-        .where(field, isEqualTo: name)
-        .get();
-    return querySnapshot.docs.isNotEmpty;
+  Stream<QuerySnapshot> getUsers()
+  {
+    return _firestore.collection('users').snapshots();
   }
-
-  Future<bool> _checkIfUserExists2(String name2, String name, String collection,
-      String field2, String field) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection(collection)
-        .where(field, isEqualTo: name)
-        .where(field2, isEqualTo: name2)
-        .get();
-    return querySnapshot.docs.isNotEmpty;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: addUserIcon),
-        backgroundColor: addUserBackground,
-        title: const Text(
-          'Add Profile',
-          style: TextStyle(color: addUserText),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          iconTheme: const IconThemeData(color: addUserIcon),
+          backgroundColor: addUserBackground,
+          title: const Text(
+            'Add Profile',
+            style: TextStyle(color: addUserText),
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.only(bottom: 300),
-          color: addUserBackground,
-          child: Form(
-            key: _formKey,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircleAvatar(
-                    radius: 130,
-                    backgroundColor: Colors.black,
-                    backgroundImage: AssetImage('assets/images/icon.png'),
+        body: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+              child: SearchAnchor.bar(
+                isFullScreen: false,
+                barPadding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
+                barBackgroundColor:WidgetStateProperty.all(Colors.black),
+                barElevation:WidgetStateProperty.all(0),
+                barShape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  const SizedBox(height: 30),
-                  const Text(
-                    'Whisper a friend',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: addUserText),
-                  ),
-                  const SizedBox(height: 30),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: CustomTextField(
-                      textStyle: const TextStyle(color: Colors.white),
-                      label: 'User Name',
-                      hintText: 'Enter User Name',
-                      keyboardType: TextInputType.name,
-                      obscureText: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter User Name';
+                ),
+                barLeading: const Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Icon(Icons.person_search, color: Colors.white),
+                ),
+                barTextStyle: WidgetStateProperty.all(
+                  const TextStyle(color: Colors.white),
+                ),
+                barHintText: 'Search by name...',
+                suggestionsBuilder: (BuildContext context, SearchController controller) {
+                  return <Widget>[
+                    StreamBuilder<QuerySnapshot>(
+                      stream: getUsers(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Text('no data');
                         }
-                        return null;
-                      },
-                      controller: textAddNameController,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        final userExistsInDatabase = await _checkIfUserExists(
-                          textAddNameController.text,
-                          'users',
-                          'fullName',
-                        );
+                        final query = controller.text.toLowerCase();
+                        final filteredDocs = snapshot.data!.docs.where((doc) {
+                          final name = (doc['fullName'] ?? '').toString().toLowerCase();
+                          return query.isEmpty || name.startsWith(query);
+                        }).toList();
 
-                        if (!userExistsInDatabase) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(
-                                    'User with this name does not exist in the database.')),
-                          );
-                        } //String name2,String name, String collection, String field2,String field
-
-                        else {
-                          final userAlreadyAdded = await _checkIfUserExists2(
-                              textAddNameController.text,
-                              widget.currentUser.fullName,
-                              'added_users', //collection
-                              'AddedUser',
-                              'CurrentUser'
-                              //field
-                              );
-                          if (userAlreadyAdded) //
+                        return Column(
+                          children: filteredDocs.map((doc)
                           {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      'User with this name has already been added.')),
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: AssetImage(defaultUserImages[1]),
+                              ),
+                              title: Text(doc['fullName'] ?? 'No Name'),
+                              trailing: TextButton(onPressed: (){}, child: Icon(Icons.add)),
+                              onTap: ()
+                              {
+                                controller.closeView(doc['fullName']);
+                              },
                             );
-                          } else {
-                            try {
-                              Map<String, String> adduser = {
-                                'CurrentUser': widget.currentUser.fullName,
-                                'AddedUser': textAddNameController.text,
-                              };
-                              await FirebaseFirestore.instance
-                                  .collection('added_users')
-                                  .add(adduser);
-
-                              Navigator.pop(context);
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('Error adding user: $e')),
-                              );
-                            }
-                          }
-                        }
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 65, vertical: 10),
+                          }).toList(),
+                        );
+                      },
                     ),
-                    child: const Text(
-                      'Add',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
+                  ];
+                },
               ),
             ),
-          ),
+            const TabBar(tabs: [
+              Tab(text: "Sent Requests"),
+              Tab(text: "Recieved Requests")
+            ]),
+            const Expanded(
+              child: TabBarView(children: [
+                Center(
+                    child: Text(
+                      'Sent Requests',
+                      style: TextStyle(color: Colors.black),
+                    )),
+                Center(
+                    child: Text(
+                      'Received Requests',
+                      style: TextStyle(color: Colors.black),
+                    )),
+              ]),
+            ),
+          ],
         ),
       ),
     );

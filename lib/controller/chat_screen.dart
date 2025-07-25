@@ -10,11 +10,13 @@ class ChatController {
   String message = '';
   late String chatId;
 
-  void init(String currentUser, String receiver) {
+  void init(String currentUser, String receiver)
+  {
     chatId = currentUser.compareTo(receiver) < 0
         ? '$currentUser-$receiver'
         : '$receiver-$currentUser';
   }
+
   Future<void> deleteMessage({
     required String sender,
     required String receiver,
@@ -95,7 +97,6 @@ class ChatController {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile == null) {
-      // User cancelled the picker
       return null;
     }
 
