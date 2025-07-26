@@ -36,4 +36,35 @@ class ChatListController {
   bool isUserAdded(String currentUser, String? addedUser) {
     return addedUser != null && currentUser == addedUser;
   }
+
+  Future<String?> getLatestChatMessage(String sender, String receiver) async {
+    final _firestore = FirebaseFirestore.instance;
+
+    try {
+      final querySnapshot = await _firestore
+          .collection('chat_room')
+          .orderBy('timestamp', descending: true)
+          .get();
+
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data();
+
+        final docSender = data['sender'] as String?;
+        final docReceiver = data['receiver'] as String?;
+
+        if ((docSender == sender && docReceiver == receiver) ||
+            (docSender == receiver && docReceiver == sender)) {
+          print(data['message'] as String?);
+          return data['message'] as String?;
+        }
+      }
+
+      return null; // No matching doc found
+    } catch (e) {
+      print('Error fetching latest chat message: $e');
+      return null;
+    }
+  }
+
+
 }
