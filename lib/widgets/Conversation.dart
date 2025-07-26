@@ -21,6 +21,7 @@ class ConversationList extends StatefulWidget {
 class _ConversationListState extends State<ConversationList> {
   @override
   Widget build(BuildContext context) {
+    print("Image URL: ${widget.imageUrl}");
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -42,9 +43,10 @@ class _ConversationListState extends State<ConversationList> {
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: (widget.imageUrl.isNotEmpty)
-                        ? NetworkImage(widget.currentuser.imageUrl!)
+                    backgroundImage: (widget.imageUrl != null && widget.imageUrl!.isNotEmpty)
+                        ? NetworkImage(widget.imageUrl!)
                         : const AssetImage('assets/images/profile3.png'),
+
                     maxRadius: 30,
                   ),
                   const SizedBox(width: 16),

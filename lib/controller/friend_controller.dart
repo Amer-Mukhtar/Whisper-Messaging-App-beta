@@ -19,10 +19,24 @@ class friend_controller
       rethrow;
     }
   }
-  Stream<QuerySnapshot> getUsers()
-  {
-     return _firestore.collection('users').snapshots();
+  Stream<List<DocumentSnapshot>> getUsers() async* {
+    final usersStream = _firestore.collection('users').snapshots();
+    final requestsSnapshot = await _firestore.collection('added_users').get();
+
+    final requestReceivers = requestsSnapshot.docs
+        .map((doc) => doc['RequestReciever'] as String)
+        .toSet();
+
+    await for (final usersSnapshot in usersStream) {
+      final filteredUsers = usersSnapshot.docs.where((userDoc) {
+        final fullName = userDoc['fullName'] as String? ?? '';
+        return !requestReceivers.contains(fullName);
+      }).toList();
+
+      yield filteredUsers;
+    }
   }
+
   Stream<QuerySnapshot> getFriendSentList(UserModel currentUser)
   {
     return _firestore.collection('added_users').where('RequestSender', isEqualTo: currentUser.fullName).where('RequestStatus', isEqualTo: 'pending').snapshots();
@@ -51,6 +65,7 @@ class friend_controller
       print('Error updating request: $e');
     }
   }
+
   Future<void> withdrawFriendRequest(FriendsModel model) async {
     try {
       final query = await FirebaseFirestore.instance

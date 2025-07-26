@@ -18,6 +18,7 @@ class ChatListController {
     )
         .snapshots();
   }
+
   Future<String?> getProfileImage(String name) async {
     final querySnapshot = await _firestore
         .collection('users')
@@ -31,8 +32,6 @@ class ChatListController {
 
     return null;
   }
-
-
 
   bool isUserAdded(String currentUser, String? addedUser) {
     return addedUser != null && currentUser == addedUser;

@@ -37,31 +37,21 @@ class _ChatListScreenState extends State<ChatListScreen> {
   @override
   Widget build(BuildContext context) {
     return BGScaffold(
-      floatingActionButton: Container(
-        height: 50,
-        width: 80,
-        margin: const EdgeInsets.only(bottom: 10),
-        decoration: BoxDecoration(
-          color: Colors.redAccent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Center(
-          child: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddUserScreen(
-                    currentUser: widget.currentuser,
-                  ),
-                ),
-              );
-            },
-            icon: const Icon(CupertinoIcons.person_add, color: Colors.white),
-          ),
-        ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.redAccent,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddUserScreen(
+                currentUser: widget.currentuser,
+              ),
+            ),
+          );
+        },
+        child: const Icon(CupertinoIcons.person_add, color: Colors.white)
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -131,8 +121,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
             final userData = users[i].data() as Map<String, dynamic>;
             final currentUser = userData['RequestSender'] as String?;
             final addedUser = userData['RequestReciever'] as String?;
-
-
             userWidgets.add(
               FutureBuilder<String?>(
                 future: chat_list_controller.getProfileImage(addedUser!),
@@ -154,8 +142,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           MaterialPageRoute(
                             builder: (_) => ChatScreen(
                               currentuser: widget.currentuser,
-                              imageUrl: snapshot.data ??
-                                  defaultUserImages[i % defaultUserImages.length],
+                              imageUrl: snapshot.data ?? defaultUserImages[i % defaultUserImages.length],
                               reciever: addedUser ?? 'No Name',
                             ),
                           ),
@@ -233,26 +220,27 @@ class _ChatListScreenState extends State<ChatListScreen> {
             for (var i = 0; i < users.length; i++)
             {
               final userData = users[i].data() as Map<String, dynamic>;
-              final currentUser = userData['RequestSender'] as String?;
               final addedUser = userData['RequestReciever'] as String?;
-
               userWidgets.add(
-                FutureBuilder<String?>(
-                  future: chat_list_controller.getProfileImage(addedUser!),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const SizedBox(); // Or a loading placeholder
-                    }
+                  FutureBuilder<String?>(
+                    future: chat_list_controller.getProfileImage(addedUser!),
+                    builder: (context, snapshot) {
+                      String imageUrl="";
 
-                    final imageUrl = snapshot.data ?? '';
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData &&
+                          snapshot.data != null &&
+                          snapshot.data!.trim().isNotEmpty) {
+                        imageUrl = snapshot.data!;
+                      }
+                      return ConversationList(
+                        reciever: addedUser,
+                        imageUrl: imageUrl,
+                        currentuser: widget.currentuser,
+                      );
+                    },
+                  )
 
-                    return ConversationList(
-                      reciever: addedUser ?? 'No Name',
-                      imageUrl: imageUrl,
-                      currentuser: widget.currentuser,
-                    );
-                  },
-                ),
               );
 
 

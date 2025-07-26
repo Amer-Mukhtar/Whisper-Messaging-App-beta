@@ -113,8 +113,8 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
 
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
+          IconButton(
+            style: IconButton.styleFrom(
               backgroundColor: Colors.blue,
             ),
             onPressed: () async
@@ -127,15 +127,17 @@ class _ChatScreenState extends State<ChatScreen> {
               );
             },
 
-            child: const Icon(Icons.attach_file, color: Colors.white, size: 20),
+            icon: const Icon(Icons.attach_file, color: Colors.white, size: 20),
           ),
           Container(
             margin: const EdgeInsets.only(right: 10),
-            child: FloatingActionButton.small(
-              heroTag: "sendMessage",
+            child: IconButton(
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.blue,
+              ),
               onPressed: () async {
                 MessagesModel newMessage = MessagesModel(
-                  '', // imageurl (empty string if no image)
+                  '', // imageurl
                   true, // isMe
                   false, // hasImage
                   sender: widget.currentuser.fullName,
@@ -147,9 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 await chatController.sendMessage(newMessage);
                 setState((){});
               },
-              backgroundColor: Colors.blue,
-              elevation: 0,
-              child: const Icon(Icons.send, color: Colors.white, size: 15),
+              icon: const Icon(Icons.send, color: Colors.white, size: 15),
             ),
           ),
         ],
