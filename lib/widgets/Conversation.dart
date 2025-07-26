@@ -42,7 +42,9 @@ class _ConversationListState extends State<ConversationList> {
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: AssetImage(widget.imageUrl),
+                    backgroundImage: (widget.imageUrl.isNotEmpty)
+                        ? NetworkImage(widget.currentuser.imageUrl!)
+                        : const AssetImage('assets/images/profile3.png'),
                     maxRadius: 30,
                   ),
                   const SizedBox(width: 16),

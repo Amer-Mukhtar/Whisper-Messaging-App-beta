@@ -18,7 +18,7 @@ class FriendsModel {
       requestSender: json['RequestSender'] as String,
       requestReceiver: json['RequestReciever'] as String,
       requestStatus: json['RequestStatus'] as String,
-      timestamp: (json['timestamp'] as Timestamp).toDate(), // Firestore timestamp
+      timestamp: (json['timestamp'] as Timestamp).toDate(),
     );
   }
 
@@ -27,7 +27,7 @@ class FriendsModel {
       'RequestSender': requestSender,
       'RequestReciever': requestReceiver,
       'RequestStatus': requestStatus,
-      'timestamp': Timestamp.fromDate(timestamp), // convert DateTime back to Firestore Timestamp
+      'timestamp': Timestamp.fromDate(timestamp),
     };
   }
 }

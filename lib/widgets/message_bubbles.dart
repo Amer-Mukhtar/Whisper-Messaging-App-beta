@@ -9,8 +9,8 @@ class MessageBubble extends StatelessWidget {
   final String reciever;
   final bool isMe;
   final String? imageUrl;
-  final String? type;
   final ChatController chatController;
+  final bool hasImage;
 
   const MessageBubble({
     super.key,
@@ -18,13 +18,13 @@ class MessageBubble extends StatelessWidget {
     required this.message,
     required this.isMe,
     this.imageUrl,
-    this.type, required this.chatController, required this.reciever,
+    required this.chatController,
+    required this.reciever,
+    required this.hasImage,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isImage = type == 'image';
-
     return Column(
       crossAxisAlignment:
       isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -35,21 +35,48 @@ class MessageBubble extends StatelessWidget {
           color: isMe ? Colors.lightBlueAccent : Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(10),
-            child: isImage
-                ? ZoomableImageScreen(imageUrl: imageUrl!)
-                : GestureDetector(onLongPress: (){
-                  if(isMe)
-                    {
-                      showModalBottomSheet(context: context, builder: (context)=>
-                      MessageOptionsSheet(
-                        onDelete: (){
-                        },
-                        onEdit: (){
-                        }, chatController: chatController, sender: sender, message: message, reciever: reciever,
-                      )
-                      );
-                    }
-            } ,child: Text(message, style: const TextStyle(fontSize: 15))),
+            child: hasImage
+                ? GestureDetector(
+              onLongPress: () {
+                if (isMe) {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) => MessageOptionsSheet(
+                      onDelete: () {},
+                      onEdit: () {},
+                      chatController: chatController,
+                      sender: sender,
+                      message: message,
+                      reciever: reciever,
+                    ),
+                  );
+                }
+              },
+              child: Column(
+                children: [
+                  ZoomableImageScreen(imageUrl: imageUrl!),
+                  Text(message, style: const TextStyle(fontSize: 15)),
+                ],
+              ),
+            )
+                : GestureDetector(
+              onLongPress: () {
+                if (isMe) {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) => MessageOptionsSheet(
+                      onDelete: () {},
+                      onEdit: () {},
+                      chatController: chatController,
+                      sender: sender,
+                      message: message,
+                      reciever: reciever,
+                    ),
+                  );
+                }
+              },
+              child: Text(message, style: const TextStyle(fontSize: 15)),
+            ),
           ),
         ),
       ],

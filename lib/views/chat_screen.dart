@@ -71,7 +71,9 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               const SizedBox(width: 2),
               CircleAvatar(
-                backgroundImage: AssetImage(widget.imageUrl),
+                backgroundImage: (widget.imageUrl.isNotEmpty)
+                    ? NetworkImage(widget.currentuser.imageUrl!)
+                    : const AssetImage('assets/images/profile3.png'),
                 maxRadius: 20,
               ),
               const SizedBox(width: 12),
@@ -115,7 +117,8 @@ class _ChatScreenState extends State<ChatScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
             ),
-            onPressed: () async {
+            onPressed: () async
+            {
               final imageUrl = await chatController.uploadImageToSupabase();
               showImageMessagePreview(
                 url: imageUrl!,
@@ -226,6 +229,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         messagetextController.clear();
                         Navigator.pop(context);
                         await chatController.sendImage(newMessage);
+                        setState((){});
 
                       },
                     ),

@@ -42,12 +42,7 @@ class ChatController {
     }
   }
 
-  Future<void> editMessage(
-      String oldMessage,
-      String newMessage,
-      String sender,
-      String receiver
-      ) async {
+  Future<void> editMessage(String oldMessage, String newMessage, String sender, String receiver) async {
     try {
       final querySnapshot = await FirebaseFirestore.instance
           .collection('chat_room')
@@ -84,11 +79,12 @@ class ChatController {
     if (messageModel.message.isEmpty) return;
     await _firestore.collection('chat_room').add({
       'message': messageModel.message,
-      'imageUrl': messageModel.imageUrl,
-      'hasImage': messageModel.hasImage,
       'sender': messageModel.sender,
       'receiver': messageModel.receiver,
       'timestamp': messageModel.timestamp,
+      'isMe':messageModel.isMe,
+      'hasImage':messageModel.hasImage,
+      'imageUrl': messageModel.imageUrl
     });
   }
 

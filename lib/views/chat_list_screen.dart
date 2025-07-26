@@ -97,8 +97,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 ),
               );
             },
-            child: const CircleAvatar(
-              backgroundImage: AssetImage('assets/images/profile3.png'),
+            child: CircleAvatar(
+              backgroundImage: widget.currentuser.imageUrl != null
+                  ? NetworkImage(widget.currentuser.imageUrl!)
+                  : const AssetImage('assets/images/profile3.png') as ImageProvider,
             ),
           ),
         ),
@@ -131,41 +133,55 @@ class _ChatListScreenState extends State<ChatListScreen> {
             final addedUser = userData['RequestReciever'] as String?;
 
 
-              userWidgets.add(
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 10, 5, 0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ChatScreen(
-                            currentuser: widget.currentuser,
-                            imageUrl: defaultUserImages[i % defaultUserImages.length],
-                            reciever: addedUser ?? 'No Name',
+            userWidgets.add(
+              FutureBuilder<String?>(
+                future: chat_list_controller.getProfileImage(addedUser!),
+                builder: (context, snapshot) {
+                  final profileImage = (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData &&
+                      snapshot.data != null &&
+                      snapshot.data!.isNotEmpty)
+                      ? NetworkImage(snapshot.data!)
+                      : AssetImage(defaultUserImages[i % defaultUserImages.length])
+                  as ImageProvider;
+
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 10, 5, 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ChatScreen(
+                              currentuser: widget.currentuser,
+                              imageUrl: snapshot.data ??
+                                  defaultUserImages[i % defaultUserImages.length],
+                              reciever: addedUser ?? 'No Name',
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: AssetImage(
-                              defaultUserImages[i % defaultUserImages.length]),
-                        ),
-                        Text(
-                          addedUser ?? 'No Name',
-                          style: const TextStyle(
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundImage: profileImage,
+                          ),
+                          Text(
+                            addedUser ?? 'No Name',
+                            style: const TextStyle(
                               fontSize: 15,
                               color: ChatPageContactNameTextColor,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-              );
+                  );
+                },
+              ),
+            );
 
           }
 
@@ -220,14 +236,25 @@ class _ChatListScreenState extends State<ChatListScreen> {
               final currentUser = userData['RequestSender'] as String?;
               final addedUser = userData['RequestReciever'] as String?;
 
+              userWidgets.add(
+                FutureBuilder<String?>(
+                  future: chat_list_controller.getProfileImage(addedUser!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox(); // Or a loading placeholder
+                    }
 
-                userWidgets.add(
-                  ConversationList(
-                    reciever: addedUser ?? 'No Name',
-                    imageUrl: defaultUserImages[i % defaultUserImages.length],
-                    currentuser: widget.currentuser,
-                  ),
-                );
+                    final imageUrl = snapshot.data ?? '';
+
+                    return ConversationList(
+                      reciever: addedUser ?? 'No Name',
+                      imageUrl: imageUrl,
+                      currentuser: widget.currentuser,
+                    );
+                  },
+                ),
+              );
+
 
             }
 

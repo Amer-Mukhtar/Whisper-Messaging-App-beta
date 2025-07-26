@@ -36,7 +36,7 @@ class MessageStream extends StatelessWidget {
               final messageData = message.data() as Map<String, dynamic>;
               final messageText = messageData['message'] ?? '';
               final imageUrl = messageData['imageUrl'] ?? '';
-              final type = messageData['type'] ?? 'text';
+              final hasImage = messageData['hasImage'] ?? false;
               final messageSender = messageData['sender'] ?? '';
               final messageReceiver = messageData['receiver'] ?? '';
 
@@ -47,7 +47,9 @@ class MessageStream extends StatelessWidget {
                   message: messageText,
                   isMe: currentUser == messageSender,
                   imageUrl: imageUrl,
-                  type: type, chatController: chatController, reciever:messageReceiver ,
+                  hasImage: hasImage,
+                  chatController: chatController,
+                  reciever:messageReceiver ,
                 );
                 messageWidgets.add(messageWidget);
               }
