@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whisper/widgets/zommable_image.dart';
-import '../controller/chat_screen.dart';
+import '../controller/chat_controller.dart';
 import 'message_options_sheet.dart';
 
 class MessageBubble extends StatelessWidget {

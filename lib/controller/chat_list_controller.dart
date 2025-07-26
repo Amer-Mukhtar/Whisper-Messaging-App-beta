@@ -7,9 +7,16 @@ class ChatListController {
 
   Stream<QuerySnapshot> fetchUsersStream(UserModel userModel) {
     return _firestore.collection('added_users')
-        .where('RequestSender',isEqualTo: userModel.fullName)
-        .where('RequestReciever',isEqualTo: userModel.fullName)
-        .where('RequestStatus',isEqualTo: 'accepted').snapshots();
+        .where(
+      Filter.and(
+        Filter.or(
+          Filter('RequestSender', isEqualTo: userModel.fullName),
+          Filter('RequestReciever', isEqualTo: userModel.fullName),
+        ),
+        Filter('RequestStatus', isEqualTo: 'accepted'),
+      ),
+    )
+        .snapshots();
   }
 
   bool isUserAdded(String currentUser, String? addedUser) {

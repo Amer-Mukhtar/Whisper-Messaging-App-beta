@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:whisper/widgets/constant.dart';
 import 'package:whisper/widgets/message_bubbles.dart';
-import '../controller/chat_screen.dart';
+import '../controller/chat_controller.dart';
 
 final _firestore = FirebaseFirestore.instance;
 

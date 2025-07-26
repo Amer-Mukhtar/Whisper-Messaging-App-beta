@@ -2,19 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:whisper/models/user_model.dart';
 import 'package:whisper/widgets/constant.dart';
-
 import '../controller/profile_controller.dart';
 
 class ProfileScreen extends StatefulWidget {
   final UserModel currentuser;
   final String? image;
+
   const ProfileScreen({super.key, required this.currentuser, this.image});
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final ProfileController profile_controller=ProfileController();
+  final ProfileController profile_controller = ProfileController();
+  bool isUploading = false;
+
+  Future<void> handleImageUpload() async {
+    setState(() {
+      isUploading = true;
+    });
+
+    final success = await profile_controller.uploadImageToSupabase(widget.currentuser);
+
+    setState(() {
+      isUploading = false;
+    });
+
+    if (success) {
+      setState(() {}); // Refresh UI with new image
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Image uploaded successfully")),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to upload image")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,22 +73,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Stack(
               alignment: Alignment.center,
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 130,
-                  backgroundImage: AssetImage('assets/images/profile3.png'),
+                  backgroundImage: widget.currentuser.imageUrl != null
+                      ? NetworkImage(widget.currentuser.imageUrl!)
+                      : const AssetImage('assets/images/profile3.png') as ImageProvider,
                 ),
+                if (isUploading)
+                  Container(
+                    width: 260,
+                    height: 260,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    ),
+                  ),
                 Positioned(
-                    right: 40,
-                    bottom: 5,
-                    child: CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.blue,
-                      child: IconButton(
-                          onPressed: () {
-                            profile_controller.pickImage(widget.currentuser);
-                          },
-                          icon: Icon(CupertinoIcons.plus, color: Colors.white)),
-                    )),
+                  right: 40,
+                  bottom: 5,
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.blue,
+                    child: IconButton(
+                      onPressed: isUploading ? null : handleImageUpload,
+                      icon: const Icon(CupertinoIcons.plus, color: Colors.white),
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 40),

@@ -1,38 +1,77 @@
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/user_model.dart';
 
 class ProfileController {
-  Future<void> pickImage(UserModel userModel) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-      if (pickedFile == null) {
-        print('Image picking cancelled.');
-        return;
+  Future<bool> uploadImageToSupabase(UserModel currentuser) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return false;
+    try {
+      final file = File(pickedFile.path);
+      final fileBytes = await file.readAsBytes();
+      final fileName = currentuser.fullName;
+      final storage = Supabase.instance.client.storage;
+      final bucket = storage.from('whisper');
+      final path = 'images/$fileName.jpg';
+
+      try {
+        await bucket.remove([path]);
+      } catch (e) {
+        print('Delete warning (may not exist yet): $e');
       }
 
-      final imageFile = File(pickedFile.path);
-      final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      // Upload new file
+      final uploadResult = await bucket.uploadBinary(
+        path,
+        fileBytes,
+        fileOptions: FileOptions(contentType: 'image/jpeg'),
+      );
 
-      print('Uploading image...');
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('profile_images/$fileName.jpg');
+      if (uploadResult.isEmpty) {
+        print("Upload failed");
+        return false;
+      }
 
-      await ref.putFile(imageFile);
-      print('Image uploaded successfully.');
+      // Get public URL
+      final imageUrl = bucket.getPublicUrl(path);
+      print("Image URL: $imageUrl");
 
-      final imageUrl = await ref.getDownloadURL();
-      userModel.imageUrl = imageUrl;
-    } on FirebaseException catch (e) {
-      print('Firebase Storage error: ${e.message}');
-    } on IOException catch (e) {
-      print('File system error: $e');
+      currentuser.imageUrl = imageUrl;
+      updateUserImageUrlByName(currentuser);
+      return true;
     } catch (e) {
-      print('Unexpected error during image upload: $e');
+      print("Upload exception: $e");
+      return false;
     }
   }
+  Future<bool> updateUserImageUrlByName(UserModel currentuser) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('fullName', isEqualTo: currentuser.fullName)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        print("No user found with fullName: ${currentuser.fullName}");
+        return false;
+      }
+      final userDoc = querySnapshot.docs.first.reference;
+      await userDoc.update({
+        'imageUrl': currentuser.imageUrl,
+      });
+
+      print("imageUrl updated for ${currentuser.fullName}");
+      return true;
+    } catch (e) {
+      print("Error updating imageUrl: $e");
+      return false;
+    }
+  }
+
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whisper/models/messages_model.dart';
 import 'package:whisper/models/user_model.dart';
-import '../controller/chat_screen.dart';
+import '../controller/chat_controller.dart';
 import '../widgets/constant.dart';
 import '../widgets/message_stream.dart';
 
@@ -116,7 +116,7 @@ class _ChatScreenState extends State<ChatScreen> {
               backgroundColor: Colors.blue,
             ),
             onPressed: () async {
-              final imageUrl = await chatController.pickImage();
+              final imageUrl = await chatController.uploadImageToSupabase();
               showImageMessagePreview(
                 url: imageUrl!,
                 context: context,

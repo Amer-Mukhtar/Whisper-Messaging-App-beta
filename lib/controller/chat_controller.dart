@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whisper/models/messages_model.dart';
 
 class ChatController {
@@ -67,7 +68,6 @@ class ChatController {
     }
   }
 
-
   Future<void> sendMessage(MessagesModel messageModel) async {
     if (messageModel.message.isEmpty) return;
     await _firestore.collection('chat_room').add({
@@ -92,23 +92,39 @@ class ChatController {
     });
   }
 
-  Future<String?> pickImage() async {
+  Future<String?> uploadImageToSupabase() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return null;
 
-    if (pickedFile == null) {
+    try {
+      final file = File(pickedFile.path);
+      final fileBytes = await file.readAsBytes();
+      final fileName = chatId+DateTime.now().millisecondsSinceEpoch.toString();
+
+      final storageResponse = await Supabase.instance.client.storage
+          .from('whisper')
+          .uploadBinary(
+        'chat-images/$fileName.jpg',
+        fileBytes,
+        fileOptions: FileOptions(contentType: 'image/jpeg'),
+      );
+
+      if (storageResponse.isEmpty) {
+        print("Upload failed");
+        return null;
+      }
+
+      final imageUrl = Supabase.instance.client.storage
+          .from('whisper')
+          .getPublicUrl('chat-images/$fileName.jpg');
+
+
+      return imageUrl;
+    } catch (e) {
+      print("Upload exception: $e");
       return null;
     }
-
-    final imageFile = File(pickedFile.path);
-    final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child('chat_images/$chatId/$fileName.jpg');
-
-    await ref.putFile(imageFile);
-    print('Image uploaded');
-    return await ref.getDownloadURL();
   }
 
 

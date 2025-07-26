@@ -1,7 +1,7 @@
 class UserModel {
   final String fullName;
   final String email;
-  late final String? imageUrl;
+  String? imageUrl;
 
   UserModel({
     required this.fullName,

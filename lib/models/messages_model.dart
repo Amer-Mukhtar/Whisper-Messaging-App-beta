@@ -4,7 +4,7 @@ class MessagesModel {
   late final String sender;
   final String receiver;
   late final String message;
-  final String imageUrl;
+  late String imageUrl;
   final DateTime timestamp;
   final bool isMe;
   final bool hasImage;

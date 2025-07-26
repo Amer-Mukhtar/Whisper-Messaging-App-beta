@@ -6,7 +6,7 @@ import 'package:whisper/views/profile_screen.dart';
 import 'package:whisper/widgets/Conversation.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/constant.dart';
-import '../controller/chat_list_screen.dart';
+import '../controller/chat_list_controller.dart';
 import 'add_user.dart';
 import 'chat_screen.dart';
 
@@ -130,7 +130,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             final currentUser = userData['RequestSender'] as String?;
             final addedUser = userData['RequestReciever'] as String?;
 
-            if (currentUser == currentUser) {
+
               userWidgets.add(
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15, 10, 5, 0),
@@ -166,7 +166,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   ),
                 ),
               );
-            }
+
           }
 
           if (userWidgets.isEmpty) {
@@ -214,12 +214,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
             }
             final users = snapshot.data?.docs ?? [];
             final userWidgets = <Widget>[];
-            for (var i = 0; i < users.length; i++) {
+            for (var i = 0; i < users.length; i++)
+            {
               final userData = users[i].data() as Map<String, dynamic>;
               final currentUser = userData['RequestSender'] as String?;
               final addedUser = userData['RequestReciever'] as String?;
 
-              if (currentUser == widget.currentuser.fullName) {
+
                 userWidgets.add(
                   ConversationList(
                     reciever: addedUser ?? 'No Name',
@@ -227,7 +228,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     currentuser: widget.currentuser,
                   ),
                 );
-              }
+
             }
 
             if (userWidgets.isEmpty) {
