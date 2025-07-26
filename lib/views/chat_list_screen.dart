@@ -4,10 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:whisper/models/user_model.dart';
 import 'package:whisper/views/profile_screen.dart';
 import 'package:whisper/widgets/Conversation.dart';
-import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/constant.dart';
 import '../controller/chat_list_controller.dart';
-import 'add_user.dart';
 import 'chat_screen.dart';
 
 final List<String> defaultUserImages = [
@@ -36,28 +34,27 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BGScaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.redAccent,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddUserScreen(
-                currentUser: widget.currentuser,
-              ),
-            ),
-          );
-        },
-        child: const Icon(CupertinoIcons.person_add, color: Colors.white)
-      ),
+    return Scaffold(
+      extendBodyBehindAppBar: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
         children: [
-          _buildHeader(),
-          _buildHorizontalUserList(),
-          _buildConversationList(),
+          Image.asset(
+            'assets/images/background.jpg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                _buildHorizontalUserList(),
+                _buildConversationList(),
+              ],
+            ),
+          ),
         ],
       ),
     );

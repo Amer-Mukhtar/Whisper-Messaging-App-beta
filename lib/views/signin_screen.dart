@@ -6,6 +6,7 @@ import 'package:whisper/views/chat_list_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
 import '../controller/signin_controller.dart';
+import 'home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -46,8 +47,8 @@ class _SignInScreenState extends State<SignInScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => ChatListScreen(
-              currentuser: result.user!,
+            builder: (_) => HomeScreen(
+              currentUser: result.user!,
             ),
           ),
         );

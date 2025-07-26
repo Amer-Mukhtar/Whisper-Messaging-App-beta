@@ -96,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   bottom: 5,
                   child: CircleAvatar(
                     radius: 20,
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.red,
                     child: IconButton(
                       onPressed: isUploading ? null : handleImageUpload,
                       icon: const Icon(CupertinoIcons.plus, color: Colors.white),
