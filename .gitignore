@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+touch.env
 migrate_working_dir/
 
 # IntelliJ related
@@ -42,5 +43,3 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Local secrets file (excluded from Git)
-lib/secrets.dart
