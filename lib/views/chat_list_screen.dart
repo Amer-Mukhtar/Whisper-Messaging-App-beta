@@ -6,6 +6,8 @@ import 'package:whisper/views/profile_screen.dart';
 import 'package:whisper/widgets/Conversation.dart';
 import 'package:whisper/widgets/constant.dart';
 import '../controller/chat_list_controller.dart';
+import '../controller/friend_controller.dart';
+import '../models/user_friends_model.dart';
 import 'chat_screen.dart';
 
 final List<String> defaultUserImages = [
@@ -240,7 +242,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       if (snapshot.connectionState == ConnectionState.done &&
                           snapshot.hasData &&
                           snapshot.data != null &&
-                          snapshot.data!.trim().isNotEmpty) {
+                          snapshot.data!.trim().isNotEmpty)
+                      {
                         imageUrl = snapshot.data!;
                       }
                       return ConversationList(
@@ -275,5 +278,27 @@ class _ChatListScreenState extends State<ChatListScreen> {
         ),
       ),
     );
+  }
+
+  void showoptions(BuildContext context,FriendsModel model)
+  {
+    showModalBottomSheet(context: context, builder: (BuildContext context){
+      return Container(padding: EdgeInsets.all(0),
+        child: Wrap(
+          children: [
+            ListTile(
+              onTap: (){
+                friend_controller controller=friend_controller();
+                controller.deleteFriends(model);
+                setState(() {
+                });
+              },
+              tileColor: Color(0xFF211a23),
+              leading: Icon(CupertinoIcons.delete,color: Colors.red,),
+              title: Text('Delete',style: TextStyle(color: Colors.white),),
+            ),
+          ],
+        ),);
+    });
   }
 }

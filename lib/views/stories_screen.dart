@@ -74,34 +74,46 @@ class StoriesScreen extends StatefulWidget {
             itemBuilder: (context, index) {
               final story = stories[index];
 
-              return Stack(
-                children: [
-                  // Story image
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      image: DecorationImage(
-                        image: NetworkImage(story.imageUrl),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  // Profile image
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.white,
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundImage: NetworkImage(
-                          story.imageUrl, // Replace with `story.userProfile` if available
+              return InkWell(
+                onLongPress: (){
+                  StoriesModel storiesModel=StoriesModel(
+                      username: story.username,
+                      timestamp: story.timestamp,
+                      imageUrl: story.imageUrl,
+                      userProfile: story.imageUrl
+
+                  );
+                  showoptions(context,storiesModel);
+                },
+                child: Stack(
+                  children: [
+                    // Story image
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        image: DecorationImage(
+                          image: NetworkImage(story.imageUrl),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    // Profile image
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: CircleAvatar(
+                        radius: 12,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 10,
+                          backgroundImage: NetworkImage(
+                            story.imageUrl, // Replace with `story.userProfile` if available
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           );
@@ -109,5 +121,26 @@ class StoriesScreen extends StatefulWidget {
       )
       ,
     );
+  }
+  void showoptions(BuildContext context,StoriesModel storiesModel)
+  {
+     showModalBottomSheet(context: context, builder: (BuildContext context){
+       return Container(padding: EdgeInsets.all(0),
+       child: Wrap(
+           children: [
+             ListTile(
+               onTap: (){
+                 StoriesController storiesController=StoriesController();
+                 storiesController.deleteStory(storiesModel);
+                 setState(() {
+                 });
+               },
+               tileColor: Color(0xFF211a23),
+             leading: Icon(CupertinoIcons.delete,color: Colors.red,),
+             title: Text('Delete',style: TextStyle(color: Colors.white),),
+       ),
+         ],
+       ),);
+     });
   }
 }

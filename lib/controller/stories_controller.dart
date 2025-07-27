@@ -69,5 +69,22 @@ class StoriesController{
       );
     }).toList();
   }
+  Future<void> deleteStory(StoriesModel storiesModel) async {
+    try {
+      final querySnapshot = await _firestore.collection('stories')
+          .where('username', isEqualTo: storiesModel.username)
+          .where('timestamp', isEqualTo: storiesModel.timestamp)
+          .limit(1)
+          .get();
 
+      if (querySnapshot.docs.isNotEmpty) {
+        await querySnapshot.docs.first.reference.delete();
+        print('Story deleted successfully.');
+      } else {
+        print('Story not found.');
+      }
+    } catch (e) {
+      print('Error deleting Story: $e');
+    }
+  }
 }
