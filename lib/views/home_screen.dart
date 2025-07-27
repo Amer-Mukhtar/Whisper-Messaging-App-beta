@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _screens = [
       ChatListScreen(currentuser: widget.currentUser),
-      StoriesScreen(),
+      StoriesScreen(currentUser: widget.currentUser),
       AddUserScreen(currentUser: widget.currentUser),
     ];
   }

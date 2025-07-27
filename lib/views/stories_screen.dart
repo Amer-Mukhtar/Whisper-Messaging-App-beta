@@ -2,28 +2,112 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:whisper/models/user_model.dart';
 
+import '../controller/stories_controller.dart';
+import '../models/stories_model.dart';
 import '../widgets/constant.dart';
 
 class StoriesScreen extends StatefulWidget {
-  const StoriesScreen({super.key});
+  UserModel currentUser;
+   StoriesScreen({super.key,required this.currentUser});
 
   @override
   State<StoriesScreen> createState() => _StoriesScreenState();
 }
+  StoriesController storiesController=StoriesController();
 
-class _StoriesScreenState extends State<StoriesScreen> {
+  class _StoriesScreenState extends State<StoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFF211a23),
+        onPressed: () async {
+          final imageurl = await storiesController.uploadImageToSupabase(widget.currentUser);
+          if (imageurl != null) {
+            StoriesModel storiesModel = StoriesModel(
+              username: widget.currentUser.fullName,
+              timestamp: DateTime.now(),
+              imageUrl: imageurl, userProfile: widget.currentUser.imageUrl!,
+            );
+            await storiesController.sendStory(storiesModel);
+          } else {
+            // handle upload failure
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Failed to upload image")),
+            );
+          }
+        },
+        child: Icon(CupertinoIcons.plus, color: Colors.redAccent),
+      ),
+
       backgroundColor: Colors.black,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Stories',style: TextStyle(color: Colors.white),),
         iconTheme: const IconThemeData(color: addUserIcon),
         backgroundColor: Colors.black,
 
       ),
-      body: Container(),
+      body: FutureBuilder<List<StoriesModel>>(
+        future: storiesController.getStories(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No stories found'));
+          }
+
+          final stories = snapshot.data!;
+
+          return GridView.builder(
+            padding: const EdgeInsets.all(10),
+            itemCount: stories.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+            ),
+            itemBuilder: (context, index) {
+              final story = stories[index];
+
+              return Stack(
+                children: [
+                  // Story image
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      image: DecorationImage(
+                        image: NetworkImage(story.imageUrl),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  // Profile image
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.white,
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundImage: NetworkImage(
+                          story.imageUrl, // Replace with `story.userProfile` if available
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      )
+      ,
     );
   }
 }

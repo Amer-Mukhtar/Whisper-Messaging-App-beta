@@ -53,6 +53,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           iconTheme: const IconThemeData(color: addUserIcon),
           backgroundColor: addUserBackground,
           title: const Text(

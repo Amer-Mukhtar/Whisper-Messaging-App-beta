@@ -6,7 +6,7 @@ const supabaseUrl = 'https://jjusijvhkozntrqwskuu.supabase.co';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
    await Firebase.initializeApp();
-  await Supabase.initialize(url: supabaseUrl, anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdXNpanZoa296bnRycXdza3V1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1MzE3MDksImV4cCI6MjA2OTEwNzcwOX0.yDZ_mPSeicGbuhLsxOzp16U5D5fhSpaCNMJuwCVgXy4');
+  await Supabase.initialize(url: supabaseUrl, anonKey: '');
   runApp(const MyApp());
 }
 
