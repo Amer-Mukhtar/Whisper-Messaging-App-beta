@@ -203,7 +203,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         itemCount: docs.length,
                         itemBuilder: (context, index) {
                           final data = docs[index].data() as Map<String, dynamic>;
-                          final fullName = data['RequestReciever'] ?? 'No Name';
+                          final fullName = data['RequestSender'] ?? 'No Name';
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                             child: ListTile(
