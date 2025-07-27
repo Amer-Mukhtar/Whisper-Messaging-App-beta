@@ -8,7 +8,8 @@
 .buildlog/
 .history
 .svn/
-touch.env
+.env
+lib/config/env.g.dart
 migrate_working_dir/
 
 # IntelliJ related
