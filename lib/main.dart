@@ -7,6 +7,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whisper/views/welcome_screen.dart';
 import 'config/env.dart';
 import 'controller/theme_controller.dart';
+import 'core/dark_theme.dart';
+import 'core/light_theme.dart';
+import 'core/theme.dart';
 
 void main() async {
   final anonKey = Env.supabaseAnonKey;
@@ -14,23 +17,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
    await Firebase.initializeApp();
   await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
-  runApp(const MyApp());
+  Get.put(ThemeController());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ThemeController themeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
-    return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.redAccent,
-      ),
+    return Obx(() => GetMaterialApp(
+      title: 'Themed App',
       debugShowCheckedModeBanner: false,
-      title: 'Whisper',
+      theme: AppTheme.lightTheme.theme,
+      darkTheme: AppTheme.darkTheme.theme,
+      themeMode: themeController.theme,
       home: const WelcomeScreen(),
-    );
+    ));
   }
 }
