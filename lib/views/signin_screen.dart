@@ -58,6 +58,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BGScaffold(
       child: Column(
         children: [

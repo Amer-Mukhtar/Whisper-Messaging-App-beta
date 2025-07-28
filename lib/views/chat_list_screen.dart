@@ -118,25 +118,26 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
           for (var i = 0; i < users.length; i++) {
             final userData = users[i].data() as Map<String, dynamic>;
-            final addedUser;
-            if(widget.currentuser==userData['RequestSender'] as String?)
-              {
-                addedUser = userData['RequestReciever'] as String?;
-              }
-            else{
-              addedUser=userData['RequestSender'] as String?;
+            final sender = userData['RequestSender'] as String?;
+            final receiver = userData['RequestReciever'] as String?;
+            if (sender == receiver) continue;
+            String? addedUser;
+            if (widget.currentuser == sender) {
+              addedUser = receiver;
+            } else {
+              addedUser = receiver;
             }
+            if (addedUser == null) continue;
             userWidgets.add(
               FutureBuilder<String?>(
-                future: chat_list_controller.getProfileImage(addedUser!),
+                future: chat_list_controller.getProfileImage(addedUser),
                 builder: (context, snapshot) {
                   final profileImage = (snapshot.connectionState == ConnectionState.done &&
                       snapshot.hasData &&
                       snapshot.data != null &&
                       snapshot.data!.isNotEmpty)
                       ? NetworkImage(snapshot.data!)
-                      : AssetImage(defaultUserImages[i % defaultUserImages.length])
-                  as ImageProvider;
+                      : AssetImage(defaultUserImages[i % defaultUserImages.length]) as ImageProvider;
 
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(15, 10, 5, 0),
@@ -148,7 +149,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                             builder: (_) => ChatScreen(
                               currentuser: widget.currentuser,
                               imageUrl: snapshot.data ?? defaultUserImages[i % defaultUserImages.length],
-                              reciever: addedUser ?? 'No Name',
+                              reciever: addedUser!,
                             ),
                           ),
                         );
@@ -160,7 +161,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                             backgroundImage: profileImage,
                           ),
                           Text(
-                            addedUser ?? 'No Name',
+                            addedUser!,
                             style: const TextStyle(
                               fontSize: 15,
                               color: ChatPageContactNameTextColor,
@@ -174,7 +175,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 },
               ),
             );
-
           }
 
           if (userWidgets.isEmpty) {
@@ -184,8 +184,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 child: Column(
                   children: [
                     CircleAvatar(radius: 30),
-                    Text('No User Added',
-                        style: TextStyle(fontSize: 15, color: Colors.white)),
+                    Text(
+                      'No User Added',
+                      style: TextStyle(fontSize: 15, color: Colors.white),
+                    ),
                   ],
                 ),
               ),
@@ -199,6 +201,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           );
         },
       ),
+
     );
   }
 
@@ -226,13 +229,15 @@ class _ChatListScreenState extends State<ChatListScreen> {
             {
               final userData = users[i].data() as Map<String, dynamic>;
               final addedUser;
-              if(widget.currentuser==userData['RequestSender'] as String?)
-              {
-                addedUser = userData['RequestReciever'] as String?;
+              final sender = userData['RequestSender'] as String?;
+              final receiver = userData['RequestReciever'] as String?;
+              if (sender == receiver) continue;
+              if (widget.currentuser == sender) {
+                addedUser = receiver;
+              } else {
+                addedUser = receiver;
               }
-              else{
-                addedUser=userData['RequestSender'] as String?;
-              }
+              if (addedUser == null) continue;
               userWidgets.add(
                   FutureBuilder<String?>(
                     future: chat_list_controller.getProfileImage(addedUser!),

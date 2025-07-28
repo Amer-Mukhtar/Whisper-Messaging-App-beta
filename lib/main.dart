@@ -1,15 +1,11 @@
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whisper/views/welcome_screen.dart';
 import 'config/env.dart';
 import 'controller/theme_controller.dart';
-import 'core/dark_theme.dart';
-import 'core/light_theme.dart';
-import 'core/theme.dart';
+import 'core/theme/theme.dart';
 
 void main() async {
   final anonKey = Env.supabaseAnonKey;

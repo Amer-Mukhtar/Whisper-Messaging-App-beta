@@ -6,18 +6,18 @@ class ChatListController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Stream<QuerySnapshot> fetchUsersStream(UserModel userModel) {
-    return _firestore.collection('added_users')
+    return _firestore
+        .collection('added_users')
         .where(
-      Filter.and(
-        Filter.or(
-          Filter('RequestSender', isEqualTo: userModel.fullName),
-          Filter('RequestReciever', isEqualTo: userModel.fullName),
-        ),
-        Filter('RequestStatus', isEqualTo: 'accepted'),
+      Filter.or(
+        Filter('RequestSender', isEqualTo: userModel.fullName),
+        Filter('RequestReciever', isEqualTo: userModel.fullName),
       ),
     )
+        .where('RequestStatus', isEqualTo: 'accepted')
         .snapshots();
   }
+
 
   Future<String?> getProfileImage(String name) async {
     final querySnapshot = await _firestore
