@@ -122,10 +122,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
             final receiver = userData['RequestReciever'] as String?;
             if (sender == receiver) continue;
             String? addedUser;
-            if (widget.currentuser == sender) {
+            if (widget.currentuser.fullName == sender) {
               addedUser = receiver;
             } else {
-              addedUser = receiver;
+              addedUser = sender;
             }
             if (addedUser == null) continue;
             userWidgets.add(
@@ -232,10 +232,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
               final sender = userData['RequestSender'] as String?;
               final receiver = userData['RequestReciever'] as String?;
               if (sender == receiver) continue;
-              if (widget.currentuser == sender) {
+              if (widget.currentuser.fullName == sender)
+              {
                 addedUser = receiver;
               } else {
-                addedUser = receiver;
+                addedUser = sender;
               }
               if (addedUser == null) continue;
               userWidgets.add(

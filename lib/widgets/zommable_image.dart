@@ -26,16 +26,24 @@ class ZoomableImageScreen extends StatelessWidget {
           },
           loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
             if (loadingProgress == null) return child;
-            return SizedBox(
+            return Container(
               height: 250,
               width: 200,
-              child: CircularProgressIndicator(
-                color: Colors.white,
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                    : null,
+              padding: const EdgeInsets.all(10),
+              alignment: Alignment.center,
+              child: SizedBox(
+                height: 40, // or any size you want
+                width: 40,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 3, // thinner circle if needed
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
               ),
             );
+
           },
         ),
       ),

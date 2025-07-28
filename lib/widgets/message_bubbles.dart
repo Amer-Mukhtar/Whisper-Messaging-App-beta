@@ -27,68 +27,96 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment:
-      isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Text(sender, style: const TextStyle(color: Colors.white60)),
         Material(
-          borderRadius: isMe? BorderRadius.only(
-              topLeft: Radius.circular(10),
-              bottomLeft:Radius.circular(10),
-              bottomRight:Radius.circular(10)
-          ) : BorderRadius.only(
-    topRight: Radius.circular(10),
-    bottomLeft:Radius.circular(10),
-    bottomRight:Radius.circular(10)
-    ),
+          borderRadius: isMe
+              ? BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10))
+              : BorderRadius.only(
+                  topRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10)),
           color: isMe ? Colors.redAccent : Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(5),
             child: hasImage
                 ? GestureDetector(
-              onLongPress: () {
-                if (isMe) {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) => MessageOptionsSheet(
-                      onDelete: () {},
-                      onEdit: () {},
-                      chatController: chatController,
-                      sender: sender,
-                      message: message,
-                      reciever: reciever,
+                    onLongPress: () {
+                      if (isMe) {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => MessageOptionsSheet(
+                            onDelete: () {},
+                            onEdit: () {},
+                            chatController: chatController,
+                            sender: sender,
+                            message: message,
+                            reciever: reciever,
+                          ),
+                        );
+                      }
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                                borderRadius: isMe
+                                    ? const BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10))
+                                    : const BorderRadius.only(
+                                        topRight: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10)),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black.withOpacity(0.4),
+                                      blurRadius: 5,
+                                      spreadRadius: 1,
+                                      offset: const Offset(0, 3))
+                                ]),
+                            child: ZoomableImageScreen(
+                              imageUrl: imageUrl!,
+                            )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(message,
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: isMe ? Colors.white : Colors.black,
+                            )),
+                      ],
                     ),
-                  );
-                }
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ZoomableImageScreen(imageUrl: imageUrl!,),
-                  Text(message,
-                      style: TextStyle(fontSize: 15,
-                        color: isMe ? Colors.white : Colors.black,)
-                  ),
-                ],
-              ),
-            )
+                  )
                 : GestureDetector(
-              onLongPress: () {
-                if (isMe) {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) => MessageOptionsSheet(
-                      onDelete: () {},
-                      onEdit: () {},
-                      chatController: chatController,
-                      sender: sender,
-                      message: message,
-                      reciever: reciever,
-                    ),
-                  );
-                }
-              },
-              child: Text(message, style: TextStyle(fontSize: 15,color: isMe ? Colors.white : Colors.black)),
-            ),
+                    onLongPress: () {
+                      if (isMe) {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => MessageOptionsSheet(
+                            onDelete: () {},
+                            onEdit: () {},
+                            chatController: chatController,
+                            sender: sender,
+                            message: message,
+                            reciever: reciever,
+                          ),
+                        );
+                      }
+                    },
+                    child: Text(message,
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: isMe ? Colors.white : Colors.black)),
+                  ),
           ),
         ),
       ],

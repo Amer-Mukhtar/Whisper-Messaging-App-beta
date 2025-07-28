@@ -55,6 +55,12 @@ class _SignInScreenState extends State<SignInScreen> {
       }
     }
   }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(const AssetImage('assets/images/background.jpg'), context);
+  }
+
 
   @override
   Widget build(BuildContext context) {
