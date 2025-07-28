@@ -15,6 +15,11 @@ class LightTheme implements AppTheme{
     ),
 
     textTheme: const TextTheme(
+      titleLarge: TextStyle(
+        fontSize: 45,
+        fontWeight: FontWeight.w700,
+        color: Colors.black,
+      ),
       displayMedium: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w700,
@@ -31,6 +36,27 @@ class LightTheme implements AppTheme{
         color: Colors.black,
       ),
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll<Color>(Colors.white),
+        foregroundColor: WidgetStatePropertyAll<Color>(Colors.black),
+        padding: WidgetStatePropertyAll<EdgeInsets>(
+          EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        ),
+        shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        textStyle: WidgetStatePropertyAll<TextStyle>(
+          TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ),
+
     inputDecorationTheme: InputDecorationTheme(
       prefixStyle: const TextStyle(
         color: Colors.black,

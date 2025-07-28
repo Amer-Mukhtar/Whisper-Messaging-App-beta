@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/material/theme_data.dart';
 import 'package:whisper/core/theme.dart';
 
 class DarkTheme implements AppTheme{
   @override
   ThemeData get theme => ThemeData(
     brightness: Brightness.dark,
+    useMaterial3: true,
+    primaryColor: Colors.redAccent,
 
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black,
-          titleTextStyle: TextStyle(color: Colors.white,fontSize: 16),
+      titleTextStyle: TextStyle(color: Colors.white,fontSize: 16),
       iconTheme: IconThemeData(
         color: Colors.white),
     ),
 
-        textTheme: const TextTheme(
-
+    textTheme: const TextTheme(
+          titleLarge: TextStyle(
+            fontSize: 45,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
           displayMedium: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
@@ -32,6 +37,28 @@ class DarkTheme implements AppTheme{
             color: Colors.white,
           ),
         ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll<Color>(Colors.black),
+        foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
+        padding: WidgetStatePropertyAll<EdgeInsets>(
+          EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        ),
+        shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        textStyle: WidgetStatePropertyAll<TextStyle>(
+          TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ),
+
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: const TextStyle(
         color: Colors.grey,

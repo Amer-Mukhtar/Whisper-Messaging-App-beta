@@ -7,6 +7,8 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BGScaffold(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -31,15 +33,18 @@ class WelcomeScreen extends StatelessWidget {
                       TextSpan(
                           text: 'Whisper\n',
                           style: TextStyle(
-                            fontSize: 45.0,
-                            fontWeight: FontWeight.w800,
-                          )),
-                      TextSpan(
+                            fontSize: 45,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800
+                          ),
+                      ),
+                       TextSpan(
                         text:
                             '\nWelcome! join us and remember, everyone is but a whisper away from you!',
                         style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 18,
+                            fontSize: 18,
+                            color: Colors.white70
+
                         ),
                       ),
                     ],
