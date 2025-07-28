@@ -115,7 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
           IconButton(
             style: IconButton.styleFrom(
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.redAccent,
             ),
             onPressed: () async
             {
@@ -129,28 +129,25 @@ class _ChatScreenState extends State<ChatScreen> {
 
             icon: const Icon(Icons.attach_file, color: Colors.white, size: 20),
           ),
-          Container(
-            margin: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              onPressed: () async {
-                MessagesModel newMessage = MessagesModel(
-                  '', // imageurl
-                  true, // isMe
-                  false, // hasImage
-                  sender: widget.currentuser.fullName,
-                  receiver: widget.reciever,
-                  message: messagetextController.text,
-                  timestamp: DateTime.now(),
-                );
-                messagetextController.clear();
-                await chatController.sendMessage(newMessage);
-                setState((){});
-              },
-              icon: const Icon(Icons.send, color: Colors.white, size: 15),
+          IconButton(
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.redAccent,
             ),
+            onPressed: () async {
+              MessagesModel newMessage = MessagesModel(
+                '', // imageurl
+                true, // isMe
+                false, // hasImage
+                sender: widget.currentuser.fullName,
+                receiver: widget.reciever,
+                message: messagetextController.text,
+                timestamp: DateTime.now(),
+              );
+              messagetextController.clear();
+              await chatController.sendMessage(newMessage);
+              setState((){});
+            },
+            icon: const Icon(Icons.send, color: Colors.white, size: 15),
           ),
         ],
       ),
@@ -208,31 +205,27 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Container(
-                    padding: EdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.send, color: Colors.white,size: 20),
-                      onPressed: () async {
-                        final newMessage = MessagesModel(
-                          url,
-                          true,
-                          true,
-                          sender: widget.currentuser.fullName,
-                          receiver: widget.reciever,
-                          message: messagetextController.text,
-                          timestamp: DateTime.now(),
-                        );
-                        messagetextController.clear();
-                        Navigator.pop(context);
-                        await chatController.sendImage(newMessage);
-                        setState((){});
+                  IconButton(
+        style: IconButton.styleFrom(
+        backgroundColor: Colors.redAccent,
+        ),
+                    icon: const Icon(Icons.send, color: Colors.white,size: 25),
+                    onPressed: () async {
+                      final newMessage = MessagesModel(
+                        url,
+                        true,
+                        true,
+                        sender: widget.currentuser.fullName,
+                        receiver: widget.reciever,
+                        message: messagetextController.text,
+                        timestamp: DateTime.now(),
+                      );
+                      messagetextController.clear();
+                      Navigator.pop(context);
+                      await chatController.sendImage(newMessage);
+                      setState((){});
 
-                      },
-                    ),
+                    },
                   )
                 ],
               ),

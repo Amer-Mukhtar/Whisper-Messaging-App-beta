@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:whisper/models/user_model.dart';
 import 'package:whisper/views/chat_list_screen.dart';
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ChatListScreen(currentuser: widget.currentUser),
       StoriesScreen(currentUser: widget.currentUser),
       AddUserScreen(currentUser: widget.currentUser),
+      ProfileScreen(currentuser: widget.currentUser)
     ];
   }
 
@@ -39,48 +41,37 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: _screens[_selectedIndex],
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.only(bottom: 10.0, left: 0.0, right: 0.0),
-          child: Container(
-            height: 55,
-            decoration: BoxDecoration(
-              color: const Color(0xFF211a23),
-              borderRadius: BorderRadius.circular(0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
+        bottomNavigationBar: NavigationBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          selectedIndex: _selectedIndex,
+          overlayColor: WidgetStateProperty.all(Colors.red),
+          onDestinationSelected: _onItemTapped,
+          labelTextStyle: WidgetStateProperty.all(TextStyle(color: Colors.red)),
+          indicatorColor: Colors.redAccent.withOpacity(0.2),
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.chat, color: Colors.grey),
+              selectedIcon: Icon(Icons.chat, color: Colors.redAccent),
+              label: 'Chats',
             ),
-            child: NavigationBar(
-              height: 55,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _onItemTapped,
-              indicatorColor: Colors.redAccent.withOpacity(0.2),
-              labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.chat, color: Colors.grey),
-                  selectedIcon: Icon(Icons.chat, color: Colors.redAccent),
-                  label: 'Chats',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.read_more, color: Colors.grey),
-                  selectedIcon: Icon(Icons.read_more, color: Colors.redAccent),
-                  label: 'Stories',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.person_add, color: Colors.grey),
-                  selectedIcon: Icon(Icons.person_add, color: Colors.redAccent),
-                  label: 'Friends',
-                ),
-              ],
+            NavigationDestination(
+              icon: Icon(Icons.read_more, color: Colors.grey),
+              selectedIcon: Icon(Icons.read_more, color: Colors.redAccent),
+              label: 'Stories',
             ),
-          ),
+            NavigationDestination(
+              icon: Icon(Icons.person_add, color: Colors.grey),
+              selectedIcon: Icon(Icons.person_add, color: Colors.redAccent),
+              label: 'Friends',
+            ),
+            NavigationDestination(
+              icon: Icon(CupertinoIcons.profile_circled, color: Colors.grey),
+              selectedIcon: Icon(CupertinoIcons.profile_circled, color: Colors.redAccent),
+              label: 'Profile',
+            ),
+          ],
         ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whisper/widgets/zommable_image.dart';
 import '../controller/chat_controller.dart';
-import 'fullscreen_image.dart';
 import 'message_options_sheet.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -32,10 +31,18 @@ class MessageBubble extends StatelessWidget {
       children: [
         Text(sender, style: const TextStyle(color: Colors.white60)),
         Material(
-          borderRadius: BorderRadius.circular(10),
-          color: isMe ? Colors.lightBlueAccent : Colors.white,
+          borderRadius: isMe? BorderRadius.only(
+              topLeft: Radius.circular(10),
+              bottomLeft:Radius.circular(10),
+              bottomRight:Radius.circular(10)
+          ) : BorderRadius.only(
+    topRight: Radius.circular(10),
+    bottomLeft:Radius.circular(10),
+    bottomRight:Radius.circular(10)
+    ),
+          color: isMe ? Colors.redAccent : Colors.white,
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(5),
             child: hasImage
                 ? GestureDetector(
               onLongPress: () {
@@ -54,9 +61,13 @@ class MessageBubble extends StatelessWidget {
                 }
               },
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ZoomableImageScreen(imageUrl: imageUrl!,),
-                  Text(message, style: const TextStyle(fontSize: 15)),
+                  Text(message,
+                      style: TextStyle(fontSize: 15,
+                        color: isMe ? Colors.white : Colors.black,)
+                  ),
                 ],
               ),
             )
@@ -76,7 +87,7 @@ class MessageBubble extends StatelessWidget {
                   );
                 }
               },
-              child: Text(message, style: const TextStyle(fontSize: 15)),
+              child: Text(message, style: TextStyle(fontSize: 15,color: isMe ? Colors.white : Colors.black)),
             ),
           ),
         ),
