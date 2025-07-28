@@ -15,7 +15,7 @@ class FullScreenImage extends StatelessWidget {
           panEnabled: true,
           minScale: 1,
           maxScale: 4,
-          child: Image.network(imageUrl),
+          child: SizedBox.expand(child: Image.network(imageUrl)),
         ),
       ),
     );

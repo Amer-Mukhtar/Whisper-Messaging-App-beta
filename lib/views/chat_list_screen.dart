@@ -285,25 +285,5 @@ class _ChatListScreenState extends State<ChatListScreen> {
     );
   }
 
-  void showoptions(BuildContext context,FriendsModel model)
-  {
-    showModalBottomSheet(context: context, builder: (BuildContext context){
-      return Container(padding: EdgeInsets.all(0),
-        child: Wrap(
-          children: [
-            ListTile(
-              onTap: (){
-                friend_controller controller=friend_controller();
-                controller.deleteFriends(model);
-                setState(() {
-                });
-              },
-              tileColor: Color(0xFF211a23),
-              leading: Icon(CupertinoIcons.delete,color: Colors.red,),
-              title: Text('Delete',style: TextStyle(color: Colors.white),),
-            ),
-          ],
-        ),);
-    });
-  }
+
 }

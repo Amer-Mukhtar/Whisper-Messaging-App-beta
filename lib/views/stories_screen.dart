@@ -1,12 +1,12 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:whisper/models/user_model.dart';
-
 import '../controller/stories_controller.dart';
 import '../models/stories_model.dart';
 import '../widgets/constant.dart';
+import '../widgets/fullscreen_image.dart';
+import '../widgets/zommable_image.dart';
 
 class StoriesScreen extends StatefulWidget {
   UserModel currentUser;
@@ -32,8 +32,10 @@ class StoriesScreen extends StatefulWidget {
               imageUrl: imageurl, userProfile: widget.currentUser.imageUrl!,
             );
             await storiesController.sendStory(storiesModel);
+            setState(() {
+
+            });
           } else {
-            // handle upload failure
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Failed to upload image")),
             );
@@ -83,7 +85,12 @@ class StoriesScreen extends StatefulWidget {
                       userProfile: story.imageUrl
 
                   );
-                  showoptions(context,storiesModel);
+                  showoptions(context,storiesModel,widget.currentUser);
+                },
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (_) => FullScreenImage(imageUrl: story.imageUrl),
+                  ));
                 },
                 child: Stack(
                   children: [
@@ -122,25 +129,37 @@ class StoriesScreen extends StatefulWidget {
       ,
     );
   }
-  void showoptions(BuildContext context,StoriesModel storiesModel)
+  void showoptions(BuildContext context,StoriesModel storiesModel,UserModel currentUser)
   {
-     showModalBottomSheet(context: context, builder: (BuildContext context){
-       return Container(padding: EdgeInsets.all(0),
-       child: Wrap(
-           children: [
-             ListTile(
-               onTap: (){
-                 StoriesController storiesController=StoriesController();
-                 storiesController.deleteStory(storiesModel);
-                 setState(() {
-                 });
-               },
-               tileColor: Color(0xFF211a23),
-             leading: Icon(CupertinoIcons.delete,color: Colors.red,),
-             title: Text('Delete',style: TextStyle(color: Colors.white),),
-       ),
-         ],
-       ),);
-     });
+
+    if(storiesModel.username==currentUser.fullName)
+      {
+        showModalBottomSheet(context: context, builder: (BuildContext context){
+          return Container(padding: EdgeInsets.all(0),
+            child: Wrap(
+              children: [
+                ListTile(
+                  onTap: (){
+                    StoriesController storiesController=StoriesController();
+                    storiesController.deleteStory(storiesModel);
+                  },
+                  tileColor: Color(0xFF211a23),
+                  leading: Icon(CupertinoIcons.delete,color: Colors.red,),
+                  title: Text('Delete',style: TextStyle(color: Colors.white),),
+                ),
+              ],
+            ),);
+        }
+        );
+      }
+    else
+      {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('You Are Not the Owner Of This Story'),
+           behavior: SnackBarBehavior.floating,duration: Duration(seconds: 1),
+          ),
+        );
+
+      }
   }
 }

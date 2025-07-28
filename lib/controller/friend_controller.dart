@@ -90,21 +90,21 @@ class friend_controller
     }
   }
 
-  Future<void> deleteFriends(FriendsModel model) async {
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('added_users')
-          .where('RequestSender', isEqualTo: model.requestSender)
-          .where('RequestReciever', isEqualTo: model.requestReceiver)
-          .limit(1)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
+  Future<void> deleteFriend(String sender, String Reciever)
+  async
+  {
+    final querySnapshot = await _firestore.collection('added_users')
+        .where('RequestSender', isEqualTo: sender)
+        .where('RequestReciever',isEqualTo: Reciever).limit(1).get();
+    if (querySnapshot.docs.isNotEmpty) {
+      await querySnapshot.docs.first.reference.delete();
+    }
+    else
+      {
+        final querySnapshot = await _firestore.collection('added_users')
+            .where('RequestSender', isEqualTo: Reciever)
+            .where('RequestReciever',isEqualTo: sender).limit(1).get();
         await querySnapshot.docs.first.reference.delete();
       }
-    } catch (e) {
-      print('Error updating request: $e');
-    }
   }
-
 }

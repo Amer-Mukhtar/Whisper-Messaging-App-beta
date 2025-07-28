@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whisper/widgets/zommable_image.dart';
 import '../controller/chat_controller.dart';
+import 'fullscreen_image.dart';
 import 'message_options_sheet.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -54,7 +55,7 @@ class MessageBubble extends StatelessWidget {
               },
               child: Column(
                 children: [
-                  ZoomableImageScreen(imageUrl: imageUrl!),
+                  ZoomableImageScreen(imageUrl: imageUrl!,),
                   Text(message, style: const TextStyle(fontSize: 15)),
                 ],
               ),
