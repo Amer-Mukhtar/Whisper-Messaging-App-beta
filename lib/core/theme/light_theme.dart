@@ -7,7 +7,8 @@ class LightTheme implements AppTheme{
   @override
   ThemeData get theme => ThemeData(
     brightness: Brightness.light,
-
+    useMaterial3: true,
+    primaryColor: Colors.redAccent,
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.white,
       titleTextStyle: TextStyle(color: Colors.black,fontSize: 16),
