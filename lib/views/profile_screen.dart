@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
 import 'package:whisper/widgets/constant.dart';
 import '../controller/profile_controller.dart';
+import '../controller/theme_controller.dart';
 
 class ProfileScreen extends StatefulWidget {
   final UserModel currentuser;
@@ -65,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       body: Container(
-        color: profileBackground,
+        color: context.background.primary,
         child: Column(
           children: [
             const SizedBox(height: 40),
@@ -119,13 +121,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                       Text(
                         "Full Name",
-                        style: TextStyle(color: Colors.white70),
+                        style: context.textStyles.bodyMedium,
                       ),
                       Text(
                         widget.currentuser.fullName,
-                        style: const TextStyle(color: profileText),
+                        style: context.textStyles.labelMedium,
                       ),
                     ],
                   ),
@@ -147,13 +149,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                       Text(
                         'Email ID',
-                        style: TextStyle(color: profileText),
+                        style: context.textStyles.bodyMedium,
                       ),
                       Text(
                         widget.currentuser.email,
-                        style: const TextStyle(color: profileText),
+                        style: context.textStyles.labelMedium,
                       ),
                     ],
                   ),
@@ -161,6 +163,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 40),
+            TextButton(onPressed: (){
+              ThemeController themeController=ThemeController();
+              themeController.toggleTheme();}, child: Text('Changes Theme'))
           ],
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
 import 'package:whisper/widgets/constant.dart';
 import '../controller/friend_controller.dart';
@@ -51,6 +52,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: context.background.primary,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: const Text(
@@ -63,7 +65,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 child: SearchAnchor.bar(
-                  viewBackgroundColor: Color(0xFF211a23),
+                  barOverlayColor: WidgetStateProperty.all(context.background.primary),
+                  viewBackgroundColor: context.background.primary,
                   isFullScreen: false,
                   barPadding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
                   barElevation:WidgetStateProperty.all(0),
@@ -72,18 +75,18 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  barLeading: const Padding(
+                  barLeading:  Padding(
                     padding: EdgeInsets.only(left: 12),
-                    child: Icon(Icons.person_search, color: Colors.white),
+                    child: Icon(Icons.person_search, color: context.background.accented),
                   ),
                   barTextStyle: WidgetStateProperty.all(
-                    const TextStyle(color: Colors.white),
+                     context.textStyles.bodyMedium,
                   ),
                   barHintText: 'Search by name...',
                   barHintStyle: WidgetStateProperty.all(
-                    const TextStyle(color: Colors.white),
+                    context.textStyles.bodyMedium,
                   ),
-                  barBackgroundColor: WidgetStateProperty.all(Colors.grey[900]),
+                  barBackgroundColor: WidgetStateProperty.all(context.background.primary),
 
                   suggestionsBuilder: (BuildContext context, SearchController controller) {
                     return <Widget>[
@@ -106,7 +109,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                   backgroundImage: AssetImage(defaultUserImages[1]),
                                 ),
                                 title: Text(doc['fullName'] ?? 'No Name'),
-                                titleTextStyle: TextStyle(color: Colors.white),
+                                titleTextStyle: context.textStyles.bodyLarge,
                                 trailing: TextButton(
                                   onPressed: () {
                                     final friendModel = FriendsModel(
@@ -115,14 +118,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                       requestStatus: 'pending',
                                       timestamp: DateTime.now(),
                                     );
-
                                     friendController.addFriendRequest(friendModel);
                                   },
-                                  child: const Icon(Icons.add,color: Colors.white,),
+                                  child: const Icon(Icons.add,),
                                 ),
-                                onTap: () {
-                                  // Optional: handle tap
-                                },
                               );
                             }).toList(),
                           );
@@ -131,14 +130,16 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
                     ];
                   },
+
                 ),
               ),
-               const TabBar(tabs:
-               [
+               TabBar(tabs:
+               const [
                 Tab(text: "Sent Requests"),
                 Tab(text: "Recieved Requests")
-               ],indicator: const BoxDecoration(),
-                 labelColor: Colors.white,
+               ],indicator:  const BoxDecoration(),
+                 labelColor: context.theme.primaryColor,
+                 unselectedLabelColor: context.background.accented,
                  dividerColor: Colors.transparent,
                ),
                Expanded(

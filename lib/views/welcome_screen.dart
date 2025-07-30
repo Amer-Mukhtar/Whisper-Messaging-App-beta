@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/views/signin_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 
@@ -14,10 +15,10 @@ class WelcomeScreen extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(bottom: 0, top: 190),
-            child: const CircleAvatar(
-              backgroundImage: AssetImage('assets/images/icon.png'),
+            child: CircleAvatar(
+              backgroundImage: const AssetImage('assets/images/icon.png'),
               radius: 90,
-              backgroundColor: Colors.white,
+              backgroundColor: context.background.primary,
             ),
           ),
           Flexible(

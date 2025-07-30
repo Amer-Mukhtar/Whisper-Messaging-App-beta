@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 
 class BGScaffold extends StatefulWidget {
   const BGScaffold({
@@ -39,6 +40,7 @@ class _BGScaffoldState extends State<BGScaffold> {
         : (widget.child ?? const SizedBox());
 
     return Scaffold(
+      backgroundColor: context.background.primary,
       appBar: widget.appBar,
       bottomNavigationBar: widget.showBottomNav
           ? BottomNavigationBar(
