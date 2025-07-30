@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/messages_model.dart';
 import 'package:whisper/models/user_model.dart';
 import '../controller/chat_controller.dart';
@@ -59,7 +60,6 @@ class _ChatScreenState extends State<ChatScreen> {
     return AppBar(
       elevation: 0,
       automaticallyImplyLeading: false,
-      backgroundColor: messageBackground,
       flexibleSpace: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(right: 16),
@@ -67,7 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back, color: messageIcon),
+                icon: Icon(Icons.arrow_back, color: context.background.accented),
               ),
               const SizedBox(width: 2),
               CircleAvatar(
@@ -80,10 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
               Expanded(
                 child: Text(
                   widget.reciever,
-                  style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: messageText),
+                  style: context.textStyles.titleMedium
                 ),
               ),
             ],
@@ -96,18 +93,16 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildMessageInput() {
     return Container(
       padding: const EdgeInsets.all(10),
-      color: messageBackground,
+      color: context.background.primary,
       child: Row(
         children: [
           const SizedBox(width: 15),
           Expanded(
             child: TextField(
-              style: const TextStyle(color: Colors.white),
               controller: messagetextController,
               onChanged: (value) => chatController.message = value,
               decoration: const InputDecoration(
                 hintText: "Write message...",
-                hintStyle: TextStyle(color: Colors.white54),
                 border: InputBorder.none,
               ),
             ),
@@ -115,7 +110,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
           IconButton(
             style: IconButton.styleFrom(
-              backgroundColor: Colors.redAccent,
+              backgroundColor: context.theme.primaryColor,
             ),
             onPressed: () async
             {
@@ -127,11 +122,11 @@ class _ChatScreenState extends State<ChatScreen> {
               );
             },
 
-            icon: const Icon(Icons.attach_file, color: Colors.white, size: 20),
+            icon: const Icon(Icons.attach_file, size: 20),
           ),
           IconButton(
             style: IconButton.styleFrom(
-              backgroundColor: Colors.redAccent,
+              backgroundColor: context.theme.primaryColor,
             ),
             onPressed: () async {
               MessagesModel newMessage = MessagesModel(
@@ -147,7 +142,7 @@ class _ChatScreenState extends State<ChatScreen> {
               await chatController.sendMessage(newMessage);
               setState((){});
             },
-            icon: const Icon(Icons.send, color: Colors.white, size: 15),
+            icon: const Icon(Icons.send, size: 15),
           ),
         ],
       ),
@@ -161,7 +156,7 @@ class _ChatScreenState extends State<ChatScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.grey[900],
+      backgroundColor: context.background.accented,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -199,8 +194,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       onChanged: (value) => chatController.message = value,
                       decoration: const InputDecoration(
                         hintText: "Write message...",
-                        hintStyle: TextStyle(color: Colors.white54),
-                        border: InputBorder.none,
                       ),
                     ),
                   ),
@@ -209,7 +202,7 @@ class _ChatScreenState extends State<ChatScreen> {
         style: IconButton.styleFrom(
         backgroundColor: Colors.redAccent,
         ),
-                    icon: const Icon(Icons.send, color: Colors.white,size: 25),
+                    icon: const Icon(Icons.send,size: 25),
                     onPressed: () async {
                       final newMessage = MessagesModel(
                         url,

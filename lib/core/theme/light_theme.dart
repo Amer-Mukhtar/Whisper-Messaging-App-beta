@@ -4,8 +4,12 @@ import 'custom_themes/background_theme.dart';
 import 'custom_themes/custom_text_theme.dart';
 
 class LightTheme implements AppTheme{
+
   @override
   ThemeData get theme => ThemeData(
+    listTileTheme: ListTileThemeData(
+    ),
+    scaffoldBackgroundColor: Colors.white,
     brightness: Brightness.light,
     useMaterial3: true,
     primaryColor: Colors.redAccent,
@@ -57,6 +61,8 @@ class LightTheme implements AppTheme{
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
+      fillColor: Colors.white,
+      filled: true,
       prefixStyle: const TextStyle(
         color: Colors.black,
         fontSize: 14,
@@ -77,10 +83,11 @@ class LightTheme implements AppTheme{
       ),
     ),
 
+
     extensions: const [
       Background(
-          primary: Colors.grey,
-          accented: Colors.white
+          primary: Colors.white,
+          accented: Color(0xFF4B4B4E)
       ),
       CustomText(
           primary: Colors.black,

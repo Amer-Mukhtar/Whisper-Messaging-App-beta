@@ -45,11 +45,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        iconTheme: const IconThemeData(color: profileIcon),
-        backgroundColor: profileBackground,
+
         title: const Text(
           'Profile',
-          style: TextStyle(color: profileText),
         ),
         actions: [
           IconButton(

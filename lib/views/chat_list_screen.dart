@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
 import 'package:whisper/views/profile_screen.dart';
 import 'package:whisper/widgets/Conversation.dart';
 import 'package:whisper/widgets/constant.dart';
 import '../controller/chat_list_controller.dart';
-import '../controller/friend_controller.dart';
-import '../models/user_friends_model.dart';
+import '../core/theme/custom_themes/background_theme.dart';
 import 'chat_screen.dart';
 
 final List<String> defaultUserImages = [
@@ -36,6 +35,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bg = Theme.of(context).extension<Background>()!;
+    final theme = Theme.of(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -209,9 +210,9 @@ class _ChatListScreenState extends State<ChatListScreen> {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.only(top: 5),
-        decoration: const BoxDecoration(
-          color: ListBGColor,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: context.background.primary,
+          borderRadius: const BorderRadius.only(
               topRight: Radius.circular(50), topLeft: Radius.circular(50)),
         ),
         child: StreamBuilder<QuerySnapshot>(
@@ -276,6 +277,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             }
 
             return ListView(
+
               padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
               physics: const BouncingScrollPhysics(),
               children: userWidgets,

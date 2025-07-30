@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import '../controller/chat_list_controller.dart';
 import '../controller/friend_controller.dart';
 import '../models/user_friends_model.dart';
@@ -61,7 +62,8 @@ class _ConversationListState extends State<ConversationList> {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         decoration: BoxDecoration(
-          color: tileColor,
+
+          color: context.background.accented,
           borderRadius: BorderRadius.circular(45),
         ),
         child: ListTile(
@@ -72,15 +74,11 @@ class _ConversationListState extends State<ConversationList> {
           ),
           title: Text(
             widget.reciever,
-            style: const TextStyle(
-              fontSize: 17,
-              color: TextColor,
-              fontWeight: FontWeight.w800,
-            ),
+            style: context.textStyles.bodyLarge,
           ),
           subtitle: Text(
             latestMessage ?? 'Loading...',
-            style: const TextStyle(color: Colors.white70),
+            style: context.textStyles.bodySmall,
           ),
           onTap: () {
             Navigator.push(

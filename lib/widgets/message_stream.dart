@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/widgets/constant.dart';
 import 'package:whisper/widgets/message_bubbles.dart';
 import '../controller/chat_controller.dart';
@@ -21,7 +22,7 @@ class MessageStream extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      color: messageBackground,
+      color: context.background.primary,
       child: StreamBuilder<QuerySnapshot>(
         stream: _firestore
             .collection('chat_room')

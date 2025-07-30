@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/widgets/zommable_image.dart';
 import '../controller/chat_controller.dart';
 import 'message_options_sheet.dart';
@@ -29,7 +30,7 @@ class MessageBubble extends StatelessWidget {
       crossAxisAlignment:
           isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        Text(sender, style: const TextStyle(color: Colors.white60)),
+
         Material(
           borderRadius: isMe
               ? BorderRadius.only(
@@ -40,7 +41,7 @@ class MessageBubble extends StatelessWidget {
                   topRight: Radius.circular(10),
                   bottomLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10)),
-          color: isMe ? Colors.redAccent : Colors.white,
+          color: isMe ? context.theme.primaryColor : context.background.accented,
           child: Padding(
             padding: const EdgeInsets.all(5),
             child: hasImage
@@ -89,10 +90,8 @@ class MessageBubble extends StatelessWidget {
                           height: 10,
                         ),
                         Text(message,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: isMe ? Colors.white : Colors.black,
-                            )),
+                            style: context.textStyles.bodyMedium
+                        ),
                       ],
                     ),
                   )
@@ -113,12 +112,13 @@ class MessageBubble extends StatelessWidget {
                       }
                     },
                     child: Text(message,
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: isMe ? Colors.white : Colors.black)),
+                        style: context.textStyles.bodyMedium
+                    ),
                   ),
           ),
         ),
+        Text(sender, style:  context.textStyles.labelSmall),
+        SizedBox(height: 10,),
       ],
     );
   }

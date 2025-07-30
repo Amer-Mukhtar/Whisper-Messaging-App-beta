@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
 import '../controller/stories_controller.dart';
 import '../models/stories_model.dart';
-import '../widgets/constant.dart';
 import '../widgets/fullscreen_image.dart';
-import '../widgets/zommable_image.dart';
 
 class StoriesScreen extends StatefulWidget {
   UserModel currentUser;
@@ -22,7 +20,7 @@ class StoriesScreen extends StatefulWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFF211a23),
+        backgroundColor: context.background.accented,
         onPressed: () async {
           final imageurl = await storiesController.uploadImageToSupabase(widget.currentUser);
           if (imageurl != null) {
@@ -44,12 +42,10 @@ class StoriesScreen extends StatefulWidget {
         child: Icon(CupertinoIcons.plus, color: Colors.redAccent),
       ),
 
-      backgroundColor: Colors.black,
+      backgroundColor: context.background.primary,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Stories',style: TextStyle(color: Colors.white),),
-        iconTheme: const IconThemeData(color: addUserIcon),
-        backgroundColor: Colors.black,
+        title: Text('Stories',),
 
       ),
       body: FutureBuilder<List<StoriesModel>>(

@@ -51,14 +51,10 @@ class _AddUserScreenState extends State<AddUserScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Colors.black,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          iconTheme: const IconThemeData(color: addUserIcon),
-          backgroundColor: addUserBackground,
           title: const Text(
             'Add Profile',
-            style: TextStyle(color: addUserText),
           ),
         ),
         body: Container(
