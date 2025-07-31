@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
-import 'package:whisper/widgets/constant.dart';
 import '../controller/profile_controller.dart';
 import '../controller/theme_controller.dart';
 
@@ -47,23 +48,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-
         title: const Text(
           'Profile',
         ),
         actions: [
+          IconButton(onPressed: (){
+            Get.find<ThemeController>().toggleTheme();
+          }, icon: Get.find<ThemeController>().isDarkMode.value ?  Icon(Icons.dark_mode,color: context.background.accented,)
+              :  Icon(Icons.light_mode,color: context.background.accented,)
+          ),
+
           IconButton(
             onPressed: () {
               Navigator.of(context)
                 ..pop()
                 ..pop();
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.logout,
-              color: profileIcon,
+              color: context.background.accented,
             ),
           ),
-          const SizedBox(width: 10),
+
         ],
       ),
       body: Container(
@@ -112,10 +118,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Icon(
+                   Icon(
                     CupertinoIcons.profile_circled,
                     size: 40,
-                    color: profileIcon,
+                    color: context.background.accented,
                   ),
                   const SizedBox(width: 10),
                   Column(
@@ -140,10 +146,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Icon(
+                   Icon(
                     Icons.email,
                     size: 40,
-                    color: profileIcon,
+                    color: context.background.accented,
                   ),
                   const SizedBox(width: 10),
                   Column(
@@ -163,9 +169,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 40),
-            TextButton(onPressed: (){
-              ThemeController themeController=ThemeController();
-              themeController.toggleTheme();}, child: Text('Changes Theme'))
           ],
         ),
       ),

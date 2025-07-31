@@ -6,7 +6,6 @@ import 'package:whisper/views/profile_screen.dart';
 import 'package:whisper/widgets/Conversation.dart';
 import 'package:whisper/widgets/constant.dart';
 import '../controller/chat_list_controller.dart';
-import '../core/theme/custom_themes/background_theme.dart';
 import 'chat_screen.dart';
 
 final List<String> defaultUserImages = [
@@ -35,8 +34,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bg = Theme.of(context).extension<Background>()!;
-    final theme = Theme.of(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

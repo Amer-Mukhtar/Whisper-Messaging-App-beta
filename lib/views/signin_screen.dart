@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/views/forget_password_screen.dart';
 import 'package:whisper/views/signup_screen.dart';
-import 'package:whisper/views/chat_list_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
 import '../controller/signin_controller.dart';
@@ -65,7 +64,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return BGScaffold(
 
       child: Column(

@@ -83,7 +83,8 @@ class DarkTheme implements AppTheme{
     extensions: const [
       Background(
           primary: Colors.black,
-          accented: Colors.white60
+          accented: Color(0xff555555)
+
       ),
     ],
 

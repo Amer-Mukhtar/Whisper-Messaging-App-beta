@@ -3,7 +3,6 @@ import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/messages_model.dart';
 import 'package:whisper/models/user_model.dart';
 import '../controller/chat_controller.dart';
-import '../widgets/constant.dart';
 import '../widgets/message_stream.dart';
 
 class ChatScreen extends StatefulWidget {

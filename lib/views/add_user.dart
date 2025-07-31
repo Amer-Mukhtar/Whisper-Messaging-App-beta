@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
-import 'package:whisper/widgets/constant.dart';
 import '../controller/friend_controller.dart';
 import '../models/user_friends_model.dart';
 
@@ -22,7 +21,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
   String friendSearch = "";
   TextEditingController searchtextController = TextEditingController();
   friend_controller friendController=friend_controller();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final List<String> defaultUserImages = [
     "assets/images/profile2.png",
     "assets/images/profile3.png",
@@ -65,7 +63,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 child: SearchAnchor.bar(
-                  barOverlayColor: WidgetStateProperty.all(context.background.primary),
                   viewBackgroundColor: context.background.primary,
                   isFullScreen: false,
                   barPadding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
@@ -84,7 +81,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                   ),
                   barHintText: 'Search by name...',
                   barHintStyle: WidgetStateProperty.all(
-                    context.textStyles.bodyMedium,
+                    context.textStyles.labelSmall,
                   ),
                   barBackgroundColor: WidgetStateProperty.all(context.background.primary),
 

@@ -4,10 +4,8 @@ import 'package:get/get.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import '../controller/chat_list_controller.dart';
 import '../controller/friend_controller.dart';
-import '../models/user_friends_model.dart';
 import '../models/user_model.dart';
 import '../views/chat_screen.dart';
-import 'constant.dart';
 
 class ConversationList extends StatefulWidget {
   final String reciever;
