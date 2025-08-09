@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:whisper/views/signin_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
 import '../controller/signup_controller.dart';
+import '../routes/pages.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -41,10 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
       if (result == null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const SignInScreen()),
-        );
+        Get.toNamed(Pages.signInScreen);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(result), backgroundColor: Colors.orangeAccent),
@@ -150,10 +149,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           const Text('Already have an Account? ', style: TextStyle(color: Colors.black45)),
                           GestureDetector(
                             onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (_) => const SignInScreen()),
-                              );
+                              Get.toNamed(Pages.signInScreen);
                             },
                             child: const Text('Sign In',
                                 style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent)),

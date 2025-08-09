@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
 import 'package:whisper/views/chat_list_screen.dart';
@@ -8,9 +10,11 @@ import 'package:whisper/views/stories_screen.dart';
 import 'add_user.dart';
 
 class HomeScreen extends StatefulWidget {
+
   final UserModel currentUser;
 
-  const HomeScreen({super.key, required this.currentUser});
+  HomeScreen({Key? key}): currentUser = Get.arguments as UserModel,
+        super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

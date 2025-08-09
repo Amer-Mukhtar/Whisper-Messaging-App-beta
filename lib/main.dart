@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:whisper/routes/pages.dart';
 import 'package:whisper/views/welcome_screen.dart';
 import 'config/env.dart';
 import 'controller/theme_controller.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme.theme,
       themeMode: themeController.theme,
       home: const WelcomeScreen(),
+        getPages: Pages.routes
     ));
   }
 }
