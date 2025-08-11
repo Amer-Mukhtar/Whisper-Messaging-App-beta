@@ -102,7 +102,7 @@ class ChatController {
           .uploadBinary(
         'chat-images/$fileName.jpg',
         fileBytes,
-        fileOptions: FileOptions(contentType: 'image/jpeg'),
+        fileOptions: const FileOptions(contentType: 'image/jpeg'),
       );
 
       if (storageResponse.isEmpty) {

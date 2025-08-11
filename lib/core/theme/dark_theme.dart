@@ -37,9 +37,9 @@ class DarkTheme implements AppTheme{
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: WidgetStatePropertyAll<Color>(Colors.black),
-        foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
-        padding: WidgetStatePropertyAll<EdgeInsets>(
+        backgroundColor: const WidgetStatePropertyAll<Color>(Colors.black),
+        foregroundColor: const WidgetStatePropertyAll<Color>(Colors.white),
+        padding: const WidgetStatePropertyAll<EdgeInsets>(
           EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
         shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
@@ -47,7 +47,7 @@ class DarkTheme implements AppTheme{
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        textStyle: WidgetStatePropertyAll<TextStyle>(
+        textStyle: const WidgetStatePropertyAll<TextStyle>(
           TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,

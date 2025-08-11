@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
-import 'package:whisper/views/signin_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 
 import '../routes/pages.dart';

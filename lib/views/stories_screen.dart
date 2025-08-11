@@ -35,17 +35,17 @@ class StoriesScreen extends StatefulWidget {
             });
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Failed to upload image")),
+              const SnackBar(content: Text("Failed to upload image")),
             );
           }
         },
-        child: Icon(CupertinoIcons.plus, color: Colors.redAccent),
+        child: const Icon(CupertinoIcons.plus, color: Colors.redAccent),
       ),
 
       backgroundColor: context.background.primary,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Stories',),
+        title: const Text('Stories',),
 
       ),
       body: FutureBuilder<List<StoriesModel>>(
@@ -131,7 +131,7 @@ class StoriesScreen extends StatefulWidget {
     if(storiesModel.username==currentUser.fullName)
       {
         showModalBottomSheet(context: context, builder: (BuildContext context){
-          return Container(padding: EdgeInsets.all(0),
+          return Container(padding: const EdgeInsets.all(0),
             child: Wrap(
               children: [
                 ListTile(
@@ -139,9 +139,9 @@ class StoriesScreen extends StatefulWidget {
                     StoriesController storiesController=StoriesController();
                     storiesController.deleteStory(storiesModel);
                   },
-                  tileColor: Color(0xFF211a23),
-                  leading: Icon(CupertinoIcons.delete,color: Colors.red,),
-                  title: Text('Delete',style: TextStyle(color: Colors.white),),
+                  tileColor: const Color(0xFF211a23),
+                  leading: const Icon(CupertinoIcons.delete,color: Colors.red,),
+                  title: const Text('Delete',style: TextStyle(color: Colors.white),),
                 ),
               ],
             ),);
@@ -151,7 +151,7 @@ class StoriesScreen extends StatefulWidget {
     else
       {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('You Are Not the Owner Of This Story'),
+          const SnackBar(content: Text('You Are Not the Owner Of This Story'),
            behavior: SnackBarBehavior.floating,duration: Duration(seconds: 1),
           ),
         );

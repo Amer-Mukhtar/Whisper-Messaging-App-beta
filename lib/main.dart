@@ -15,11 +15,13 @@ void main() async {
    await Firebase.initializeApp();
   await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
   Get.put(ThemeController());
-  runApp(MyApp());
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
   final ThemeController themeController = Get.find();
+
+   MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

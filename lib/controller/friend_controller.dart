@@ -8,7 +8,7 @@ class friend_controller
   
   Future<void> getFriendList(FriendsModel friendModel)
   async{
-    await _firestore.collection('added_users').where('sender', isEqualTo: friendModel.requestSender);
+    _firestore.collection('added_users').where('sender', isEqualTo: friendModel.requestSender);
   }
   Future<void> addFriendRequest(FriendsModel model) async
   {

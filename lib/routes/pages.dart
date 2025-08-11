@@ -9,7 +9,7 @@ class Pages
   static const homeScreen ='/HomeScreen';
 
   static final  routes=[
-    GetPage(name: signInScreen, page: ()=>SignInScreen()),
+    GetPage(name: signInScreen, page: ()=>const SignInScreen()),
     GetPage(name: homeScreen, page: ()=>HomeScreen()),
   ];
 }

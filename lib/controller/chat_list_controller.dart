@@ -38,10 +38,10 @@ class ChatListController {
   }
 
   Future<String?> getLatestChatMessage(String sender, String receiver) async {
-    final _firestore = FirebaseFirestore.instance;
+    final firestore = FirebaseFirestore.instance;
 
     try {
-      final querySnapshot = await _firestore
+      final querySnapshot = await firestore
           .collection('chat_room')
           .orderBy('timestamp', descending: true)
           .get();

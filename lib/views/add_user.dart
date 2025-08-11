@@ -61,11 +61,11 @@ class _AddUserScreenState extends State<AddUserScreen> {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                 child: SearchAnchor.bar(
                   viewBackgroundColor: context.background.primary,
                   isFullScreen: false,
-                  barPadding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
+                  barPadding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
                   barElevation:WidgetStateProperty.all(0),
                   barShape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
@@ -73,7 +73,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     ),
                   ),
                   barLeading:  Padding(
-                    padding: EdgeInsets.only(left: 12),
+                    padding: const EdgeInsets.only(left: 12),
                     child: Icon(Icons.person_search, color: context.background.accented),
                   ),
                   barTextStyle: WidgetStateProperty.all(
@@ -150,21 +150,21 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       }
                       final docs = snapshot.data!.docs;
                       return ListView.builder(
-                        physics: ClampingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: docs.length,
                         itemBuilder: (context, index) {
                           final data = docs[index].data() as Map<String, dynamic>;
                           final fullName = data['RequestReciever'] ?? 'No Name';
                           return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                             child: ListTile(
                               shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)) ,
-                              tileColor: Color(0xFF211a23),
+                              tileColor: const Color(0xFF211a23),
                               leading: CircleAvatar(
                                 backgroundImage: AssetImage(defaultUserImages[1]),
                               ),
-                              title: Text(fullName,style: TextStyle(color: Colors.white),),
+                              title: Text(fullName,style: const TextStyle(color: Colors.white),),
                               trailing: TextButton(onPressed: (){
                                 final model = FriendsModel(
                                   requestSender: data['RequestSender'],
@@ -174,11 +174,11 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                 );
                                 friendController.withdrawFriendRequest(model);
                               }, child: Container(
-                                  padding: EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                 color: Colors.red,
                                 borderRadius: BorderRadius.circular(15)
-                              ),child: Text('Withdraw',style: TextStyle(color: Colors.white),))),
+                              ),child: const Text('Withdraw',style: TextStyle(color: Colors.white),))),
                             ),
                           );
                         },
@@ -199,14 +199,14 @@ class _AddUserScreenState extends State<AddUserScreen> {
                           final data = docs[index].data() as Map<String, dynamic>;
                           final fullName = data['RequestSender'] ?? 'No Name';
                           return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                             child: ListTile(
                               shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)) ,
-                              tileColor: Color(0xFF211a23),
+                              tileColor: const Color(0xFF211a23),
                               leading: CircleAvatar(
                                 backgroundImage: AssetImage(defaultUserImages[1]),
                               ),
-                              title: Text(fullName,style: TextStyle(color: Colors.white),),
+                              title: Text(fullName,style: const TextStyle(color: Colors.white),),
                               trailing: SizedBox(
                                 width:MediaQuery.of(context).size.width * 0.45,
                                 child: Row(
@@ -221,11 +221,11 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                         timestamp: (data['timestamp'] as Timestamp).toDate(),
                                       );
                                       friendController.withdrawFriendRequest(model);                                  }, child: Container(
-                                        padding: EdgeInsets.all(8),
+                                        padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                             color: Colors.red,
                                             borderRadius: BorderRadius.circular(15)
-                                        ),child: Text('Reject',style: TextStyle(color: Colors.white),))
+                                        ),child: const Text('Reject',style: TextStyle(color: Colors.white),))
                                     ),
                                     TextButton(onPressed: ()
                                     {
@@ -237,11 +237,11 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                       );
                                       friendController.acceptFriendRequest(model);
                                     }, child: Container(
-                                        padding: EdgeInsets.all(8),
+                                        padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                             color: Colors.white,
                                             borderRadius: BorderRadius.circular(15)
-                                        ),child: Text('Accept',style: TextStyle(color: Colors.black),))
+                                        ),child: const Text('Accept',style: TextStyle(color: Colors.black),))
                                     ),
                                   ],
                                 ),

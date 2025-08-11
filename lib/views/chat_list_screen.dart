@@ -226,7 +226,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             for (var i = 0; i < users.length; i++)
             {
               final userData = users[i].data() as Map<String, dynamic>;
-              final addedUser;
+              final String? addedUser;
               final sender = userData['RequestSender'] as String?;
               final receiver = userData['RequestReciever'] as String?;
               if (sender == receiver) continue;
@@ -239,7 +239,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               if (addedUser == null) continue;
               userWidgets.add(
                   FutureBuilder<String?>(
-                    future: chat_list_controller.getProfileImage(addedUser!),
+                    future: chat_list_controller.getProfileImage(addedUser),
                     builder: (context, snapshot) {
                       String imageUrl="";
 
@@ -251,7 +251,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         imageUrl = snapshot.data!;
                       }
                       return ConversationList(
-                        reciever: addedUser,
+                        reciever: addedUser!,
                         imageUrl: imageUrl,
                         currentuser: widget.currentuser,
                       );

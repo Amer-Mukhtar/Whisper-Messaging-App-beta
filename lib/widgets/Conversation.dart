@@ -97,7 +97,7 @@ class _ConversationListState extends State<ConversationList> {
   void showoptions(BuildContext context,String userA,String userB)
   {
     showModalBottomSheet(context: context, builder: (BuildContext context){
-      return Container(padding: EdgeInsets.all(0),
+      return Container(padding: const EdgeInsets.all(0),
         child: Wrap(
           children: [
             ListTile(
@@ -106,9 +106,9 @@ class _ConversationListState extends State<ConversationList> {
                 controller.deleteFriend(userA,userB);
                 navigator?.pop(context);
               },
-              tileColor: Color(0xFF211a23),
-              leading: Icon(CupertinoIcons.delete,color: Colors.red,),
-              title: Text('Delete',style: TextStyle(color: Colors.white),),
+              tileColor: const Color(0xFF211a23),
+              leading: const Icon(CupertinoIcons.delete,color: Colors.red,),
+              title: const Text('Delete',style: TextStyle(color: Colors.white),),
             ),
           ],
         ),);

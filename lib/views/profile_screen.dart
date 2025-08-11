@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
 import '../controller/profile_controller.dart';

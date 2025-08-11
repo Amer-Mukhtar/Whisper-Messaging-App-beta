@@ -33,11 +33,11 @@ class MessageBubble extends StatelessWidget {
 
         Material(
           borderRadius: isMe
-              ? BorderRadius.only(
+              ? const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   bottomLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10))
-              : BorderRadius.only(
+              : const BorderRadius.only(
                   topRight: Radius.circular(10),
                   bottomLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10)),
@@ -65,7 +65,7 @@ class MessageBubble extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                            padding: EdgeInsets.all(2),
+                            padding: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
                                 borderRadius: isMe
                                     ? const BorderRadius.only(
@@ -86,7 +86,7 @@ class MessageBubble extends StatelessWidget {
                             child: ZoomableImageScreen(
                               imageUrl: imageUrl!,
                             )),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Text(message,
@@ -118,7 +118,7 @@ class MessageBubble extends StatelessWidget {
           ),
         ),
         Text(sender, style:  context.textStyles.labelSmall),
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
       ],
     );
   }

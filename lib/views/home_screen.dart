@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
 import 'package:whisper/views/chat_list_screen.dart';
@@ -13,8 +12,7 @@ class HomeScreen extends StatefulWidget {
 
   final UserModel currentUser;
 
-  HomeScreen({Key? key}): currentUser = Get.arguments as UserModel,
-        super(key: key);
+  HomeScreen({super.key}): currentUser = Get.arguments as UserModel;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -51,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedIndex: _selectedIndex,
           overlayColor: WidgetStateProperty.all(Colors.red),
           onDestinationSelected: _onItemTapped,
-          labelTextStyle: WidgetStateProperty.all(TextStyle(color: Colors.red)),
+          labelTextStyle: WidgetStateProperty.all(const TextStyle(color: Colors.red)),
           indicatorColor: Colors.redAccent.withOpacity(0.2),
           labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           destinations: const [

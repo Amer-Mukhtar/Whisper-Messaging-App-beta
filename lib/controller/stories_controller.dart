@@ -17,14 +17,14 @@ class StoriesController{
     try {
       final file = File(pickedFile.path);
       final fileBytes = await file.readAsBytes();
-      final fileName = userModel.fullName+"-"+DateTime.now().millisecondsSinceEpoch.toString();
+      final fileName = "${userModel.fullName}-${DateTime.now().millisecondsSinceEpoch}";
 
       final storageResponse = await Supabase.instance.client.storage
           .from('whisper')
           .uploadBinary(
         'Stories/$fileName.jpg',
         fileBytes,
-        fileOptions: FileOptions(contentType: 'image/jpeg'),
+        fileOptions: const FileOptions(contentType: 'image/jpeg'),
       );
 
       if (storageResponse.isEmpty) {

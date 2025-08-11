@@ -28,7 +28,7 @@ class ProfileController {
       final uploadResult = await bucket.uploadBinary(
         path,
         fileBytes,
-        fileOptions: FileOptions(contentType: 'image/jpeg'),
+        fileOptions: const FileOptions(contentType: 'image/jpeg'),
       );
 
       if (uploadResult.isEmpty) {
