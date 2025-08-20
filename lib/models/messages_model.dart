@@ -7,12 +7,12 @@ class MessagesModel {
   late String imageUrl;
   final DateTime timestamp;
   final bool isMe;
-  final bool hasImage;
+  final String type;
 
   MessagesModel(
     this.imageUrl,
     this.isMe,
-    this.hasImage, {
+    this.type, {
     required this.sender,
     required this.receiver,
     required this.message,
@@ -23,7 +23,7 @@ class MessagesModel {
     return MessagesModel(
       json['ImageUrl'] as String,
       json['isMe'] as bool,
-      json['hasImage'] as bool,
+      json['type'] as String,
       sender: json['Sender'] as String,
       receiver: json['Reciever'] as String,
       message: json['Message'] as String,

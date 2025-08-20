@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
-import 'package:whisper/views/profile_screen.dart';
-import 'package:whisper/widgets/Conversation.dart';
+import 'package:whisper/views/Profile/profile_screen.dart';
+import 'package:whisper/views/Chat/Conversation.dart';
 import 'package:whisper/widgets/constant.dart';
-import '../controller/chat_list_controller.dart';
-import 'chat_screen.dart';
+import '../../controller/ChatList/chat_list_controller.dart';
+import '../Chat/chat_screen.dart';
 
 final List<String> defaultUserImages = [
   "assets/images/profile2.png",

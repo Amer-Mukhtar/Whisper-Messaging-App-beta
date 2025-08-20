@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 
-import '../routes/pages.dart';
+import '../../routes/pages.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

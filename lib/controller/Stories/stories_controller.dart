@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whisper/models/user_model.dart';
-import '../models/stories_model.dart';
+import '../../models/stories_model.dart';
 
 class StoriesController{
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

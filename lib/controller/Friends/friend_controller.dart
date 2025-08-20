@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/user_friends_model.dart';
-import '../models/user_model.dart';
+import '../../models/user_friends_model.dart';
+import '../../models/user_model.dart';
 
 class friend_controller
 {

@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
-import '../controller/stories_controller.dart';
-import '../models/stories_model.dart';
-import '../widgets/fullscreen_image.dart';
+import '../../controller/Stories/stories_controller.dart';
+import '../../models/stories_model.dart';
+import '../../widgets/fullscreen_image.dart';
 
 class StoriesScreen extends StatefulWidget {
   UserModel currentUser;

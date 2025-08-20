@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
-import '../controller/chat_list_controller.dart';
-import '../controller/friend_controller.dart';
-import '../models/user_model.dart';
-import '../views/chat_screen.dart';
+import '../../controller/ChatList/chat_list_controller.dart';
+import '../../controller/Friends/friend_controller.dart';
+import '../../models/user_model.dart';
+import 'chat_screen.dart';
 
 class ConversationList extends StatefulWidget {
   final String reciever;

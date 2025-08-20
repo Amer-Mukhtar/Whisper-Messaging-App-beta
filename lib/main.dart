@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:whisper/routes/pages.dart';
-import 'package:whisper/views/welcome_screen.dart';
+import 'package:whisper/views/Home&Welcome/welcome_screen.dart';
 import 'config/env.dart';
-import 'controller/theme_controller.dart';
+import 'controller/Theme/theme_controller.dart';
 import 'core/theme/theme.dart';
 
 void main() async {

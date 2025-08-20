@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
-
-import '../views/home_screen.dart';
-import '../views/signin_screen.dart';
+import '../views/Auth/signin_screen.dart';
+import '../views/Home&Welcome/home_screen.dart';
 
 class Pages
 {

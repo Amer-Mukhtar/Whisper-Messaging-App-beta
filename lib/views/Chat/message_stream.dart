@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/widgets/message_bubbles.dart';
-import '../controller/chat_controller.dart';
+import '../../controller/Chat/chat_controller.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -36,9 +36,10 @@ class MessageStream extends StatelessWidget {
               final messageData = message.data() as Map<String, dynamic>;
               final messageText = messageData['message'] ?? '';
               final imageUrl = messageData['imageUrl'] ?? '';
-              final hasImage = messageData['hasImage'] ?? false;
               final messageSender = messageData['sender'] ?? '';
               final messageReceiver = messageData['receiver'] ?? '';
+              final type = messageData['type'] ?? 'text';
+              final audioUrl=messageData['audioUrl']??'';
 
               if ((messageSender == receiver && messageReceiver == currentUser) ||
                   (messageReceiver == receiver && messageSender == currentUser)) {
@@ -47,9 +48,10 @@ class MessageStream extends StatelessWidget {
                   message: messageText,
                   isMe: currentUser == messageSender,
                   imageUrl: imageUrl,
-                  hasImage: hasImage,
                   chatController: chatController,
-                  reciever:messageReceiver ,
+                  reciever:messageReceiver,
+                  type:type,
+                  audioUrl: audioUrl,
                 );
                 messageWidgets.add(messageWidget);
               }

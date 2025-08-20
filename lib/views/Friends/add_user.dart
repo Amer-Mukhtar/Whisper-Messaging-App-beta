@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
-import '../controller/friend_controller.dart';
-import '../models/user_friends_model.dart';
+import '../../controller/Friends/friend_controller.dart';
+import '../../models/user_friends_model.dart';
 
 class AddUserScreen extends StatefulWidget {
   final UserModel currentUser;

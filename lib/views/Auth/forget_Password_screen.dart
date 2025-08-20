@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:whisper/views/signup_screen.dart';
+import 'package:whisper/views/Auth/signup_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
-import '../controller/forget_password_controller.dart';
+import '../../controller/Auth/forget_password_controller.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});

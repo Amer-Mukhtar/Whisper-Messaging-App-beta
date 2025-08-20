@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/messages_model.dart';
 import 'package:whisper/models/user_model.dart';
-import '../controller/chat_controller.dart';
-import '../widgets/message_stream.dart';
+import '../../controller/Chat/audioController.dart';
+import '../../controller/Chat/chat_controller.dart';
+import 'message_stream.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ChatScreen extends StatefulWidget {
   final String reciever;
@@ -86,6 +89,9 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
+      actions: [
+        IconButton(onPressed: (){}, icon: Icon(Icons.phone))
+      ],
     );
   }
 
@@ -106,7 +112,6 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-
           IconButton(
             style: IconButton.styleFrom(
               backgroundColor: context.theme.primaryColor,
@@ -131,7 +136,7 @@ class _ChatScreenState extends State<ChatScreen> {
               MessagesModel newMessage = MessagesModel(
                 '', // imageurl
                 true, // isMe
-                false, // hasImage
+                'text', // hasImage
                 sender: widget.currentuser.fullName,
                 receiver: widget.reciever,
                 message: messagetextController.text,
@@ -143,6 +148,32 @@ class _ChatScreenState extends State<ChatScreen> {
             },
             icon: const Icon(Icons.send, size: 15),
           ),
+          GestureDetector(
+            onLongPressStart: (_) async {
+              var status = await Permission.microphone.status;
+              if (!status.isGranted) {
+                status = await Permission.microphone.request();
+              }
+
+              if (status.isGranted) {
+                await NativeAudio.startRecording();
+              } else {
+                print("Microphone permission denied!");
+              }
+            },
+            onLongPressEnd: (_) async {
+              final filePath = await NativeAudio.stopRecording();
+              await chatController.sendAudioMessage(filePath: filePath.toString(), senderId: widget.currentuser.fullName, receiverId: widget.reciever);
+            },
+            child: IconButton(
+              style: IconButton.styleFrom(
+                backgroundColor: context.theme.primaryColor,
+              ),
+              onPressed: () {},
+              icon: const Icon(FontAwesomeIcons.microphone, size: 15),
+            ),
+          )
+
         ],
       ),
     );
@@ -206,7 +237,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       final newMessage = MessagesModel(
                         url,
                         true,
-                        true,
+                        'image',
                         sender: widget.currentuser.fullName,
                         receiver: widget.reciever,
                         message: messagetextController.text,

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
-import 'package:whisper/views/forget_password_screen.dart';
-import 'package:whisper/views/signup_screen.dart';
+import 'package:whisper/views/Auth/signup_screen.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
-import '../controller/signin_controller.dart';
-import '../routes/pages.dart';
+import '../../controller/Auth/signin_controller.dart';
+import '../../routes/pages.dart';
+import 'package:whisper/views/Auth/forget_Password_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

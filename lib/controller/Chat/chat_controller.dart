@@ -70,7 +70,7 @@ class ChatController {
       'receiver': messageModel.receiver,
       'timestamp': messageModel.timestamp,
       'isMe':messageModel.isMe,
-      'hasImage':messageModel.hasImage
+      'type':'text',
     });
   }
 
@@ -82,7 +82,7 @@ class ChatController {
       'receiver': messageModel.receiver,
       'timestamp': messageModel.timestamp,
       'isMe':messageModel.isMe,
-      'hasImage':messageModel.hasImage,
+      'type':"image",
       'imageUrl': messageModel.imageUrl
     });
   }
@@ -121,6 +121,40 @@ class ChatController {
       return null;
     }
   }
+
+  Future<void> sendAudioMessage({
+    required String filePath,
+    required String senderId,
+    required String receiverId,
+  }) async {
+    final fileBytes = await File(filePath).readAsBytes();
+    final fileName = "audio_${DateTime.now().millisecondsSinceEpoch}.m4a";
+
+    await Supabase.instance.client.storage
+        .from('whisper')
+        .uploadBinary(fileName, fileBytes);
+
+    final audioUrl = Supabase.instance.client.storage.from('whisper').getPublicUrl(fileName);
+
+
+    await FirebaseFirestore.instance
+        .collection("chat_room")
+        .add({
+      "sender": senderId,
+      "receiver": receiverId,
+      "type": "audio",
+      "message": "Audio Message",
+      "audioUrl":audioUrl,
+      "timestamp": FieldValue.serverTimestamp(),
+    });
+  }
+
+
+  String getChatId(String uid1, String uid2) {
+    return uid1.hashCode <= uid2.hashCode ? "${uid1}_$uid2" : "${uid2}_$uid1";
+  }
+
+
 
 
 

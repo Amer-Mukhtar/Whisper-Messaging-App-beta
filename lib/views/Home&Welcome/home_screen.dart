@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
-import 'package:whisper/views/chat_list_screen.dart';
-import 'package:whisper/views/profile_screen.dart';
-import 'package:whisper/views/stories_screen.dart';
-import 'add_user.dart';
+import 'package:whisper/views/ChatList/chat_list_screen.dart';
+import 'package:whisper/views/Profile/profile_screen.dart';
+import 'package:whisper/views/Stories/stories_screen.dart';
+
+import '../Friends/add_user.dart';
 
 class HomeScreen extends StatefulWidget {
 

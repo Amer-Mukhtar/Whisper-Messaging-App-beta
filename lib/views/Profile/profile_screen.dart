@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/models/user_model.dart';
-import '../controller/profile_controller.dart';
-import '../controller/theme_controller.dart';
+import '../../controller/Profile/profile_controller.dart';
+import '../../controller/Theme/theme_controller.dart';
 
 class ProfileScreen extends StatefulWidget {
   final UserModel currentuser;

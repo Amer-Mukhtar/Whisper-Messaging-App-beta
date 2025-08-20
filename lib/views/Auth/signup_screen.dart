@@ -3,8 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:whisper/widgets/bg_scaffold.dart';
 import 'package:whisper/widgets/text_field.dart';
-import '../controller/signup_controller.dart';
-import '../routes/pages.dart';
+import '../../controller/Auth/signup_controller.dart';
+import '../../routes/pages.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
