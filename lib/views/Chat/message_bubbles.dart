@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:whisper/core/theme/custom_themes/context_extensions.dart';
 import 'package:whisper/widgets/zommable_image.dart';
-import '../controller/Chat/chat_controller.dart';
-import 'message_options_sheet.dart';
+import '../../controller/Chat/chat_controller.dart';
+import '../../widgets/VideoPlayer.dart';
+import '../../widgets/message_options_sheet.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class MessageBubble extends StatelessWidget {
   final String sender;
-  final String message; // for text OR audio path
+  final String message;
   final String reciever;
   final bool isMe;
   final String? imageUrl;
   final ChatController chatController;
   final String type;
   final String? audioUrl;
+  final String? videoUrl;
 
   const MessageBubble({
     super.key,
@@ -22,6 +24,7 @@ class MessageBubble extends StatelessWidget {
     required this.isMe,
     this.imageUrl,
     this.audioUrl,
+    this.videoUrl,
     required this.chatController,
     required this.reciever,
     required this.type,
@@ -88,7 +91,6 @@ class MessageBubble extends StatelessWidget {
         );
 
       case "audio":
-        print(audioUrl);
         return GestureDetector(
           onLongPress: () => _showOptions(context),
           child: Row(
@@ -104,6 +106,26 @@ class MessageBubble extends StatelessWidget {
             ],
           ),
         );
+      case "video":
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => VideoPlayerScreen(videoUrl: videoUrl!),
+              ),
+            );
+          },
+          child: Container(
+            width: 150,
+            height: 200,
+            color: Colors.black12,
+            child: const Center(
+              child: Icon(Icons.play_circle_fill, color: Colors.white, size: 50),
+            ),
+          ),
+        );
+
 
       case "text":
       default:

@@ -128,7 +128,7 @@ class ChatController {
     required String receiverId,
   }) async {
     final fileBytes = await File(filePath).readAsBytes();
-    final fileName = "audio_${DateTime.now().millisecondsSinceEpoch}.m4a";
+    final fileName = "chat-audios/audio_${DateTime.now().millisecondsSinceEpoch}.m4a";
 
     await Supabase.instance.client.storage
         .from('whisper')
@@ -150,8 +150,46 @@ class ChatController {
   }
 
 
-  String getChatId(String uid1, String uid2) {
-    return uid1.hashCode <= uid2.hashCode ? "${uid1}_$uid2" : "${uid2}_$uid1";
+  Future<String?> pickAndUploadVideo(
+  {
+    required String senderId,
+    required String receiverId,
+  }
+      ) async {
+    final picker = ImagePicker();
+    final XFile? pickedVideo = await picker.pickVideo(source: ImageSource.gallery);
+
+    if (pickedVideo == null) return null;
+
+    final file = File(pickedVideo.path);
+
+    final fileName = "chat-videos/${DateTime.now().millisecondsSinceEpoch}.mp4";
+
+    try {
+      await Supabase.instance.client.storage
+          .from("whisper")
+          .upload(fileName, file);
+
+      final publicUrl = Supabase.instance.client.storage
+          .from("whisper")
+          .getPublicUrl(fileName);
+
+      await FirebaseFirestore.instance
+          .collection("chat_room")
+          .add({
+        "sender": senderId,
+        "receiver": receiverId,
+        "type": "video",
+        "message": "Video Message",
+        "videoUrl":publicUrl,
+        "timestamp": FieldValue.serverTimestamp(),
+      });
+
+      return publicUrl;
+    } catch (e) {
+      print("Upload error: $e");
+      return null;
+    }
   }
 
 

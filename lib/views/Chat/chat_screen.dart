@@ -105,30 +105,19 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: TextField(
               controller: messagetextController,
-              onChanged: (value) => chatController.message = value,
+              onChanged: (value) {
+                chatController.message = value;
+                setState(() {
+
+                });
+              },
               decoration: const InputDecoration(
                 hintText: "Write message...",
                 border: InputBorder.none,
               ),
             ),
           ),
-          IconButton(
-            style: IconButton.styleFrom(
-              backgroundColor: context.theme.primaryColor,
-            ),
-            onPressed: () async
-            {
-              final imageUrl = await chatController.uploadImageToSupabase();
-              showImageMessagePreview(
-                url: imageUrl!,
-                context: context,
-                messageController: messagetextController,
-              );
-            },
-
-            icon: const Icon(Icons.attach_file, size: 20),
-          ),
-          IconButton(
+      messagetextController.text.trim().isNotEmpty ?  IconButton(
             style: IconButton.styleFrom(
               backgroundColor: context.theme.primaryColor,
             ),
@@ -147,32 +136,56 @@ class _ChatScreenState extends State<ChatScreen> {
               setState((){});
             },
             icon: const Icon(Icons.send, size: 15),
-          ),
-          GestureDetector(
-            onLongPressStart: (_) async {
-              var status = await Permission.microphone.status;
-              if (!status.isGranted) {
-                status = await Permission.microphone.request();
-              }
-
-              if (status.isGranted) {
-                await NativeAudio.startRecording();
-              } else {
-                print("Microphone permission denied!");
-              }
-            },
-            onLongPressEnd: (_) async {
-              final filePath = await NativeAudio.stopRecording();
-              await chatController.sendAudioMessage(filePath: filePath.toString(), senderId: widget.currentuser.fullName, receiverId: widget.reciever);
-            },
-            child: IconButton(
-              style: IconButton.styleFrom(
-                backgroundColor: context.theme.primaryColor,
-              ),
-              onPressed: () {},
-              icon: const Icon(FontAwesomeIcons.microphone, size: 15),
-            ),
           )
+          : GestureDetector(
+        onLongPressStart: (_) async {
+          var status = await Permission.microphone.status;
+          if (!status.isGranted) {
+            status = await Permission.microphone.request();
+          }
+
+          if (status.isGranted) {
+            await NativeAudio.startRecording();
+          } else {
+            print("Microphone permission denied!");
+          }
+        },
+        onLongPressEnd: (_) async {
+          final filePath = await NativeAudio.stopRecording();
+          await chatController.sendAudioMessage(filePath: filePath.toString(), senderId: widget.currentuser.fullName, receiverId: widget.reciever);
+        },
+        child: IconButton(
+          style: IconButton.styleFrom(
+            backgroundColor: context.theme.primaryColor,
+          ),
+          onPressed: () {},
+          icon: const Icon(FontAwesomeIcons.microphone, size: 15),
+        ),
+      ),IconButton(style: IconButton.styleFrom(
+          backgroundColor: context.theme.primaryColor,
+        ),
+        onPressed: () async
+        {
+          final imageUrl = await chatController.uploadImageToSupabase();
+          showImageMessagePreview(
+            url: imageUrl!,
+            context: context,
+            messageController: messagetextController,
+          );
+        },
+
+        icon: const Icon(Icons.attach_file, size: 20),
+      ),
+
+          IconButton(
+            style: IconButton.styleFrom(
+              backgroundColor: context.theme.primaryColor,
+            ),
+            onPressed: () async {
+              await chatController.pickAndUploadVideo(senderId: widget.currentuser.fullName, receiverId: widget.reciever);
+            },
+            icon: const Icon(FontAwesomeIcons.video, size: 15),
+          ),
 
         ],
       ),
