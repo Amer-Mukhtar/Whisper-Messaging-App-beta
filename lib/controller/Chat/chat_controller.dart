@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -129,7 +130,7 @@ class ChatController {
   }) async {
     final fileBytes = await File(filePath).readAsBytes();
     final fileName = "chat-audios/audio_${DateTime.now().millisecondsSinceEpoch}.m4a";
-
+    final String duration = await getAudioDuration(filePath);
     await Supabase.instance.client.storage
         .from('whisper')
         .uploadBinary(fileName, fileBytes);
@@ -144,10 +145,27 @@ class ChatController {
       "receiver": receiverId,
       "type": "audio",
       "message": "Audio Message",
+      "duration":duration,
       "audioUrl":audioUrl,
       "timestamp": FieldValue.serverTimestamp(),
     });
   }
+  Future<String> getAudioDuration(String filePath) async {
+    final player = AudioPlayer();
+    await player.setSourceUrl(filePath);
+
+    Duration? duration = await player.getDuration();
+
+    if (duration != null) {
+      String twoDigits(int n) => n.toString().padLeft(2, "0");
+      final minutes = duration.inMinutes;
+      final seconds = duration.inSeconds.remainder(60);
+      return "$minutes:${twoDigits(seconds)}";
+    }
+
+    return "0:00";
+  }
+
 
 
   Future<String?> pickAndUploadVideo(

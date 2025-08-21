@@ -25,16 +25,28 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateMixin {
   final ChatController chatController = ChatController();
   final TextEditingController messagetextController = TextEditingController();
-   late MessagesModel messagesModel;
-   bool isUploading=false;
+  late AnimationController controller;
+  late Animation<double> scaleAnimation;
+  late MessagesModel messagesModel;
+  bool isUploading=false;
+
   @override
   void initState() {
     super.initState();
     chatController.init(
         widget.currentuser.fullName, widget.reciever);
+
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+
+    scaleAnimation = Tween<double>(begin: 0.0, end: 1.6).animate(
+      CurvedAnimation(parent: controller, curve: Curves.easeOut),
+    );
   }
 
   @override
@@ -138,7 +150,9 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: const Icon(Icons.send, size: 15),
           )
           : GestureDetector(
-        onLongPressStart: (_) async {
+        onLongPressStart: (_) async
+        {
+          controller.forward();
           var status = await Permission.microphone.status;
           if (!status.isGranted) {
             status = await Permission.microphone.request();
@@ -150,16 +164,36 @@ class _ChatScreenState extends State<ChatScreen> {
             print("Microphone permission denied!");
           }
         },
-        onLongPressEnd: (_) async {
+        onLongPressEnd: (_) async
+        {
+          controller.reverse();
           final filePath = await NativeAudio.stopRecording();
           await chatController.sendAudioMessage(filePath: filePath.toString(), senderId: widget.currentuser.fullName, receiverId: widget.reciever);
         },
-        child: IconButton(
-          style: IconButton.styleFrom(
-            backgroundColor: context.theme.primaryColor,
-          ),
-          onPressed: () {},
-          icon: const Icon(FontAwesomeIcons.microphone, size: 15),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            FadeTransition(
+              opacity: controller,
+              child: ScaleTransition(scale: scaleAnimation,
+                child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.3),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              ),
+            ),
+            IconButton(
+              style: IconButton.styleFrom(
+                backgroundColor: context.theme.primaryColor,
+              ),
+              onPressed: () {},
+              icon: const Icon(FontAwesomeIcons.microphone, size: 15),
+            ),
+          ],
         ),
       ),IconButton(style: IconButton.styleFrom(
           backgroundColor: context.theme.primaryColor,

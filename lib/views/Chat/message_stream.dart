@@ -41,6 +41,12 @@ class MessageStream extends StatelessWidget {
               final type = messageData['type'] ?? 'text';
               final audioUrl=messageData['audioUrl']??'';
               final videoUrl =messageData['videoUrl']??'';
+              final mediaDuration=messageData['duration']??'';
+              final timestamp = messageData['timestamp'];
+              DateTime? dateTime;
+              if (timestamp is Timestamp) {
+                dateTime = timestamp.toDate(); //dart time
+              }
 
               if ((messageSender == receiver && messageReceiver == currentUser) ||
                   (messageReceiver == receiver && messageSender == currentUser)) {
@@ -53,7 +59,9 @@ class MessageStream extends StatelessWidget {
                   reciever:messageReceiver,
                   type:type,
                   audioUrl: audioUrl,
-                  videoUrl: videoUrl
+                  videoUrl: videoUrl,
+                  mediaDuration: mediaDuration,
+                  timeStamp:dateTime!,
                 );
                 messageWidgets.add(messageWidget);
               }

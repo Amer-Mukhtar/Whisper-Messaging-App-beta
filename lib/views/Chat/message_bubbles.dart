@@ -5,7 +5,7 @@ import '../../controller/Chat/chat_controller.dart';
 import '../../widgets/VideoPlayer.dart';
 import '../../widgets/message_options_sheet.dart';
 import 'package:audioplayers/audioplayers.dart';
-
+import 'package:intl/intl.dart';
 class MessageBubble extends StatelessWidget {
   final String sender;
   final String message;
@@ -16,6 +16,8 @@ class MessageBubble extends StatelessWidget {
   final String type;
   final String? audioUrl;
   final String? videoUrl;
+  final String? mediaDuration;
+  final DateTime timeStamp;
 
   const MessageBubble({
     super.key,
@@ -23,8 +25,10 @@ class MessageBubble extends StatelessWidget {
     required this.message,
     required this.isMe,
     this.imageUrl,
+    this.mediaDuration,
     this.audioUrl,
     this.videoUrl,
+    required this.timeStamp,
     required this.chatController,
     required this.reciever,
     required this.type,
@@ -32,6 +36,7 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDateTime = DateFormat('MMM d, hh:mm a').format(timeStamp);
     return Column(
       crossAxisAlignment:
       isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -48,11 +53,12 @@ class MessageBubble extends StatelessWidget {
               bottomRight: Radius.circular(10)),
           color: isMe ? context.theme.primaryColor : context.background.accented,
           child: Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
             child: _buildMessageContent(context),
           ),
         ),
-        Text(sender, style: context.textStyles.labelSmall),
+        Text("$formattedDateTime",style: const TextStyle(color: Colors.black,fontSize: 8)),
+
         const SizedBox(height: 10),
       ],
     );
@@ -91,6 +97,7 @@ class MessageBubble extends StatelessWidget {
         );
 
       case "audio":
+        final player = AudioPlayer();
         return GestureDetector(
           onLongPress: () => _showOptions(context),
           child: Row(
@@ -98,11 +105,19 @@ class MessageBubble extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.play_arrow, color: Colors.white),
                 onPressed: () async {
-                  final player = AudioPlayer();
                   await player.play(UrlSource(audioUrl!));
                 },
               ),
-              const Text("Audio Message", style: TextStyle(color: Colors.white)),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Audio Message", style: const TextStyle(color: Colors.white)),
+                    Text("$mediaDuration", style: const TextStyle(color: Colors.white)),
+
+                  ],
+                ),
+              ),
             ],
           ),
         );
