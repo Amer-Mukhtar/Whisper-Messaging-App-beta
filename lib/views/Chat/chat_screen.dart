@@ -13,7 +13,6 @@ class ChatScreen extends StatefulWidget {
   final UserModel currentuser;
   final String imageUrl;
 
-
   const ChatScreen({
     super.key,
     required this.currentuser,
@@ -25,19 +24,19 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateMixin {
+class _ChatScreenState extends State<ChatScreen>
+    with SingleTickerProviderStateMixin {
   final ChatController chatController = ChatController();
   final TextEditingController messagetextController = TextEditingController();
   late AnimationController controller;
   late Animation<double> scaleAnimation;
   late MessagesModel messagesModel;
-  bool isUploading=false;
+  bool isUploading = false;
 
   @override
   void initState() {
     super.initState();
-    chatController.init(
-        widget.currentuser.fullName, widget.reciever);
+    chatController.init(widget.currentuser.fullName, widget.reciever);
 
     controller = AnimationController(
       vsync: this,
@@ -81,7 +80,8 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back, color: context.background.accented),
+                icon:
+                    Icon(Icons.arrow_back, color: context.background.accented),
               ),
               const SizedBox(width: 2),
               CircleAvatar(
@@ -92,18 +92,13 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(
-                  widget.reciever,
-                  style: context.textStyles.titleMedium
-                ),
+                child: Text(widget.reciever,
+                    style: context.textStyles.titleMedium),
               ),
             ],
           ),
         ),
       ),
-      actions: [
-        IconButton(onPressed: (){}, icon: Icon(Icons.phone))
-      ],
     );
   }
 
@@ -119,9 +114,7 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
               controller: messagetextController,
               onChanged: (value) {
                 chatController.message = value;
-                setState(() {
-
-                });
+                setState(() {});
               },
               decoration: const InputDecoration(
                 hintText: "Write message...",
@@ -129,102 +122,88 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
               ),
             ),
           ),
-      messagetextController.text.trim().isNotEmpty ?  IconButton(
-            style: IconButton.styleFrom(
-              backgroundColor: context.theme.primaryColor,
-            ),
-            onPressed: () async {
-              MessagesModel newMessage = MessagesModel(
-                '', // imageurl
-                true, // isMe
-                'text', // hasImage
-                sender: widget.currentuser.fullName,
-                receiver: widget.reciever,
-                message: messagetextController.text,
-                timestamp: DateTime.now(),
-              );
-              messagetextController.clear();
-              await chatController.sendMessage(newMessage);
-              setState((){});
-            },
-            icon: const Icon(Icons.send, size: 15),
-          )
-          : GestureDetector(
-        onLongPressStart: (_) async
-        {
-          controller.forward();
-          var status = await Permission.microphone.status;
-          if (!status.isGranted) {
-            status = await Permission.microphone.request();
-          }
+          messagetextController.text.trim().isNotEmpty
+              ? IconButton(
+                  style: IconButton.styleFrom(
+                    backgroundColor: context.theme.primaryColor,
+                  ),
+                  onPressed: () async {
+                    MessagesModel newMessage = MessagesModel(
+                      '', // imageurl
+                      true, // isMe
+                      'text', // hasImage
+                      sender: widget.currentuser.fullName,
+                      receiver: widget.reciever,
+                      message: messagetextController.text,
+                      timestamp: DateTime.now(),
+                    );
+                    messagetextController.clear();
+                    await chatController.sendMessage(newMessage);
+                    setState(() {});
+                  },
+                  icon: const Icon(Icons.send, size: 15),
+                )
+              : GestureDetector(
+                  onLongPressStart: (_) async {
+                    controller.forward();
+                    var status = await Permission.microphone.status;
+                    if (!status.isGranted) {
+                      status = await Permission.microphone.request();
+                    }
 
-          if (status.isGranted) {
-            await NativeAudio.startRecording();
-          } else {
-            print("Microphone permission denied!");
-          }
-        },
-        onLongPressEnd: (_) async
-        {
-          controller.reverse();
-          final filePath = await NativeAudio.stopRecording();
-          await chatController.sendAudioMessage(filePath: filePath.toString(), senderId: widget.currentuser.fullName, receiverId: widget.reciever);
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            FadeTransition(
-              opacity: controller,
-              child: ScaleTransition(scale: scaleAnimation,
-                child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.3),
-                  shape: BoxShape.circle,
+                    if (status.isGranted) {
+                      await NativeAudio.startRecording();
+                    } else {
+                      print("Microphone permission denied!");
+                    }
+                  },
+                  onLongPressEnd: (_) async {
+                    controller.reverse();
+                    final filePath = await NativeAudio.stopRecording();
+                    await chatController.sendAudioMessage(
+                        filePath: filePath.toString(),
+                        senderId: widget.currentuser.fullName,
+                        receiverId: widget.reciever);
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      FadeTransition(
+                        opacity: controller,
+                        child: ScaleTransition(
+                          scale: scaleAnimation,
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.withValues(alpha: 0.3),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        style: IconButton.styleFrom(
+                          backgroundColor: context.theme.primaryColor,
+                        ),
+                        onPressed: () {},
+                        icon: const Icon(FontAwesomeIcons.microphone, size: 15),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              ),
-            ),
-            IconButton(
+          IconButton(
               style: IconButton.styleFrom(
                 backgroundColor: context.theme.primaryColor,
               ),
-              onPressed: () {},
-              icon: const Icon(FontAwesomeIcons.microphone, size: 15),
-            ),
-          ],
-        ),
-      ),IconButton(style: IconButton.styleFrom(
-          backgroundColor: context.theme.primaryColor,
-        ),
-        onPressed: () async
-        {
-          final imageUrl = await chatController.uploadImageToSupabase();
-          showImageMessagePreview(
-            url: imageUrl!,
-            context: context,
-            messageController: messagetextController,
-          );
-        },
-
-        icon: const Icon(Icons.attach_file, size: 20),
-      ),
-
-          IconButton(
-            style: IconButton.styleFrom(
-              backgroundColor: context.theme.primaryColor,
-            ),
-            onPressed: () async {
-              await chatController.pickAndUploadVideo(senderId: widget.currentuser.fullName, receiverId: widget.reciever);
-            },
-            icon: const Icon(FontAwesomeIcons.video, size: 15),
-          ),
+              onPressed: (){attachmentOptions(context);},
+              icon: Icon(Icons.attachment)),
 
         ],
       ),
     );
   }
+
   void showImageMessagePreview({
     required String url,
     required BuildContext context,
@@ -276,10 +255,10 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
                   ),
                   const SizedBox(width: 10),
                   IconButton(
-        style: IconButton.styleFrom(
-        backgroundColor: Colors.redAccent,
-        ),
-                    icon: const Icon(Icons.send,size: 25),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                    ),
+                    icon: const Icon(Icons.send, size: 25),
                     onPressed: () async {
                       final newMessage = MessagesModel(
                         url,
@@ -293,8 +272,7 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
                       messagetextController.clear();
                       Navigator.pop(context);
                       await chatController.sendImage(newMessage);
-                      setState((){});
-
+                      setState(() {});
                     },
                   )
                 ],
@@ -305,6 +283,68 @@ class _ChatScreenState extends State<ChatScreen> with SingleTickerProviderStateM
       },
     );
   }
+
+  void attachmentOptions(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      builder: (context) {
+        return Stack(
+          children: [
+            Positioned(
+              bottom: 80,
+              right: 20,
+              child: Material(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                    bottomLeft: Radius.circular(16)
+                ),
+                color: context.background.accented,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                        ),
+                        onPressed: () async {
+                          final imageUrl =
+                          await chatController.uploadImageToSupabase();
+                          showImageMessagePreview(
+                            url: imageUrl!,
+                            context: context,
+                            messageController: messagetextController,
+                          );
+                        },
+                        icon: const Icon(Icons.attach_file, size: 20),
+                      ),
+                      IconButton(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                        ),
+                        onPressed: () async {
+                          await chatController.pickAndUploadVideo(
+                            senderId: widget.currentuser.fullName,
+                            receiverId: widget.reciever,
+                          );
+                        },
+                        icon: const Icon(Icons.video_call, size: 20),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
 
 
 }

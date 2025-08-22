@@ -12,7 +12,7 @@ void main() async {
   final anonKey = Env.supabaseAnonKey;
   final supabaseUrl =Env.supabaseUrl;
   WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp();
+  await Firebase.initializeApp();
   await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
   Get.put(ThemeController());
   runApp( MyApp());

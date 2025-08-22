@@ -57,7 +57,7 @@ class MessageBubble extends StatelessWidget {
             child: _buildMessageContent(context),
           ),
         ),
-        Text("$formattedDateTime",style: const TextStyle(color: Colors.black,fontSize: 8)),
+        Text("$formattedDateTime",style: const TextStyle(color: Colors.red,fontSize: 8)),
 
         const SizedBox(height: 10),
       ],
